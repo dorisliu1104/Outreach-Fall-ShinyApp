@@ -1,0 +1,37 @@
+---
+title: "Ph Graphs"
+author: "Doris Liu"
+date: "10/19/2021"
+output: html_document
+---
+
+```{r}
+library(TSstudio)
+library(xts)
+library(zoo)
+library(lubridate)
+library(tidyverse)
+library(here)
+ph_clean<- read_csv(here("data", "ph_clean.csv")) %>% 
+  clean_names()
+Alegria <- dplyr::filter(ph_clean, site=="Alegria")  ## Filtering the data according to different sites
+Lompoc_Landing <- dplyr::filter(ph_clean, site=="Lompoc Landing")
+Bodega_Bay <- dplyr::filter(ph_clean, site=="Bodega Bay")
+```
+
+```{r}
+Alegria_ts <- xts(Alegria$p_h, Alegria$date_time)        # Convert data frame to time series 
+class(Alegria$date_time) ## conditons over ocean (under water at the edge of the beach)
+ts_plot(Alegria_ts)
+```
+
+```{r}
+Lompoc_time <- Lompoc_Landing %>% 
+  filter(date_time < ymd_hms("2021-06-19 02:30:00"))
+Lompoc_ts <- xts(Lompoc_time$p_h, Lompoc_time$date_time)        # Convert data frame to time series
+class(Lompoc_ts) ## in the tide pool, always under water, conditons in the tide pool not nececerrily the ocean
+ggplot(data = Lompoc_time, aes(x = date_time, y = p_h)) + 
+  geom_line() + geom_point()## filter to a certain time of the day
+```
+
+
