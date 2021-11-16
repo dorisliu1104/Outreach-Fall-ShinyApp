@@ -15,7 +15,6 @@ View(ph_clean_updated)
 ## Date filtering
 ph_clean_updated$date =  as.Date(ph_clean_updated$date, format = "%Y-%m-%d")
 
-
 ## Create the ui (user interface)
 ui <- dashboardPage(
   
@@ -53,13 +52,14 @@ ui <- dashboardPage(
                            selectInput(inputId = "site",   
                                        label = "Visualization of sites(you can choose multiple sites)",
                                        choices = c("Alegria","Lompoc Landing", "Bodega Bay" )),
-                           dateRangeInput(inputId = "date_range", 
+                           dateRangeInput(inputId = 'dateRange', 
                                           label = 'Filter tide by date',
                                           start = as.Date('2021-06-18') , end = as.Date('2021-10-08')),
                            
               ),
               mainPanel("Some text for the main panel",
                         plotOutput(outputId="ph_ts_plot"))),
+      
       
       ##Scatterplot tab content
       tabItem(tabName = "scatter",
@@ -69,14 +69,20 @@ ui <- dashboardPage(
                                        choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" )),
                            selectInput(inputId = "y",
                                        label = "Y variable",
-                                       choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" ))
+                                       choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" )),
+                           h4("Points near click"),
+                           verbatimTextOutput("click_info")
                            
               ),
               
+              
               mainPanel("Some text for the main panel",
-                        plotOutput(outputId="ph_scatterplot_Alegria", width = "50%", height = "200px"),
-                        plotOutput(outputId="ph_scatterplot_Bodega", width = "50%",height = "200px"),
-                        plotOutput(outputId="ph_scatterplot_Lompoc", width = "50%",height = "200px"))
+                        plotOutput(outputId="ph_scatterplot_Alegria", width = "50%", height = "200px", 
+                                   click = "plot1_click",),
+                        plotOutput(outputId="ph_scatterplot_Bodega", width = "50%",height = "200px",
+                                   click = "plot2_click",),
+                        plotOutput(outputId="ph_scatterplot_Lompoc", width = "50%",height = "200px",
+                                   click = "plot3_click",))
               
               
       )
@@ -86,22 +92,19 @@ ui <- dashboardPage(
 ## Create the Server
 server <- function(input, output) {
   
+  
   ## time series tab
   site_select <- reactive ({
     ph_clean_updated %>% 
       filter(site == input$site)
   })
   
-  dateFiltered <- reactive({ph_clean_updated %>% filter(date %in% seq(input$date_range[1],input$date_range[2], by = "day"))
-  })
-  #reactive plot
   output$ph_ts_plot <- renderPlot({
-    data <- dateFiltered() 
-    c <- ggplot(data = site_select(), 
-                aes(x = date_time, y=tide)) + geom_line()
-    
+    ggplot(data = site_select(), 
+           aes(x = date_time, y=tide)) + geom_line()
   })
-    
+  
+  
   ## scatterplot tab
   output$ph_scatterplot_Alegria <- renderPlot({
     ggplot(subset(ph_clean_updated, site %in% "Alegria"), aes_string(x = input$x, y = input$y)) +
@@ -117,6 +120,9 @@ server <- function(input, output) {
     ggplot(subset(ph_clean_updated, site %in% "Lompoc Landing"), aes_string(x = input$x, y = input$y)) +
       geom_point() +
       ggtitle("Lompoc Landing")
+  })
+  output$click_info <- renderPrint({
+    nearPoints(ph_clean_updated, input$plot1_click, addDist = TRUE)
   })
 }
 
