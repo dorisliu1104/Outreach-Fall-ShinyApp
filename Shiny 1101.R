@@ -4,12 +4,13 @@ library(shinydashboard)
 library(readxl)
 library(dygraphs)
 library(tidyverse)
+library(here)
 library(lubridate)
 library(xts)
 library(reshape)
 
 ## Read the Updated Data
-ph_clean_updated <- read_excel("data/ph_clean_updated.xls")
+ph_clean_updated <- read_csv(here("data", "ph_clean_1121.csv"))
 View(ph_clean_updated)
 
 ## Date filtering
