@@ -17,8 +17,13 @@ f = "%m/%d/%Y"
 ph_clean_updated$SetDateMonth <- format(as.POSIXct(ph_clean_updated$date, format = f), "%m")
 
 
-## Date filtering
-# ph_clean_updated$date =  as.Date(ph_clean_updated$date, format = "%Y-%m-%d")
+## Read GPS data for map
+site_gps <- read_excel("data/site gps.xlsx")
+site_gps <- site_gps %>% 
+  mutate(popup_info = paste(site, "<br/>", 
+                            "Average ph", Avg_ph, "<br/>", 
+                            "Average temperature", Avg_temp, "<br/>", 
+                            "Average tide", Avg_tide ))
 
 
 ## Create the ui (user interface)
@@ -35,7 +40,9 @@ ui <- dashboardPage(
       menuItem("Tables", tabName = "table", icon = icon("table")),
       menuItem("Time Series Trend", tabName = "TS", icon = icon("chart-line", lib = "font-awesome")),
       menuItem("Scatterplot",tabName = "scatter", icon = icon("chart-bar", lib = "font-awesome")),
-      menuItem("Lompoc Landing",tabName = "lompoc", icon = icon("anchor", lib = "font-awesome"))
+      menuItem("Lompoc Landing",tabName = "lompoc", icon = icon("anchor", lib = "font-awesome")),
+      menuItem("Alegria",tabName = "alegria", icon = icon("docker", lib = "font-awesome")),
+      menuItem("Bodega Bay",tabName = "bodega", icon = icon("fish", lib = "font-awesome"))
     )
   ), ## end dashboardSidebar
   
@@ -47,11 +54,16 @@ ui <- dashboardPage(
       ),
       # Second tab content
       tabItem(tabName = "description",
-              h2("Lorem ipsum dolor sit amet"),
+              h2("Our Research", color = "red"),
               tags$img(src = "sc1.jpeg", align = "center",height = 72, width = 72),
-              h3("Lorem ipsum dolor sit amet"),
+              h3("Scientific method: observation, hypothesis, method"),
               tags$img(src = "th.jpeg", align = "center",height = 72, width = 72),
       ),
+      
+      # Map tab content
+      tabItem(tabName = "map",
+              leafletOutput(outputId = "map")    
+         ),
       
       # Time Series tab content 
       tabItem(tabName = "TS",
@@ -100,12 +112,49 @@ ui <- dashboardPage(
                            ),
               mainPanel("Some text for the main panel",
                         plotOutput(outputId="scatterplot_lompoc"))
+      ),
+      
+      ## Alegria
+      tabItem(tabName = "alegria",
+              sidebarPanel("Alegria Visualization",
+                           selectInput(inputId = "x3",
+                                       label = "X variable",
+                                       choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" )),
+                           selectInput(inputId = "y3",
+                                       label = "Y variable",
+                                       choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" ))
+                           
+              ),
+              mainPanel("Some text for the main panel",
+                        plotOutput(outputId="scatterplot_alegria"))
+      ),
+      
+      ## Bodega Bay
+      tabItem(tabName = "bodega",
+              sidebarPanel("Bodega Bay Visualization",
+                           selectInput(inputId = "x4",
+                                       label = "X variable",
+                                       choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" )),
+                           selectInput(inputId = "y4",
+                                       label = "Y variable",
+                                       choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" ))
+                           
+              ),
+              mainPanel("Some text for the main panel",
+                        plotOutput(outputId="scatterplot_bodega"))
       )
     )
   ))
 
 ## Create the Server
 server <- function(input, output) {
+  
+  ## map tab
+  output$map <- renderLeaflet({
+    leaflet() %>% 
+      addTiles() %>% 
+      addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, popup = ~popup_info)
+    }) 
   
   ## time series tab
   
@@ -140,11 +189,28 @@ server <- function(input, output) {
   
   ## lompoc tab
   output$scatterplot_lompoc <- renderPlot({
-    ggplot(ph_clean_updated, site = "Lompoc Landing") +
-      aes_string(input$x2, y = input$y2, col = as.factor(ph_clean_updated$SetDateMonth)) +
-      geom_point() +
+    ggplot(subset(ph_clean_updated, site %in% "Lompoc Landing"), 
+           aes_string(x = input$x2, y = input$y2)) +
+      geom_point(aes(color = SetDateMonth)) +
       ggtitle("Lompoc Landing")
   })
+  
+  ## alegria tab
+  output$scatterplot_alegria <- renderPlot({
+    ggplot(subset(ph_clean_updated, site %in% "Alegria"), 
+           aes_string(x = input$x3, y = input$y3)) +
+      geom_point(aes(color = SetDateMonth)) +
+      ggtitle("Alegria")
+  })
+  
+  ## bodega tab
+  output$scatterplot_bodega <- renderPlot({
+    ggplot(subset(ph_clean_updated, site %in% "Bodega Bay"), 
+           aes_string(x = input$x4, y = input$y4)) +
+      geom_point(aes(color = SetDateMonth)) +
+      ggtitle("Bodega Bay")
+  })
+  
 }
 
 
