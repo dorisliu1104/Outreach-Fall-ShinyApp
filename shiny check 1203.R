@@ -1,5 +1,6 @@
 library(shiny) 
 library(leaflet)
+library(urbnmapr)
 library(shinydashboard)
 library(readxl)
 library(dygraphs)
@@ -27,7 +28,9 @@ site_gps <- site_gps %>%
 
 
 ## Create the ui (user interface)
-ui <- dashboardPage(
+ui <- fluidPage(
+  
+  dashboardPage(
   
   skin = "blue",
   
@@ -50,11 +53,41 @@ ui <- dashboardPage(
     tabItems(
       # First tab content
       tabItem(tabName = "home",
-              HTML('<iframe width="200" height="100" src="https://www.youtube.com/embed/Gyrfsrd4zK0" frameborder="0" allowfullscreen></iframe>'),
-      ),
+              h1("About The Intertidal", align = "center"),
+              h3("What do you know about ocean acidification?"),
+              fluidRow(
+              column(
+                br(),
+                p("Ocean acidification (OA) is a process that occurs when the ocean absorbs excessive amounts of anthropogenically produced CO2 from the air.",
+                  style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
+                br(),
+                p("Ocean as a carbon sink and part of the carbon cycle.
+                   Ocean absorbs 25% of all anthropogenically released CO2.
+                  Ocean pH is normally ~8.1, more basic than acidic (introduce pH scale)",
+                  style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
+                br(),
+                p("When CO2 dissolves in water, it releases H+ protons and combines with carbonate to produce bicarbonate, taking it out of the water
+                Many marine organisms use carbonate to make shells (calcium carbonate). Taking them out of the water makes it harder to make hard shells
+                More H+ protons in the water means the water becomes more acidic and corrodes the shells of many organisms
+                Ex: coral reefs feel OA’s impact because there’s less carbonate in the water to build the 3D reef structure", 
+                  style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
+                br(),
+                p("OA occurs at different rates in different ecosystems; coastal environments like the intertidal experience more rapid rates of acidification due to eutrophication (nutrient runoff caused by human activity)
+                  Eutrophication causes algal blooms, which release large amounts of CO2 that dissolve into the water when decomposed
+                  Coastal upwelling also introduces CO2 rich water from the deep sea",
+                  style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
+                br(),
+                p("The intertidal is highly variable and dynamic and has extreme environmental conditions when it comes to temperature, salinity, and pH 
+                  anthropogenic activities that lead to increased CO2 emissions leads to OA 
+                  (fossil fuels, carbon emissions, and deforestation)",
+                  style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
+                  width = 12
+               ))),
+              
+             
       # Second tab content
       tabItem(tabName = "description",
-              h2("Our Research", color = "red"),
+              h2("Our Research"),
               tags$img(src = "sc1.jpeg", align = "center",height = 72, width = 72),
               h3("Scientific method: observation, hypothesis, method"),
               tags$img(src = "th.jpeg", align = "center",height = 72, width = 72),
@@ -62,8 +95,22 @@ ui <- dashboardPage(
       
       # Map tab content
       tabItem(tabName = "map",
-              leafletOutput(outputId = "map")    
-         ),
+              fluidRow(
+                column(5,
+                       tabPanel("Map", leafletOutput(outputId = "map", width = "100%", height = 600 ))),
+                column(7, tabsetPanel(id="plot_tabs",
+                                      tabPanel("Alegria",
+                                               h3("Pic of Alegria"),
+                                               tags$img(src = "alegria.jpeg", align = "center",height = 300, width = 300)),
+                                      tabPanel("Lompoc Landing",
+                                               h3("Pic of Lompoc Landing"),
+                                               tags$img(src = "lompoc.jpeg", align = "center",height = 300, width = 300)),
+                                      tabPanel("Bodega Bay",
+                                               h3("Pic of Bodega Bay"),
+                                               tags$img(src = "bodega.jpeg", align = "center",height = 300, width = 300))
+                       )))),
+              
+                    
       
       # Time Series tab content 
       tabItem(tabName = "TS",
@@ -144,7 +191,7 @@ ui <- dashboardPage(
                         plotOutput(outputId="scatterplot_bodega"))
       )
     )
-  ))
+  )))
 
 ## Create the Server
 server <- function(input, output) {
