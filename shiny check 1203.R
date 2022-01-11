@@ -99,10 +99,10 @@ ui <- fluidPage(
                 column(5,
                        tabPanel("Map", leafletOutput(outputId = "map", width = "100%", height = 600 ))),
                 column(7, tabsetPanel(id="plot_tabs",
-                                      tabPanel("Alegria",
+                                      tabPanel("Picture of Sites",
                                                h3("Pic of Alegria"),
                                                tags$img(src = "alegria.jpeg", align = "center",height = 300, width = 300)),
-                                      tabPanel("Lompoc Landing",
+                                      tabPanel("Questions",
                                                h3("Pic of Lompoc Landing"),
                                                tags$img(src = "lompoc.jpeg", align = "center",height = 300, width = 300)),
                                       tabPanel("Bodega Bay",
@@ -200,7 +200,7 @@ server <- function(input, output) {
   output$map <- renderLeaflet({
     leaflet() %>% 
       addTiles() %>% 
-      addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, popup = ~popup_info)
+      addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, radius = ~Avg_temp * 2, popup = ~popup_info, color = '#ff0000')
     }) 
   
   ## time series tab
