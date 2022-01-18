@@ -1,6 +1,5 @@
 library(shiny) 
 library(leaflet)
-library(urbnmapr)
 library(shinydashboard)
 library(readxl)
 library(dygraphs)
@@ -37,7 +36,7 @@ ui <- fluidPage(
   dashboardHeader(title = "Outreach Project"),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Home", tabName = "home", icon = icon("home")),
+      menuItem("About the Intertidal", tabName = "about_the_intertidal", icon = icon("compass",lib="font-awesome")),
       menuItem("Description", tabName = "description", icon = icon("leaf")),
       menuItem("Map", tabName = "map", icon = icon("thumbtack")),
       menuItem("Tables", tabName = "table", icon = icon("table")),
@@ -51,36 +50,37 @@ ui <- fluidPage(
   
   dashboardBody(
     tabItems(
-      # First tab content
-      tabItem(tabName = "home",
+      # First tab content: About the Intertidal
+      tabItem(tabName = "about_the_intertidal",
               h1("About The Intertidal", align = "center"),
-              h3("What do you know about ocean acidification?"),
+              h3("What is ocean acidification?"),
               fluidRow(
               column(
                 br(),
-                p("Ocean acidification (OA) is a process that occurs when the ocean absorbs excessive amounts of anthropogenically produced CO2 from the air.",
-                  style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
+                p("Ocean acidification (OA) is a process that occurs when the ocean absorbs excessive amounts of anthropogenically (*resulting from human influence*) produced CO2 from the air.",
+                  style="text-align:justify;color:black;background-color:aliceblue;padding:15px;border-radius:10px"),
+                tags$img(src = "OCcycle.jpeg", align = "center"),
                 br(),
-                p("Ocean as a carbon sink and part of the carbon cycle.
-                   Ocean absorbs 25% of all anthropogenically released CO2.
-                  Ocean pH is normally ~8.1, more basic than acidic (introduce pH scale)",
-                  style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
+                p("The ocean absorbs 25% of all anthropogenically released CO2 as a carbon sink. Ocean pH is normally ~8.1, which is pretty neutral, but becomes more acidic when CO2 dissolves in water.",
+                  style="text-align:justify;color:black;background-color:aliceblue;padding:15px;border-radius:10px"),
+                tags$img(src = "phscaleEPA.jpeg", align = "center"),
                 br(),
-                p("When CO2 dissolves in water, it releases H+ protons and combines with carbonate to produce bicarbonate, taking it out of the water
-                Many marine organisms use carbonate to make shells (calcium carbonate). Taking them out of the water makes it harder to make hard shells
-                More H+ protons in the water means the water becomes more acidic and corrodes the shells of many organisms
-                Ex: coral reefs feel OA’s impact because there’s less carbonate in the water to build the 3D reef structure", 
-                  style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
+                p("When CO2 dissolves in water, it releases H+ protons and combines with carbonate to produce bicarbonate, taking carbonate out of the water
+                Many marine organisms use carbonate to make shells (calcium carbonate). Taking carbonate out of the water makes it harder to make hard shells
+                Furthermore, more H+ protons in the water means the water becomes more acidic and corrodes the shells of many organisms. For example, coral reefs feel OA’s impact because there’s less carbonate in the water to build the 3D reef structure",
+                  style="text-align:justify;color:black;background-color:aliceblue;padding:15px;border-radius:10px"),
+                tags$img(src = "corealreef.jpeg", align = "center"),
                 br(),
-                p("OA occurs at different rates in different ecosystems; coastal environments like the intertidal experience more rapid rates of acidification due to eutrophication (nutrient runoff caused by human activity)
-                  Eutrophication causes algal blooms, which release large amounts of CO2 that dissolve into the water when decomposed
+                p("OA occurs at different rates in different ecosystems; coastal environments like the intertidal experience more rapid rates of acidification due to eutrophication (nutrient runoff caused by human activity). 
+                  Eutrophication can cause algal blooms, which release large amounts of CO2 that dissolve into the water when decomposed.
                   Coastal upwelling also introduces CO2 rich water from the deep sea",
-                  style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
+                  style="text-align:justify;color:black;background-color:aliceblue;padding:15px;border-radius:10px"),
+                tags$img(src = "algalbloom.jpeg", align = "center"),
                 br(),
-                p("The intertidal is highly variable and dynamic and has extreme environmental conditions when it comes to temperature, salinity, and pH 
-                  anthropogenic activities that lead to increased CO2 emissions leads to OA 
-                  (fossil fuels, carbon emissions, and deforestation)",
-                  style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
+                p("The intertidal is highly variable and dynamic and has extreme environmental conditions when it comes to temperature, salinity, and pH.
+                  Coastal upwelling also introduces CO2 rich water from the deep sea, which contributes to coastal acidification.
+                  Fossil fuels, carbon emmissions, and deforestation are humam impacts that further ocean acidification.",
+                  style="text-align:justify;color:black;background-color:aliceblue;padding:15px;border-radius:10px"),
                   width = 12
                ))),
               
