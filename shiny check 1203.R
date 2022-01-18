@@ -119,15 +119,16 @@ ui <- fluidPage(
                        tabPanel("Map", leafletOutput(outputId = "map", width = "100%", height = 600 ))),
                 column(7, tabsetPanel(id="plot_tabs",
                                       tabPanel("Picture of Sites",
-                                               h3("Pic of Alegria"),
-                                               tags$img(src = "alegria.jpeg", align = "center",height = 300, width = 300)),
+                                               radioButtons("pics","Pictures of Sites", 
+                                                            choices=c("Alegria"="alegria" , "Bodega Bay"="bodega", "Lompoc Landing"="lompoc"), inline=T),
+                                               imageOutput("pic_site")),
                                       tabPanel("Questions",
-                                               h3("Pic of Lompoc Landing"),
-                                               tags$img(src = "lompoc.jpeg", align = "center",height = 300, width = 300)),
-                                      tabPanel("Bodega Bay",
-                                               h3("Pic of Bodega Bay"),
-                                               tags$img(src = "bodega.jpeg", align = "center",height = 300, width = 300))
-                       )))),
+                                               p("Q1. Examine the three pictures from the three different sites in which sensors were deployed. What are some visual differences between each environment?"),
+                                               br(),
+                                               p("Q2. Why were these three sites selected? What are the geographic differences between each site?"),
+                                               br(),
+                                               p("Q3. What other physical variables in the intertidal could affect the data collected by the sensors besides the ones being tested for?"))
+                )))),
               
                     
       
@@ -219,6 +220,14 @@ server <- function(input, output) {
       addTiles() %>% 
       addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, radius = ~Avg_temp * 2, popup = ~popup_info, color = '#ff0000')
     }) 
+  
+  output$pic_site <- renderImage({
+    filename <- normalizePath(file.path('./www/', paste(input$pics, ".png", sep="")))
+    
+    list(src = filename, height = 300, width = 300)
+  }, deleteFile = FALSE
+  )
+  
   
   ## time series tab
   
