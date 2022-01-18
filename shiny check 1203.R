@@ -58,33 +58,46 @@ ui <- fluidPage(
               column(
                 br(),
                 p("Ocean acidification (OA) is a process that occurs when the ocean absorbs excessive amounts of anthropogenically (*resulting from human influence*) produced CO2 from the air.",
-                  style="text-align:justify;color:black;background-color:aliceblue;padding:15px;border-radius:10px"),
                 tags$img(src = "OCcycle.jpeg", align = "center"),
+                  style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
                 br(),
                 p("The ocean absorbs 25% of all anthropogenically released CO2 as a carbon sink. Ocean pH is normally ~8.1, which is pretty neutral, but becomes more acidic when CO2 dissolves in water.",
-                  style="text-align:justify;color:black;background-color:aliceblue;padding:15px;border-radius:10px"),
-                tags$img(src = "phscaleEPA.jpeg", align = "center"),
+                tags$img(src = "phscaleEPA.png", align = "center",height=350,width=500),  
+                  style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
                 br(),
                 p("When CO2 dissolves in water, it releases H+ protons and combines with carbonate to produce bicarbonate, taking carbonate out of the water
                 Many marine organisms use carbonate to make shells (calcium carbonate). Taking carbonate out of the water makes it harder to make hard shells
-                Furthermore, more H+ protons in the water means the water becomes more acidic and corrodes the shells of many organisms. For example, coral reefs feel OA’s impact because there’s less carbonate in the water to build the 3D reef structure",
-                  style="text-align:justify;color:black;background-color:aliceblue;padding:15px;border-radius:10px"),
-                tags$img(src = "corealreef.jpeg", align = "center"),
+                Furthermore, more H+ protons in the water means the water becomes more acidic and corrodes the shells of many organisms. For example, coral reefs feel OA’s impact because there’s less carbonate in the water to build the 3D reef structure.",
+                tags$img(src = "corealreef.jpeg", align = "center",height=300,width=500),
+                  style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
                 br(),
                 p("OA occurs at different rates in different ecosystems; coastal environments like the intertidal experience more rapid rates of acidification due to eutrophication (nutrient runoff caused by human activity). 
                   Eutrophication can cause algal blooms, which release large amounts of CO2 that dissolve into the water when decomposed.
-                  Coastal upwelling also introduces CO2 rich water from the deep sea",
-                  style="text-align:justify;color:black;background-color:aliceblue;padding:15px;border-radius:10px"),
-                tags$img(src = "algalbloom.jpeg", align = "center"),
+                  Coastal upwelling also introduces CO2 rich water from the deep sea.",
+                tags$img(src = "algalbloom.jpeg", align = "center",height=300,width=500),  
+                  style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
                 br(),
                 p("The intertidal is highly variable and dynamic and has extreme environmental conditions when it comes to temperature, salinity, and pH.
                   Coastal upwelling also introduces CO2 rich water from the deep sea, which contributes to coastal acidification.
                   Fossil fuels, carbon emmissions, and deforestation are humam impacts that further ocean acidification.",
-                  style="text-align:justify;color:black;background-color:aliceblue;padding:15px;border-radius:10px"),
-                  width = 12
-               ))),
-              
-             
+                  style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
+                  width = 12,
+               )),
+              h3("Your turn"),
+              h4("Using the information above, answer the following questions."),
+              fluidRow(
+                column(
+                  br(),
+                  p("What do you know about ocean acidification? Follow this link to a Mentimeter[https://www.menti.com/uijfevceik] and submit the first word/phrase that comes to mind when you think of ocean acidification.",
+                    style="text-align:justify;color:black;background-color:azure3;padding:15px;border-radius:10px"),
+                  br(),
+                  p("What makes the intertidal unique in terms of ocean acidification and other environmental processes?",
+                    style="text-align:justify;color:black;background-color:azure3;padding:15px;border-radius:10px"),
+                  br(),
+                  p("How do intertidal organisms adapt to the extreme environmental conditions in which they live?",
+                    style="text-align:justify;color:black;background-color:azure3;padding:15px;border-radius:10px"),
+                  )))))),
+  
       # Second tab content
       tabItem(tabName = "description",
               h2("Our Research"),
@@ -189,9 +202,7 @@ ui <- fluidPage(
               ),
               mainPanel("Some text for the main panel",
                         plotOutput(outputId="scatterplot_bodega"))
-      )
-    )
-  )))
+      )),
 
 ## Create the Server
 server <- function(input, output) {
