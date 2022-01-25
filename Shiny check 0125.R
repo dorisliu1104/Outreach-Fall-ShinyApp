@@ -112,7 +112,9 @@ ui <- fluidPage(
                 fluidRow(
                   column(5,
                          tabPanel("Map", leafletOutput(outputId = "map", width = "100%", height = 600 ))),
-                  column(7, tabsetPanel(id="plot_tabs",
+                  column(7, 
+                         h3("put pictures here"),
+                         tabsetPanel(id="plot_tabs",
                                         tabPanel("Picture of Sites",
                                                  radioButtons("pics","Pictures of Sites", 
                                                               choices=c("Alegria"="alegria" , "Bodega Bay"="bodega", "Lompoc Landing"="lompoc"), inline=T),
