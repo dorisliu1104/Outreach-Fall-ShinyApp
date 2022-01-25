@@ -1,0 +1,27 @@
+---
+title: "Filtered Data (High and Low tide)"
+author: "Doris Liu"
+date: "1/24/2022"
+output: html_document
+---
+
+```{r}
+library(TSstudio)
+library(xts)
+library(zoo)
+library(lubridate)
+library(tidyverse)
+library(here)
+ph_clean<- read_csv(here("data", "ph_clean_final.csv"))
+Alegria <- dplyr::filter(ph_clean, site=="Alegria")  ## Filtering the data according to different sites
+Lompoc_Landing <- dplyr::filter(ph_clean, site=="Lompoc Landing")
+Bodega_Bay <- dplyr::filter(ph_clean, site=="Bodega Bay")
+```
+
+```{r}
+alegria_high <- dplyr::filter(Alegria, tide == "high")
+alegria_low <- dplyr::filter(Alegria, tide == "low")
+Bodega_high <- dplyr::filter(Bodega_Bay, tide == "high")
+Bodega_low <- dplyr::filter(Bodega_Bay, tide == "low")
+```
+
