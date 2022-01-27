@@ -51,3 +51,4 @@ highchart() %>%
   hc_colors(c("#D55E00", #set specific colors for points (note same color order as y axis)
               "#009E73",
               "#0072B2"))
+
