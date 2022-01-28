@@ -8,6 +8,7 @@ library(here)
 library(lubridate)
 library(xts)
 library(reshape)
+library(highcharter)
 
 ## Read the Updated Data
 ph_clean_final <- read_csv(here("data", "ph_clean_final.csv"))
@@ -58,63 +59,55 @@ ui <- fluidPage(
         # First tab content: About the Intertidal
         tabItem(tabName = "about_the_intertidal",
                 h1("About The Intertidal", align = "center"),
-                h3("What is ocean acidification?"),
-                fluidRow(
-                  column(
-                    br(),
-                    p("Ocean acidification (OA) is a process that occurs when the ocean absorbs excessive amounts of anthropogenically (*resulting from human influence*) produced CO2 from the air.",
-                      br(),
-                      br(),
-                      tags$img(src = "OCcycle.jpeg", align = "center"),
-                      style="text-align:left;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
-                    br(),
-                    p("The ocean absorbs 25% of all anthropogenically released CO2 as a carbon sink. Ocean pH is normally ~8.1, which is pretty neutral, but becomes more acidic when CO2 dissolves in water.",
-                      br(),
-                      br(),
-                      tags$img(src = "phscaleEPA.png", align = "center",height=350,width=500),  
-                      style="text-align:left;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
-                    br(),
-                    p("When CO2 dissolves in water, it releases H+ protons and combines with carbonate to produce bicarbonate, taking carbonate out of the water
-                Many marine organisms use carbonate to make shells (calcium carbonate). Taking carbonate out of the water makes it harder to make hard shells
-                Furthermore, more H+ protons in the water means the water becomes more acidic and corrodes the shells of many organisms. For example, coral reefs feel OA’s impact because there’s less carbonate in the water to build the 3D reef structure.",
-                      br(),
-                      br(),
-                      tags$img(src = "corealreef.jpeg", align = "center",height=300,width=500),
-                      style="text-align:left;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
-                    br(),
-                    p("OA occurs at different rates in different ecosystems; coastal environments like the intertidal experience more rapid rates of acidification due to eutrophication (nutrient runoff caused by human activity). 
-                  Eutrophication can cause algal blooms, which release large amounts of CO2 that dissolve into the water when decomposed.
-                  Coastal upwelling also introduces CO2 rich water from the deep sea.",
-                      br(),
-                      br(),
-                      tags$img(src = "algalbloom.jpeg", align = "center",height=300,width=500),  
-                      style="text-align:left;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
-                    br(),
-                    p("The intertidal is highly variable and dynamic and has extreme environmental conditions when it comes to temperature, salinity, and pH.
-                  Coastal upwelling also introduces CO2 rich water from the deep sea, which contributes to coastal acidification.
-                  Fossil fuels, carbon emmissions, and deforestation are humam impacts that further ocean acidification.",
-                      style="text-align:left;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
-                    width = 12
-                  )),
-                h3("Your turn"),
-                h4("Using the information above, answer the following questions."),
-                fluidRow(
-                  column(
-                    br(),
-                    p("What do you know about ocean acidification? Follow this link to a",
-                      tags$a(href="https://www.menti.com/uijfevceik", "Mentimeter"), 
-                      "and submit the first word/phrase that comes to mind when you think of ocean acidification. View your class's Mentimeter",
-                      tags$a(href="https://www.mentimeter.com/s/29f86468afbfa7aa26f27554857d25d9/974479e8d82c", "here."),
-                      style="text-align:left;color:black;background-color:lavender;padding:15px;border-radius:10px"),
-                    br(),
-                    p("What makes the intertidal unique in terms of ocean acidification and other environmental processes?",
-                      style="text-align:left;color:black;background-color:lavender;padding:15px;border-radius:10px"),
-                    br(),
-                    p("How do intertidal organisms adapt to the extreme environmental conditions in which they live?",
-                      style="text-align:left;color:black;background-color:lavender;padding:15px;border-radius:10px"),
-                    width=12
-                  ))),
-        
+                tabsetPanel(id="about_the_intertidal",
+                            tabPanel("What is ocean acidification?",
+                                     p("Ocean acidification (OA) is a process that occurs when the ocean absorbs excessive amounts of anthropogenically (*resulting from human influence*) produced CO2 from the air.",
+                                       br(),
+                                       br(),
+                                       tags$img(src = "OCcycle.jpeg", style="display: block; margin-left: auto; margin-right: auto;"),
+                                       br(),
+                                       br(),
+                                       "The ocean absorbs 25% of all anthropogenically released CO2 as a carbon sink. Ocean pH is normally ~8.1, which is pretty neutral, but becomes more acidic when CO2 dissolves in water.",
+                                       br(),
+                                       br(),
+                                       tags$img(src = "phscaleEPA.png", style="display: block; margin-left: auto; margin-right: auto;", height=350,width=500),  
+                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
+                            tabPanel("The effect on coral and shelled organisms",
+                                     p("When CO2 dissolves in water, it releases H+ protons and combines with carbonate to produce bicarbonate, taking carbonate out of the water.
+                                       Many marine organisms use carbonate to make shells (calcium carbonate). Taking carbonate out of the water makes it harder to make hard shells.
+                                       Furthermore, more H+ protons in the water means the water becomes more acidic and corrodes the shells of many organisms. For example, coral reefs feel OA’s impact because there’s less carbonate in the water to build the 3D reef structure.",
+                                       br(),
+                                       br(),
+                                       tags$img(src = "corealreef.jpeg", style="display: block; margin-left: auto; margin-right: auto;", height=300,width=500),
+                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
+                            tabPanel("Eutrophication",
+                                     p("OA occurs at different rates in different ecosystems; coastal environments like the intertidal experience more rapid rates of acidification due to eutrophication (nutrient runoff caused by human activity).
+                                       Eutrophication can cause algal blooms, which release large amounts of CO2 that dissolve into the water when decomposed.
+                                       Coastal upwelling also introduces CO2 rich water from the deep sea.",
+                                       br(),
+                                       br(),
+                                       tags$img(src = "algalbloom.jpeg", style="display: block; margin-left: auto; margin-right: auto;", height=300,width=500),
+                                       br(),
+                                       br(),
+                                       "The intertidal is highly variable and dynamic and has extreme environmental conditions when it comes to temperature, salinity, and pH.
+                                         Lastly, fossil fuels, carbon emmissions, and deforestation are humam impacts that further ocean acidification.",
+                                         style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
+                            tabPanel("Your turn",
+                                     h4("Using the information above, answer the following questions."),
+                                     br(),
+                                     p("What do you know about ocean acidification? Follow this link to a",
+                                       tags$a(href="https://www.menti.com/uijfevceik", "Mentimeter"), 
+                                       "and submit the first word/phrase that comes to mind when you think of ocean acidification. View your class's Mentimeter",
+                                       tags$a(href="https://www.mentimeter.com/s/29f86468afbfa7aa26f27554857d25d9/974479e8d82c", "here."),
+                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
+                                     br(),
+                                     p("What makes the intertidal unique in terms of ocean acidification and other environmental processes?",
+                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
+                                     br(),
+                                     p("How do intertidal organisms adapt to the extreme environmental conditions in which they live?",
+                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
+                                     width=12
+                            ))),
         
         # our research tab content
         
@@ -122,26 +115,46 @@ ui <- fluidPage(
                 h1("Our Research"),
                 fluidRow(
                   column(5,
-                         tabPanel("Map", leafletOutput(outputId = "map", width = "100%", height = 600 ))),
+                         h3("About the sites"),
+                         tabsetPanel(id="about_the_sites_tabs",
+                                     tabPanel("Site pictures",
+                                              tags$img(src = "alegria_site.jpg", align = "center",height=225,width=375),
+                                              h6("Alegria"),
+                                              tags$img(src = "bodega_site.jpg", align = "center",height=225,width=375),
+                                              h6("Bodega Bay"),
+                                              tags$img(src = "lol_site.jpg", align = "center",height=225,width=375),
+                                              h6("Lompoc Landing")),
+                                     tabPanel("On the map",
+                                              leafletOutput(outputId = "map", width = "100%", height = 600 )))),
+                         
                   column(7, 
-                         h3("put pictures here"),
-                         tabsetPanel(id="plot_tabs",
-                                        tabPanel("Picture of Sites",
-                                                 radioButtons("pics","Pictures of Sites", 
-                                                              choices=c("Alegria"="alegria" , "Bodega Bay"="bodega", "Lompoc Landing"="lompoc"), inline=T),
-                                                 imageOutput("pic_site")),
-                                        tabPanel("questions",
-                                                 p("Examine the three pictures from the three different sites in which sensors were deloyed. What are some visual differences between each environment?",
-                                                   checkboxInput("checkbox1", label = "Show answer", value = FALSE),
-                                                   verbatimTextOutput("answer1"),
-                                                   br(),
-                                                   p("Q2. Why were these three sites selected? What are the geographic differences between each site?"),
-                                                   checkboxInput("checkbox2", label = "Show answer", value = FALSE),
-                                                   verbatimTextOutput("answer2"),
-                                                   br(),
-                                                   p("Q3. What other physical variables in the intertidal could affect the data collected by the sensors besides the ones being tested for?"),
-                                                   checkboxInput("checkbox3", label = "Show answer", value = FALSE),
-                                                   verbatimTextOutput("answer3"))
+                         h3("Your turn"),
+                         tabsetPanel(id="our_research_tabs",
+                                     tabPanel("Question 1",
+                                              p("Examine the three pictures from the three different sites in which sensors were deloyed. What are some visual differences between each environment?",
+                                                style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
+                                                checkboxInput("checkbox1", label = "Show answer", value = FALSE),
+                                                conditionalPanel(
+                                                  condition = "input.checkbox1 == 1",
+                                                  p("A lot more sand in Alegria, more flat than rocky Bodega; Lompoc is structured like a shelf with steps; sensor was exposed at Bodega site",
+                                                    style="text-align:left;color:darkgray;background-color:white;padding:15px;border-radius:10px"))),
+                                     tabPanel("Question 2",
+                                              p("Why were these three sites selected? What are the geographic differences between each site?",
+                                                style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
+                                                checkboxInput("checkbox2",label = "Show answer", value = FALSE),
+                                                conditionalPanel(
+                                                  condition = "input.checkbox2 == 1",
+                                                  p("Alegria is furthest south (only one south of Point Conception, meaning it has less intense upwelling and higher average pH), followed by Lompoc and Bodega Bay north of Point Conception which are in the same upwelling regime",
+                                                    style="text-align:left;color:darkgray;background-color:white;padding:15px;border-radius:10px")
+                                                )),
+                                     tabPanel("Question 3",
+                                              p("What other physical variables in the intertidal could affect the data collected by the sensors besides the ones being tested for?",
+                                                style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
+                                                checkboxInput("checkbox3", label = "Show answer", value = FALSE),
+                                                conditionalPanel(
+                                                  condition = "input.checkbox3 == 1",
+                                                  p("zonation, isolation of pools, depth",
+                                                    style="text-align:left;color:darkgray;background-color:white;padding:15px;border-radius:10px")))
                   )))),
         
         tabItem(tabName = "data",
@@ -150,7 +163,7 @@ ui <- fluidPage(
                                             label = 'Filter tide by date',
                                             start = as.Date('2021-06-14') , end = as.Date('2021-10-06'))
                 ),
-                mainPanel(highchartOutput(outputId = "ph_ts_plot")),
+                mainPanel(highchartOutput("ph_ts_plot")),
                 tabPanel("questions",
                          h3("Questions"),
                          br(),
@@ -191,8 +204,7 @@ ui <- fluidPage(
         # acknowledgements tab content
         tabItem(tabName="acknowledgements",
                 h1("Acknowledgements"),
-        )
-      )))))
+        )))))
 
 ## Create the Server
 server <- function(input, output) {
@@ -216,13 +228,6 @@ server <- function(input, output) {
       addTiles() %>% 
       addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, radius = ~Avg_temp * 2, popup = ~popup_info, color = '#ff0000')
   }) 
-  
-  output$pic_site <- renderImage({
-    filename <- normalizePath(file.path('./www/', paste(input$pics, ".png", sep="")))
-    
-    list(src = filename, height = 300, width = 300)
-  }, deleteFile = FALSE
-  )
   
   ## Data (Lompoc) Tab
   
