@@ -10,11 +10,11 @@ library(xts)
 library(reshape)
 
 ## Read the Updated Data
-ph_clean_updated <- read_csv(here("data", "ph_clean_1121.csv"))
-ph_clean_updated <- ph_clean_updated %>%
+ph_clean_final <- read_csv(here("data", "ph_clean_final.csv"))
+ph_clean_final <- ph_clean_final %>%
   mutate(date=mdy(date))
 f = "%m/%d/%Y" 
-ph_clean_updated$SetDateMonth <- format(as.POSIXct(ph_clean_updated$date, format = f), "%m")
+ph_clean_final$SetDateMonth <- format(as.POSIXct(ph_clean_final$date, format = f), "%m")
 
 
 ## Read GPS data for map
@@ -24,6 +24,14 @@ site_gps <- site_gps %>%
                             "Average ph", Avg_ph, "<br/>", 
                             "Average temperature", Avg_temp, "<br/>", 
                             "Average tide", Avg_tide ))
+
+# filter data for lompoc and set axis for highchart
+lompoc <- dplyr::filter(ph_clean_final, site=="Lompoc Landing")
+
+y1 <- lompoc$temp_c #set first y axis
+y2 <- lompoc$p_h  #set second y axis
+y3 <- lompoc$tide_height #set third y axis
+x <- lompoc$date_time #set x axis
 
 
 ## Create the ui (user interface)
@@ -37,10 +45,10 @@ ui <- fluidPage(
     dashboardSidebar(
       sidebarMenu(
         menuItem("About the Intertidal", tabName = "about_the_intertidal", icon = icon("compass",lib="font-awesome")),
-        menuItem("Our Research", tabName = "our_research", icon = icon("docker",lib="font-awesome")),
+        menuItem("Our Research", tabName = "research", icon = icon("docker",lib="font-awesome")),
         menuItem("Data (Lompoc Results)", tabName = "data", icon = icon("anchor",lib="font-awesome")),
-        menuItem("Compare and Contrast", tabName = "compare_and_contrast", icon = icon("chart-bar",lib="font-awesome")),
-        menuItem("Conclusion and Global Implications", tabName = "conclusions", icon = icon("fish", lib = "font-awesome")),
+        menuItem("Compare and Contrast", tabName = "compare", icon = icon("chart-bar",lib="font-awesome")),
+        menuItem("Conclusion", tabName = "conclusions", icon = icon("fish", lib = "font-awesome")),
         menuItem("Acknowledgements", tabName="acknowledgements",icon=icon("trophy",lib="font-awesome"))
       )
     ), ## end dashboardSidebar
@@ -105,49 +113,11 @@ ui <- fluidPage(
                     width=12
                   ))),
         
+        
         # our research tab content
-        tabItem(tabName = "our_research",
-                h1("Our Research", align="center"),
-                sidebarPanel(
-                  h3("Alegria"),
-                  tags$img(src = "alegria.jpg", align = "center",height = 200, width = 333),
-                  br(),
-                  h3("Bodega"),
-                  tags$img(src="bodega.jpg",align="center",height=200,width=333),
-                  br(),
-                  h3("Lompoc"),
-                  tags$img(src="lompoc.jpg",align="center",height=200,width=333)),
-                mainPanel(
-                  h3("Answer the following questions:"),
-                  fluidRow(
-                    column(
-                      br(),
-                      p("Examine the three pictures from the three different sites in which sensors were deloyed. What are some visual differences between each environment?",
-                        br(),
-                        br(),
-                        actionButton("answer1", label = "Show answer"),
-                        style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
-                      br(),
-                      p("Why were these three sites selected? What are the geographic differences between each site?",
-                        br(),
-                        br(),
-                        actionButton("answer2", label = "Show answer"),
-                        style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
-                      br(),
-                      p("What other physical variables in the intertidal could affect the data collected by the sensors besides the ones being tested for (pH and temperature)?",
-                        br(),
-                        br(),
-                        actionButton("answer3", label = "Show answer"),
-                        style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
-                      width=11
-                    ))
-                  
-                )),
         
-        # data (lompoc) tab content
-        
-        tabItem(tabName = "data",
-                h1("Data (Lompoc Results)"),
+        tabItem(tabName = "research",
+                h1("Our Research"),
                 fluidRow(
                   column(5,
                          tabPanel("Map", leafletOutput(outputId = "map", width = "100%", height = 600 ))),
@@ -156,64 +126,53 @@ ui <- fluidPage(
                                                  radioButtons("pics","Pictures of Sites", 
                                                               choices=c("Alegria"="alegria" , "Bodega Bay"="bodega", "Lompoc Landing"="lompoc"), inline=T),
                                                  imageOutput("pic_site")),
-                                        tabPanel("Questions",
-                                                 p("Q1. Examine the three pictures from the three different sites in which sensors were deployed. What are some visual differences between each environment?"),
+                                        tabPanel("questions",
+                                                 p("Examine the three pictures from the three different sites in which sensors were deloyed. What are some visual differences between each environment?",
+                                                   br(),
+                                                   br(),
+                                                   actionButton("answer1", label = "Show answer"),
+                                                   verbatimTextOutput("text1"),
+                                                   style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
                                                  br(),
-                                                 p("Q2. Why were these three sites selected? What are the geographic differences between each site?"),
+                                                 p("Why were these three sites selected? What are the geographic differences between each site?",
+                                                   br(),
+                                                   br(),
+                                                   actionButton("answer2", label = "Show answer"),
+                                                   verbatimTextOutput("text2"),
+                                                   style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
                                                  br(),
-                                                 p("Q3. What other physical variables in the intertidal could affect the data collected by the sensors besides the ones being tested for?"))
-                  ))),
-                sidebarPanel("Lompoc Landing Visualization",
-                             selectInput(inputId = "x2",
-                                         label = "X variable",
-                                         choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" )),
-                             selectInput(inputId = "y2",
-                                         label = "Y variable",
-                                         choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" ))
-                             
-                ),
-                mainPanel("Some text for the main panel",
-                          plotOutput(outputId="scatterplot_lompoc"))
-        ),
+                                                 p("What other physical variables in the intertidal could affect the data collected by the sensors besides the ones being tested for (pH and temperature)?",
+                                                   br(),
+                                                   br(),
+                                                   actionButton("answer3", label = "Show answer"),
+                                                   verbatimTextOutput("text3"),
+                                                   style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"))
+                  )))),
         
-        
-        
-        # compare & contrast tab content 
-        tabItem(tabName = "compare_and_contrast",
-                h1("Compare and Contrast (Alegria, Lompoc, and Bodega Bay Results)"),
-                sidebarPanel("Time Series Trend Visualization",  ##Adding a title within the sidebar
-                             selectInput(inputId = "site",   
-                                         label = "Visualization of sites(you can choose multiple sites)",
-                                         choices = c("Alegria","Lompoc Landing", "Bodega Bay" )),
-                             dateRangeInput(inputId = "date_range", 
+        tabItem(tabName = "data",
+                titlePanel("Time Series Trend Visualization for Lompoc Landing"),
+                sidebarPanel(dateRangeInput(inputId = "date_range", 
                                             label = 'Filter tide by date',
-                                            start = as.Date('2021-06-18') , end = as.Date('2021-10-08'))
-                             
+                                            start = as.Date('2021-06-14') , end = as.Date('2021-10-06'))
                 ),
-                mainPanel("Some text for the main panel",
-                          plotOutput(outputId="ph_ts_plot")),
-                sidebarPanel("Alegria Visualization",
-                             selectInput(inputId = "x3",
-                                         label = "X variable",
-                                         choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" )),
-                             selectInput(inputId = "y3",
-                                         label = "Y variable",
-                                         choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" ))
-                             
+                mainPanel(highchartOutput(outputId = "ph_ts_plot")),
+                tabPanel("questions",
+                         h3("Questions"),
+                         br(),
+                             p("Q1. What trends do you notice between pH and temperature for the Lompoc site?"),
+                             br(),
+                             p("Q2. What do you notice about the scale of change for both pH and temp over hours? Days? Weeks/months?"),
+                             br(),
+                             p("Q3. Search up the weather for August 2 and compare it to the Lompoc data. What do you think could’ve caused the spikes in the data? What are some reasons why the temperature might’ve hit an extreme that day? "),
+                             br(),
+                             p("Q4. What would normal data collection weather be like compared to the extremes?"))
                 ),
-                mainPanel("Some text for the main panel",
-                          plotOutput(outputId="scatterplot_alegria")),
-                sidebarPanel("Bodega Bay Visualization",
-                             selectInput(inputId = "x4",
-                                         label = "X variable",
-                                         choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" )),
-                             selectInput(inputId = "y4",
-                                         label = "Y variable",
-                                         choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" ))
-                ),
-                mainPanel("Some text for the main panel",
-                          plotOutput(outputId="scatterplot_bodega"))
-        ),
+        
+        tabItem(tabName = "compare",
+                fluidRow(
+                  column(5,
+                         tabPanel("Map", leafletOutput(outputId = "map2", width = "100%", height = 600 ))))),
+        
         
         # conclusion & global implications tab content
         tabItem(tabName = "conclusions",
@@ -244,9 +203,16 @@ ui <- fluidPage(
 server <- function(input, output) {
   
   # answers for "our research" tab
-  observeEvent(input$answer1,{ # when you click on "show answer," only a black screen is displayed
-    session$sendCustomMessage(type='testmessage',
-                              message="Alegria has a lot more sand and is flatter than rocky Bodega. Lompoc is structured like a shelf with steps. The sensor was exposed at the Bodega site.")
+  observeEvent(input$answer1, {
+    output$text1 <- renderText({"Alegria has a lot more sand and is flatter than rocky Bodega. Lompoc is structured like a shelf with steps. The sensor was exposed at the Bodega site."})
+  })
+  
+  observeEvent(input$answer2, {
+    output$text2 <- renderText({"Alegria is furthest south (only one south of Point Conception, meaning it has less intense upwelling and higher average pH), followed by Lompoc and Bodega Bay north of Point Conception which are in the same upwelling regime"})
+  })
+  
+  observeEvent(input$answer3, {
+    output$text3 <- renderText({"zonation, isolation of pools, depth"})
   })
   
   ## map tab
@@ -263,64 +229,43 @@ server <- function(input, output) {
   }, deleteFile = FALSE
   )
   
-  
-  ## time series tab
+  ## Data (Lompoc) Tab
   
   dateFiltered <- reactive({
-    ph_clean_updated %>%
-      filter(site == input$site) %>%
+    ph_clean_final %>%
+      filter(site == "Lompoc Landing") %>%
       filter(date>=input$date_range[1] & date<input$date_range[2])
   })
   
-  #reactive plot
-  output$ph_ts_plot <- renderPlot({
-    ggplot(data = dateFiltered(), 
-           aes(x = date_time, y=tide)) + geom_line()
+  # Highchart
+  output$ph_ts_plot <- renderHighchart({
+    y1 <- dateFiltered()$temp_c #set first y axis
+    y2 <- dateFiltered()$p_h  #set second y axis
+    y3 <- dateFiltered()$tide_height #set third y axis
+    x <- dateFiltered()$date_time
+    
+    highchart() %>% 
+      hc_add_series(data = y1, dashStyle="solid") %>% #plot temp
+      hc_add_series(data = y2, yAxis = 1) %>% #plot pH
+      hc_add_series(data = y3, yAxis = 2) %>% #plot tide height
+      hc_yAxis_multiples(
+        list(lineWidth = 3, lineColor='#D55E00', title=list(text="Temp")), #label/colorize temp y axis
+        list(lineWidth = 3, lineColor="#009E73", title=list(text="pH")), #label/colorize pH y axis
+        list(lineWidth = 3, lineColor="#0072B2", title=list(text="Tide"))) %>% #label/colorize tide y axis
+      hc_xAxis(title = "Date", categories = x, breaks=10) %>% #label x axis
+      hc_colors(c("#D55E00", #set specific colors for points (note same color order as y axis)
+                  "#009E73",
+                  "#0072B2"))
+    
   })
   
-  ## scatterplot tab
-  output$ph_scatterplot_Alegria <- renderPlot({
-    ggplot(subset(ph_clean_updated, site %in% "Alegria"), aes_string(x = input$x, y = input$y)) +
-      geom_point() +
-      ggtitle("Alegria")
-  })
-  output$ph_scatterplot_Bodega <- renderPlot({
-    ggplot(subset(ph_clean_updated, site %in% "Bodega Bay"), aes_string(x = input$x, y = input$y)) +
-      geom_point() +
-      ggtitle("Bodega Bay")
-  })
-  output$ph_scatterplot_Lompoc <- renderPlot({
-    ggplot(subset(ph_clean_updated, site %in% "Lompoc Landing"), aes_string(x = input$x, y = input$y)) +
-      geom_point() +
-      ggtitle("Lompoc Landing")
-  })
-  
-  ## lompoc tab
-  output$scatterplot_lompoc <- renderPlot({
-    ggplot(subset(ph_clean_updated, site %in% "Lompoc Landing"), 
-           aes_string(x = input$x2, y = input$y2)) +
-      geom_point(aes(color = SetDateMonth)) +
-      ggtitle("Lompoc Landing")
-  })
-  
-  ## alegria tab
-  output$scatterplot_alegria <- renderPlot({
-    ggplot(subset(ph_clean_updated, site %in% "Alegria"), 
-           aes_string(x = input$x3, y = input$y3)) +
-      geom_point(aes(color = SetDateMonth)) +
-      ggtitle("Alegria")
-  })
-  
-  ## bodega tab
-  output$scatterplot_bodega <- renderPlot({
-    ggplot(subset(ph_clean_updated, site %in% "Bodega Bay"), 
-           aes_string(x = input$x4, y = input$y4)) +
-      geom_point(aes(color = SetDateMonth)) +
-      ggtitle("Bodega Bay")
-  })
-  
+  ## compare and contrast
+  output$map2 <- renderLeaflet({
+    leaflet() %>% 
+      addTiles() %>% 
+      addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, radius = ~Avg_temp * 2, popup = ~popup_info, color = '#ff0000')
+  }) 
 }
-
 
 ## Combine the UI and the server
 shinyApp(ui = ui, server = server)

@@ -145,7 +145,7 @@ ui <- fluidPage(
                 titlePanel("Time Series Trend Visualization for Lompoc Landing"),
                 sidebarPanel(selectInput(inputId = "var",   
                                          label = "Variables",
-                                         choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" )),
+                                         choices = c("Temperature" = "temp_c", "Ph" = "p_h", "Tide" = "tide_height" )),
                              dateRangeInput(inputId = "date_range", 
                                             label = 'Filter tide by date',
                                             start = as.Date('2021-06-18') , end = as.Date('2021-10-08'))

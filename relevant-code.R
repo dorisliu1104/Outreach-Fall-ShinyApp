@@ -52,13 +52,3 @@ highchart() %>%
               "#009E73",
               "#0072B2"))
 
-
-#For the "show the answer" box, conditionally show text
-fluidRow(column(10, align="left", 
-                checkboxInput("pickaplot", label = "Display heat map (interactive)", value = FALSE))),
-br(),
-p("Thus, if a single quadrat contains the focal organism and three neighbor organisms, the plot would allocate a value of 1 for each neighbor organism (each bar on the plot), and the table would allocate a value of 1 for that quadrat (column three on the table)."),
-conditionalPanel(
-  condition = "input.pickaplot == '1'",
-  p("Like the plot,", strong("the heat map"), "displays the unique number of quadrats containing the focal organism and each neighbor organism, as well as the focal organism. The darker the shade of the box, the more quadrats containing both the focal organism and the neighbor organism.")),
-)
