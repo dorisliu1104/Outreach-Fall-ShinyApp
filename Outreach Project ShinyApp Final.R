@@ -25,6 +25,14 @@ site_gps <- site_gps %>%
                             "Average temperature", Avg_temp, "<br/>", 
                             "Average tide", Avg_tide ))
 
+# filter data for lompoc and set axis for highchart
+lompoc <- dplyr::filter(ph_clean_final, site=="Lompoc Landing")
+
+y1 <- lompoc$temp_c #set first y axis
+y2 <- lompoc$p_h  #set second y axis
+y3 <- lompoc$tide_height #set third y axis
+x <- lompoc$date_time #set x axis
+
 
 ## Create the ui (user interface)
 ui <- fluidPage(
@@ -143,17 +151,22 @@ ui <- fluidPage(
         
         tabItem(tabName = "data",
                 titlePanel("Time Series Trend Visualization for Lompoc Landing"),
-                sidebarPanel(selectInput(inputId = "var",   
-                                         label = "Variables",
-                                         choices = c("Temperature" = "temp_c", "Ph" = "p_h", "Tide" = "tide_height" )),
-                             dateRangeInput(inputId = "date_range", 
+                sidebarPanel(dateRangeInput(inputId = "date_range", 
                                             label = 'Filter tide by date',
-                                            start = as.Date('2021-06-18') , end = as.Date('2021-10-08'))
+                                            start = as.Date('2021-06-14') , end = as.Date('2021-10-06'))
                 ),
-                mainPanel(plotOutput(outputId="ph_ts_plot")),
-                tabPanel("Questions",
-                         p("Q1. What trends do you notice between time and tide height for the Lompoc site?")
-                )),
+                mainPanel(highchartOutput(outputId = "ph_ts_plot")),
+                tabPanel("questions",
+                         h3("Questions"),
+                         br(),
+                             p("Q1. What trends do you notice between pH and temperature for the Lompoc site?"),
+                             br(),
+                             p("Q2. What do you notice about the scale of change for both pH and temp over hours? Days? Weeks/months?"),
+                             br(),
+                             p("Q3. Search up the weather for August 2 and compare it to the Lompoc data. What do you think could’ve caused the spikes in the data? What are some reasons why the temperature might’ve hit an extreme that day? "),
+                             br(),
+                             p("Q4. What would normal data collection weather be like compared to the extremes?"))
+                ),
         
         tabItem(tabName = "compare",
                 fluidRow(
@@ -216,7 +229,7 @@ server <- function(input, output) {
   }, deleteFile = FALSE
   )
   
-  ## time series tab
+  ## Data (Lompoc) Tab
   
   dateFiltered <- reactive({
     ph_clean_final %>%
@@ -224,10 +237,26 @@ server <- function(input, output) {
       filter(date>=input$date_range[1] & date<input$date_range[2])
   })
   
-  #reactive plot
-  output$ph_ts_plot <- renderPlot({
-    ggplot(data = dateFiltered(), 
-           aes(x = date_time, y = input$var)) + geom_line()
+  # Highchart
+  output$ph_ts_plot <- renderHighchart({
+    y1 <- dateFiltered()$temp_c #set first y axis
+    y2 <- dateFiltered()$p_h  #set second y axis
+    y3 <- dateFiltered()$tide_height #set third y axis
+    x <- dateFiltered()$date_time
+    
+    highchart() %>% 
+      hc_add_series(data = y1, dashStyle="solid") %>% #plot temp
+      hc_add_series(data = y2, yAxis = 1) %>% #plot pH
+      hc_add_series(data = y3, yAxis = 2) %>% #plot tide height
+      hc_yAxis_multiples(
+        list(lineWidth = 3, lineColor='#D55E00', title=list(text="Temp")), #label/colorize temp y axis
+        list(lineWidth = 3, lineColor="#009E73", title=list(text="pH")), #label/colorize pH y axis
+        list(lineWidth = 3, lineColor="#0072B2", title=list(text="Tide"))) %>% #label/colorize tide y axis
+      hc_xAxis(title = "Date", categories = x, breaks=10) %>% #label x axis
+      hc_colors(c("#D55E00", #set specific colors for points (note same color order as y axis)
+                  "#009E73",
+                  "#0072B2"))
+    
   })
   
   ## compare and contrast
