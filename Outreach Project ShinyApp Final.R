@@ -21,10 +21,8 @@ ph_clean_final$SetDateMonth <- format(as.POSIXct(ph_clean_final$date, format = f
 ## Read GPS data for map
 site_gps <- read_excel("data/site gps.xlsx")
 site_gps <- site_gps %>% 
-  mutate(popup_info = paste(site, "<br/>", 
-                            "Average ph", Avg_ph, "<br/>", 
-                            "Average temperature", Avg_temp, "<br/>", 
-                            "Average tide", Avg_tide ))
+  mutate(popup_info = paste("Average ph", Avg_ph, "<br/>", 
+                            "Average temperature", Avg_temp))
 
 # filter data for lompoc and set axis for highchart
 lompoc <- dplyr::filter(ph_clean_final, site=="Lompoc Landing")
@@ -60,8 +58,8 @@ ui <- fluidPage(
         tabItem(tabName = "about_the_intertidal",
                 h1("About The Intertidal", align = "center"),
                 tabsetPanel(id="about_the_intertidal",
-                            tabPanel("What is ocean acidification?",
-                                     p("Ocean acidification (OA) is a process that occurs when the ocean absorbs excessive amounts of anthropogenically (*resulting from human influence*) produced CO2 from the air.",
+                            tabPanel(h4("What is ocean acidification?"),
+                                     h4(p("Ocean acidification (OA) is a process that occurs when the ocean absorbs excessive amounts of anthropogenically (*resulting from human influence*) produced CO2 from the air.",
                                        br(),
                                        br(),
                                        tags$img(src = "OCcycle.jpeg", style="display: block; margin-left: auto; margin-right: auto;"),
@@ -71,17 +69,17 @@ ui <- fluidPage(
                                        br(),
                                        br(),
                                        tags$img(src = "phscaleEPA.png", style="display: block; margin-left: auto; margin-right: auto;", height=350,width=500),  
-                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
-                            tabPanel("The effect on coral and shelled organisms",
-                                     p("When CO2 dissolves in water, it releases H+ protons and combines with carbonate to produce bicarbonate, taking carbonate out of the water.
+                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))),
+                            tabPanel(h4("The effect on coral and shelled organisms"),
+                                     h4(p("When CO2 dissolves in water, it releases H+ protons and combines with carbonate to produce bicarbonate, taking carbonate out of the water.
                                        Many marine organisms use carbonate to make shells (calcium carbonate). Taking carbonate out of the water makes it harder to make hard shells.
                                        Furthermore, more H+ protons in the water means the water becomes more acidic and corrodes the shells of many organisms. For example, coral reefs feel OA’s impact because there’s less carbonate in the water to build the 3D reef structure.",
                                        br(),
                                        br(),
                                        tags$img(src = "corealreef.jpeg", style="display: block; margin-left: auto; margin-right: auto;", height=300,width=500),
-                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
-                            tabPanel("Eutrophication",
-                                     p("OA occurs at different rates in different ecosystems; coastal environments like the intertidal experience more rapid rates of acidification due to eutrophication (nutrient runoff caused by human activity).
+                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))),
+                            tabPanel(h4("Eutrophication"),
+                                     h4(p("OA occurs at different rates in different ecosystems; coastal environments like the intertidal experience more rapid rates of acidification due to eutrophication (nutrient runoff caused by human activity).
                                        Eutrophication can cause algal blooms, which release large amounts of CO2 that dissolve into the water when decomposed.
                                        Coastal upwelling also introduces CO2 rich water from the deep sea.",
                                        br(),
@@ -91,21 +89,24 @@ ui <- fluidPage(
                                        br(),
                                        "The intertidal is highly variable and dynamic and has extreme environmental conditions when it comes to temperature, salinity, and pH.
                                          Lastly, fossil fuels, carbon emmissions, and deforestation are humam impacts that further ocean acidification.",
-                                         style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
-                            tabPanel("Your turn",
-                                     h4("Using the information above, answer the following questions."),
+                                         style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))),
+                            tabPanel(h4("Your turn"),
+                                     h4(p(strong("Using the information you just learned, answer the following questions."),
+                                          style="text-align:center"),
                                      br(),
-                                     p("What do you know about ocean acidification? Follow this link to a",
+                                     p("1. What do you know about ocean acidification? Follow this link to a",
                                        tags$a(href="https://www.menti.com/uijfevceik", "Mentimeter"), 
-                                       "and submit the first word/phrase that comes to mind when you think of ocean acidification. View your class's Mentimeter",
-                                       tags$a(href="https://www.mentimeter.com/s/29f86468afbfa7aa26f27554857d25d9/974479e8d82c", "here."),
+                                       "and submit the first word/phrase that comes to mind when you think of ocean acidification.",
+                                       br(),
+                                       em("View your class's Mentimeter",
+                                       tags$a(href="https://www.mentimeter.com/s/29f86468afbfa7aa26f27554857d25d9/974479e8d82c", "here.")),
                                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
                                      br(),
-                                     p("What makes the intertidal unique in terms of ocean acidification and other environmental processes?",
+                                     p("2. What makes the intertidal unique in terms of ocean acidification and other environmental processes?",
                                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
                                      br(),
-                                     p("How do intertidal organisms adapt to the extreme environmental conditions in which they live?",
-                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
+                                     p("3. How do intertidal organisms adapt to the extreme environmental conditions in which they live?",
+                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
                                      width=12
                             ))),
         
@@ -226,7 +227,11 @@ server <- function(input, output) {
   output$map <- renderLeaflet({
     leaflet() %>% 
       addTiles() %>% 
-      addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, radius = ~Avg_temp * 2, popup = ~popup_info, color = '#ff0000')
+      addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, radius = ~Avg_temp * 2, popup = ~popup_info, color = '#ff0000')%>%
+      addLabelOnlyMarkers(
+        lng = -123.0721856, lat = 38.31875756,
+        label = "Label w/o surrounding box",
+        labelOptions = labelOptions(noHide = T, textOnly = TRUE))
   }) 
   
   ## Data (Lompoc) Tab
