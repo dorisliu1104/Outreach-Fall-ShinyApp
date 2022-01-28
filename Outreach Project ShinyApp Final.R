@@ -66,13 +66,13 @@ ui <- fluidPage(
                       br(),
                       br(),
                       tags$img(src = "OCcycle.jpeg", align = "center"),
-                      style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
+                      style="text-align:left;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
                     br(),
                     p("The ocean absorbs 25% of all anthropogenically released CO2 as a carbon sink. Ocean pH is normally ~8.1, which is pretty neutral, but becomes more acidic when CO2 dissolves in water.",
                       br(),
                       br(),
                       tags$img(src = "phscaleEPA.png", align = "center",height=350,width=500),  
-                      style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
+                      style="text-align:left;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
                     br(),
                     p("When CO2 dissolves in water, it releases H+ protons and combines with carbonate to produce bicarbonate, taking carbonate out of the water
                 Many marine organisms use carbonate to make shells (calcium carbonate). Taking carbonate out of the water makes it harder to make hard shells
@@ -80,7 +80,7 @@ ui <- fluidPage(
                       br(),
                       br(),
                       tags$img(src = "corealreef.jpeg", align = "center",height=300,width=500),
-                      style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
+                      style="text-align:left;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
                     br(),
                     p("OA occurs at different rates in different ecosystems; coastal environments like the intertidal experience more rapid rates of acidification due to eutrophication (nutrient runoff caused by human activity). 
                   Eutrophication can cause algal blooms, which release large amounts of CO2 that dissolve into the water when decomposed.
@@ -88,12 +88,12 @@ ui <- fluidPage(
                       br(),
                       br(),
                       tags$img(src = "algalbloom.jpeg", align = "center",height=300,width=500),  
-                      style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
+                      style="text-align:left;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
                     br(),
                     p("The intertidal is highly variable and dynamic and has extreme environmental conditions when it comes to temperature, salinity, and pH.
                   Coastal upwelling also introduces CO2 rich water from the deep sea, which contributes to coastal acidification.
                   Fossil fuels, carbon emmissions, and deforestation are humam impacts that further ocean acidification.",
-                      style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
+                      style="text-align:left;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
                     width = 12
                   )),
                 h3("Your turn"),
@@ -101,15 +101,17 @@ ui <- fluidPage(
                 fluidRow(
                   column(
                     br(),
-                    p("What do you know about ocean acidification? Follow this link to a Mentimeter[https://www.menti.com/uijfevceik] 
-                    and submit the first word/phrase that comes to mind when you think of ocean acidification.",
-                      style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
+                    p("What do you know about ocean acidification? Follow this link to a",
+                      tags$a(href="https://www.menti.com/uijfevceik", "Mentimeter"), 
+                      "and submit the first word/phrase that comes to mind when you think of ocean acidification. View your class's Mentimeter",
+                      tags$a(href="https://www.mentimeter.com/s/29f86468afbfa7aa26f27554857d25d9/974479e8d82c", "here."),
+                      style="text-align:left;color:black;background-color:lavender;padding:15px;border-radius:10px"),
                     br(),
                     p("What makes the intertidal unique in terms of ocean acidification and other environmental processes?",
-                      style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
+                      style="text-align:left;color:black;background-color:lavender;padding:15px;border-radius:10px"),
                     br(),
                     p("How do intertidal organisms adapt to the extreme environmental conditions in which they live?",
-                      style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
+                      style="text-align:left;color:black;background-color:lavender;padding:15px;border-radius:10px"),
                     width=12
                   ))),
         
@@ -121,32 +123,25 @@ ui <- fluidPage(
                 fluidRow(
                   column(5,
                          tabPanel("Map", leafletOutput(outputId = "map", width = "100%", height = 600 ))),
-                  column(7, tabsetPanel(id="plot_tabs",
+                  column(7, 
+                         h3("put pictures here"),
+                         tabsetPanel(id="plot_tabs",
                                         tabPanel("Picture of Sites",
                                                  radioButtons("pics","Pictures of Sites", 
                                                               choices=c("Alegria"="alegria" , "Bodega Bay"="bodega", "Lompoc Landing"="lompoc"), inline=T),
                                                  imageOutput("pic_site")),
                                         tabPanel("questions",
                                                  p("Examine the three pictures from the three different sites in which sensors were deloyed. What are some visual differences between each environment?",
+                                                   checkboxInput("checkbox1", label = "Show answer", value = FALSE),
+                                                   verbatimTextOutput("answer1"),
                                                    br(),
+                                                   p("Q2. Why were these three sites selected? What are the geographic differences between each site?"),
+                                                   checkboxInput("checkbox2", label = "Show answer", value = FALSE),
+                                                   verbatimTextOutput("answer2"),
                                                    br(),
-                                                   actionButton("answer1", label = "Show answer"),
-                                                   verbatimTextOutput("text1"),
-                                                   style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
-                                                 br(),
-                                                 p("Why were these three sites selected? What are the geographic differences between each site?",
-                                                   br(),
-                                                   br(),
-                                                   actionButton("answer2", label = "Show answer"),
-                                                   verbatimTextOutput("text2"),
-                                                   style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
-                                                 br(),
-                                                 p("What other physical variables in the intertidal could affect the data collected by the sensors besides the ones being tested for (pH and temperature)?",
-                                                   br(),
-                                                   br(),
-                                                   actionButton("answer3", label = "Show answer"),
-                                                   verbatimTextOutput("text3"),
-                                                   style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"))
+                                                   p("Q3. What other physical variables in the intertidal could affect the data collected by the sensors besides the ones being tested for?"),
+                                                   checkboxInput("checkbox3", label = "Show answer", value = FALSE),
+                                                   verbatimTextOutput("answer3"))
                   )))),
         
         tabItem(tabName = "data",
@@ -197,7 +192,7 @@ ui <- fluidPage(
         tabItem(tabName="acknowledgements",
                 h1("Acknowledgements"),
         )
-      ))))
+      )))))
 
 ## Create the Server
 server <- function(input, output) {
