@@ -19,10 +19,3 @@ highchart() %>%
   hc_colors(c("#D55E00", #set specific colors for points (note same color order as y axis)
               "#009E73",
               "#0072B2"))
-
-br(),
-p("Q2. What do you notice about the scale of change for both pH and temp over hours? Days? Weeks/months?"),
-br(),
-p("Q3. Search up the weather for August 2 and compare it to the Lompoc data. What do you think could’ve caused the spikes in the data? What are some reasons why the temperature might’ve hit an extreme that day? "),
-br(),
-p("Q4. What would normal data collection weather be like compared to the extremes?"))

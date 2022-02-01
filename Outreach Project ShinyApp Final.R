@@ -17,7 +17,6 @@ ph_clean_final <- ph_clean_final %>%
 f = "%m/%d/%Y" 
 ph_clean_final$SetDateMonth <- format(as.POSIXct(ph_clean_final$date, format = f), "%m")
 
-
 ## Read GPS data for map
 site_gps <- read_excel("data/site gps.xlsx")
 site_gps <- site_gps %>% 
@@ -32,6 +31,7 @@ y2 <- lompoc$p_h  #set second y axis
 y3 <- lompoc$tide_height #set third y axis
 x <- lompoc$date_time #set x axis
 
+lompoc2 <- filter(lompoc, between(date, as.Date("2021-07-25"), as.Date("2021-08-05")))
 
 ## Create the ui (user interface)
 ui <- fluidPage(
@@ -160,22 +160,36 @@ ui <- fluidPage(
         
         tabItem(tabName = "data",
                 titlePanel("Time Series Trend Visualization for Lompoc Landing"),
-                sidebarPanel(dateRangeInput(inputId = "date_range", 
+                tabsetPanel(id = "lomdata",
+                tabPanel(h4("Question 1"),
+                          sidebarPanel(dateRangeInput(inputId = "date_range", 
                                             label = 'Filter tide by date',
-                                            start = as.Date('2021-06-14') , end = as.Date('2021-10-06'))
-                ),
-                mainPanel(highchartOutput("ph_ts_plot")),
-                tabPanel("questions",
-                         h3("Questions"),
-                         br(),
-                             p("Q1. What trends do you notice between pH and temperature for the Lompoc site?"),
-                             br(),
-                             p("Q2. What do you notice about the scale of change for both pH and temp over hours? Days? Weeks/months?"),
-                             br(),
-                             p("Q3. Search up the weather for August 2 and compare it to the Lompoc data. What do you think could’ve caused the spikes in the data? What are some reasons why the temperature might’ve hit an extreme that day? "),
-                             br(),
-                             p("Q4. What would normal data collection weather be like compared to the extremes?"))
-                ),
+                                            start = as.Date('2021-06-14') , end = as.Date('2021-10-06')),
+                                       br(),
+                                       h5("Question 1"),
+                                       h6("What trends do you notice between pH and temperature for the Lompoc site?")),
+                                       
+                mainPanel(highchartOutput("ph_ts_plot"))
+               ),
+                
+                tabPanel(
+                         h4("Question 2"),
+                         sidebarPanel(selectInput(inputId = "ph_temp",
+                                                  label = "select pH or temperature",
+                                                  choices = c("Temperature" = "temp_c", "Ph" = "p_h"))),
+                         mainPanel(plotOutput(outputId = "q2plot"))),
+                tabPanel(
+                         h4("Question 3"),
+                         sidebarPanel(
+                           h5("Question 3"),
+                           br(),
+                           h6("Search up the weather for August 2 and compare it to the Lompoc data. What do you think could’ve caused the spikes in the data? What are some reasons why the temperature might’ve hit an extreme that day? "),
+                           br()),
+                         mainPanel(highchartOutput("q3plot"))
+                         )
+                
+                         
+                )),
         
         tabItem(tabName = "compare",
                 fluidRow(
@@ -250,19 +264,61 @@ server <- function(input, output) {
     x <- dateFiltered()$date_time
     
     highchart() %>% 
-      hc_add_series(data = y1, dashStyle="solid") %>% #plot temp
-      hc_add_series(data = y2, yAxis = 1) %>% #plot pH
-      hc_add_series(data = y3, yAxis = 2) %>% #plot tide height
+      hc_add_series(data = y1, dashStyle="solid", name = "Temperature") %>% #plot temp
+      hc_add_series(data = y2, yAxis = 1, name = "pH") %>% #plot pH
+      hc_add_series(data = y3, yAxis = 2, name = "Tide") %>% #plot tide height
       hc_yAxis_multiples(
-        list(lineWidth = 3, lineColor='#D55E00', title=list(text="Temp")), #label/colorize temp y axis
+        list(lineWidth = 3, lineColor='#D55E00', title=list(text="Temperature")), #label/colorize temp y axis
         list(lineWidth = 3, lineColor="#009E73", title=list(text="pH")), #label/colorize pH y axis
         list(lineWidth = 3, lineColor="#0072B2", title=list(text="Tide"))) %>% #label/colorize tide y axis
       hc_xAxis(title = "Date", categories = x, breaks=10) %>% #label x axis
       hc_colors(c("#D55E00", #set specific colors for points (note same color order as y axis)
                   "#009E73",
                   "#0072B2"))
+      
     
   })
+  
+  # data_q2_plot
+  output$q2plot <- renderPlot({
+    ggplot(data = lompoc, aes(x=date_time, y=input$ph_temp)) + #plot pH here
+      #geom_line(aes(color="#009E73"), size=0.7) + #make it a line chart
+      #geom_smooth(aes(color="#009E73"), method="loess", span=0.1) + #plot trend line for each site
+      #scale_x_datetime(breaks = scales::date_breaks("1 week"), 
+                      # labels = date_format("%m/%d %H:%m")) + #change x axis to make it look cleaner - each tick is one week, display month/day hour/minute
+      xlab("Date time") + #change x axis label
+      ylab("Variable") + #change y axis label
+      theme_bw() +
+      theme(legend.position = "none", #remove legend
+        axis.text.x=element_text(angle=45, vjust = 1, hjust=1, size=12), #adjust x axis text format
+        axis.title.x=element_text(size=15),
+        axis.text.y=element_text(size=12), #adjust y axis text format
+        axis.title.y=element_text(size=15)) +
+      scale_alpha_manual(values=c(0.5,0.5,1)) #make focal site more opaque, make all other site points more transparent
+    
+  })
+  
+  # data_q3plot
+  output$q3plot <- renderHighchart({
+    y4 <- lompoc2$temp_c #set first y axis
+    y5 <- lompoc2$p_h  #set second y axis
+    y6 <- lompoc2$tide_height #set third y axis
+    x <- lompoc2$date_time
+    
+    highchart() %>% 
+      hc_add_series(data = y4, dashStyle="solid", name = "Temperature") %>% #plot temp
+      hc_add_series(data = y5, yAxis = 1, name = "pH") %>% #plot pH
+      hc_add_series(data = y6, yAxis = 2, name = "Tide") %>% #plot tide height
+      hc_yAxis_multiples(
+        list(lineWidth = 3, lineColor='#D55E00', title=list(text="Temperature")), #label/colorize temp y axis
+        list(lineWidth = 3, lineColor="#009E73", title=list(text="pH")), #label/colorize pH y axis
+        list(lineWidth = 3, lineColor="#0072B2", title=list(text="Tide"))) %>% #label/colorize tide y axis
+      hc_xAxis(title = "Date", categories = x, breaks=10) %>% #label x axis
+      hc_colors(c("#D55E00", #set specific colors for points (note same color order as y axis)
+                  "#009E73",
+                  "#0072B2"))
+  })
+  
   
   ## compare and contrast
   output$map2 <- renderLeaflet({
