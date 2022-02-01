@@ -20,7 +20,7 @@ ph_clean_final$SetDateMonth <- format(as.POSIXct(ph_clean_final$date, format = f
 ## Read GPS data for map
 site_gps <- read_excel("data/site gps.xlsx")
 site_gps <- site_gps %>% 
-  mutate(popup_info = paste("Average ph", Avg_ph, "<br/>", 
+  mutate(popup_info = paste("Average pH", Avg_ph, "<br/>", 
                             "Average temperature", Avg_temp))
 
 # filter data for lompoc and set axis for highchart
@@ -118,44 +118,55 @@ ui <- fluidPage(
                   column(5,
                          h3("About the sites"),
                          tabsetPanel(id="about_the_sites_tabs",
-                                     tabPanel("Site pictures",
-                                              tags$img(src = "alegria_site.jpg", align = "center",height=225,width=375),
-                                              h6("Alegria"),
+                                     tabPanel(h4("Site pictures"),
+                                              h4("Bodega Bay",
+                                                 style="text-align:center"),
                                               tags$img(src = "bodega_site.jpg", align = "center",height=225,width=375),
-                                              h6("Bodega Bay"),
+                                              br(),
+                                              br(),
+                                              h4("Lompoc Landing",
+                                                 style="text-align:center"),
                                               tags$img(src = "lol_site.jpg", align = "center",height=225,width=375),
-                                              h6("Lompoc Landing")),
-                                     tabPanel("On the map",
+                                              br(),
+                                              br(),
+                                              h4("Alegria",
+                                                 style="text-align:center"),
+                                              tags$img(src = "alegria_site.jpg", align = "center",height=225,width=375),
+                                              ),
+                                     tabPanel(h4("On the map"),
                                               leafletOutput(outputId = "map", width = "100%", height = 600 )))),
                          
                   column(7, 
                          h3("Your turn"),
                          tabsetPanel(id="our_research_tabs",
-                                     tabPanel("Question 1",
-                                              p("Examine the three pictures from the three different sites in which sensors were deloyed. What are some visual differences between each environment?",
-                                                style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
-                                                checkboxInput("checkbox1", label = "Show answer", value = FALSE),
+                                     tabPanel(h4("Question 1"),
+                                              h4(p("Examine the three pictures from the three different sites in which sensors were deloyed. What are some visual differences between each environment?",
+                                                style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
+                                              column(12, align="right",
+                                                     checkboxInput("checkbox1", label = "Show answer", value = FALSE)),
                                                 conditionalPanel(
                                                   condition = "input.checkbox1 == 1",
-                                                  p("A lot more sand in Alegria, more flat than rocky Bodega; Lompoc is structured like a shelf with steps; sensor was exposed at Bodega site",
-                                                    style="text-align:left;color:darkgray;background-color:white;padding:15px;border-radius:10px"))),
-                                     tabPanel("Question 2",
-                                              p("Why were these three sites selected? What are the geographic differences between each site?",
-                                                style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
-                                                checkboxInput("checkbox2",label = "Show answer", value = FALSE),
+                                                  h4(p(em("A lot more sand in Alegria, more flat than rocky Bodega; Lompoc is structured like a shelf with steps; sensor was exposed at Bodega site"),
+                                                    style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")))),
+                                     tabPanel(h4("Question 2"),
+                                              h4(p("Why were these three sites selected? What are the geographic differences between each site?",
+                                                style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
+                                                column(12, align="right",
+                                                       checkboxInput("checkbox2",label = "Show answer", value = FALSE)),
                                                 conditionalPanel(
                                                   condition = "input.checkbox2 == 1",
-                                                  p("Alegria is furthest south (only one south of Point Conception, meaning it has less intense upwelling and higher average pH), followed by Lompoc and Bodega Bay north of Point Conception which are in the same upwelling regime",
-                                                    style="text-align:left;color:darkgray;background-color:white;padding:15px;border-radius:10px")
+                                                  h4(p(em("Alegria is furthest south (only one south of Point Conception, meaning it has less intense upwelling and higher average pH), followed by Lompoc and Bodega Bay north of Point Conception which are in the same upwelling regime"),
+                                                    style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))
                                                 )),
-                                     tabPanel("Question 3",
-                                              p("What other physical variables in the intertidal could affect the data collected by the sensors besides the ones being tested for?",
-                                                style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
-                                                checkboxInput("checkbox3", label = "Show answer", value = FALSE),
+                                     tabPanel(h4("Question 3"),
+                                              h4(p("What other physical variables in the intertidal could affect the data collected by the sensors besides the ones being tested for?",
+                                                style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
+                                                column(12, align="right",
+                                                       checkboxInput("checkbox3", label = "Show answer", value = FALSE)),
                                                 conditionalPanel(
                                                   condition = "input.checkbox3 == 1",
-                                                  p("zonation, isolation of pools, depth",
-                                                    style="text-align:left;color:darkgray;background-color:white;padding:15px;border-radius:10px")))
+                                                  h4(p(em("zonation, isolation of pools, depth"),
+                                                    style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))))
                   )))),
         
         tabItem(tabName = "data",
@@ -241,11 +252,25 @@ server <- function(input, output) {
   output$map <- renderLeaflet({
     leaflet() %>% 
       addTiles() %>% 
-      addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, radius = ~Avg_temp * 2, popup = ~popup_info, color = '#ff0000')%>%
+      addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, radius = ~Avg_temp * 2, popup = ~popup_info, color = '#ff0000') %>%
       addLabelOnlyMarkers(
-        lng = -123.0721856, lat = 38.31875756,
-        label = "Label w/o surrounding box",
-        labelOptions = labelOptions(noHide = T, textOnly = TRUE))
+        lng = -125.5921856, lat = 38.31875756,
+        label = "Bodega Bay",
+        labelOptions = labelOptions(noHide = T, textOnly = TRUE, textsize = "15px",
+                                    style = list("font-style" = "italic"))) %>%
+      addLabelOnlyMarkers(
+        lng = -121.3505135, lat = 34.70743071,
+        label = "Lompoc Landing",
+        labelOptions = labelOptions(noHide = T, textOnly = TRUE, textsize = "15px",
+                                    style = list("font-style" = "italic"))) %>%
+      addLabelOnlyMarkers(
+        lng = -121.1519116, lat = 34.19907704,
+        label = "Alegria",
+        labelOptions = labelOptions(noHide = T, textOnly = TRUE, textsize = "15px",
+                                    style = list("font-style" = "italic")))
+      
+      
+    
   }) 
   
   ## Data (Lompoc) Tab
