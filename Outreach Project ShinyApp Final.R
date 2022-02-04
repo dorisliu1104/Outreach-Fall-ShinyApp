@@ -257,7 +257,7 @@ server <- function(input, output) {
   output$map <- renderLeaflet({
     leaflet() %>% 
       addTiles() %>% 
-      addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, radius = ~Avg_temp * 2, popup = ~popup_info, color = '#ff0000') %>%
+      addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, radius = 7, popup = ~popup_info, color = '#ff0000') %>%
       addLabelOnlyMarkers(
         lng = -125.5921856, lat = 38.31875756,
         label = "Bodega Bay",
