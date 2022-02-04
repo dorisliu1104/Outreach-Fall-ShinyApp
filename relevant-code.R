@@ -88,5 +88,3 @@ reef_table <- reactive({
 output$table_neighbor <- render_gt({
   expr = reef_table() #turn the gt table (named reef_table, with () because it's reactive!) into something that works with Shiny
 })
-
-
