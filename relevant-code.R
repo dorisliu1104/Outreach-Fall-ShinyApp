@@ -62,3 +62,31 @@ conditionalPanel(
   condition = "input.pickaplot == '1'",
   p("Like the plot,", strong("the heat map"), "displays the unique number of quadrats containing the focal organism and each neighbor organism, as well as the focal organism. The darker the shade of the box, the more quadrats containing both the focal organism and the neighbor organism.")),
 )
+
+
+#Create a table using gt()
+library(gt)
+
+#in the ui
+gt_output(outputId="table_neighbor")
+
+#in the server
+reef_table <- reactive({
+  as.data.frame(cbind(nrow(reef_focal()), nrow(reef_neighbor()), nrow(reef_together()))) %>% #essentially, everything within as.data.frame() is taking individual data points and melting them together into a single data frame, which you will then turn into a nice looking table with gt() 
+    mutate(percent_focal = V3/V1,
+           percent_neighbor = V3/V2) %>% #create two new columns that I want to end up in the final table
+    gt() %>% #take the data.frame and turn it into a gt table
+    fmt_percent(columns=vars(percent_focal, percent_neighbor), decimal=1) %>% #reformat table values as percentages
+    tab_options(table.width = pct(90)) %>% #make the table width 80% of the page width
+    cols_label(V1=paste("Quadrats with",input$pickaphylum), #change the column label names to custom names
+               V2="Quadrats with neighbors",
+               V3=paste("Quadrats with both",input$pickaphylum,"and neighbors"),
+               percent_focal=paste("Percent", input$pickaphylum, "co-occurrs with neighbors"),
+               percent_neighbor=paste("Percent neighbors co-occur with", input$pickaphylum))
+})
+
+output$table_neighbor <- render_gt({
+  expr = reef_table() #turn the gt table (named reef_table, with () because it's reactive!) into something that works with Shiny
+})
+
+
