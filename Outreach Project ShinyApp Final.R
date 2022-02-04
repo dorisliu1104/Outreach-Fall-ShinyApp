@@ -180,8 +180,8 @@ ui <- fluidPage(
                                             label = 'Filter tide by date',
                                             start = as.Date('2021-06-14') , end = as.Date('2021-10-06')),
                                        br(),
-                                       h5("Question 1"),
-                                       h6("What trends do you notice between pH and temperature for the Lompoc site?")),
+                                       h4("Question 1"),
+                                       h4("What trends do you notice between pH and temperature for the Lompoc site?")),
                                        
                 mainPanel(highchartOutput("ph_ts_plot"))
                ),
@@ -190,14 +190,16 @@ ui <- fluidPage(
                          h4("Question 2"),
                          sidebarPanel(selectInput(inputId = "ph_temp",
                                                   label = "select pH or temperature",
-                                                  choices = c("Temperature"="temp_c","pH"="p_h"))),
+                                                  choices = c("Temperature"="temp_c","pH"="p_h")),
+                                      br(),
+                                      h4("Question 2"),
+                                      h4("What do you notice about the scale of change for both pH and temp over hours? Days? Weeks/months?")),
                          mainPanel(plotOutput(outputId = "q2plot"))),
                 tabPanel(
                          h4("Question 3"),
                          sidebarPanel(
-                           h5("Question 3"),
-                           br(),
-                           h6("Search up the weather for August 2 and compare it to the Lompoc data. What do you think could’ve caused the spikes in the data? What are some reasons why the temperature might’ve hit an extreme that day? "),
+                           h4("Question 3"),
+                           h4("Search up the weather for August 2 and compare it to the Lompoc data. What do you think could’ve caused the spikes in the data? What are some reasons why the temperature might’ve hit an extreme that day? "),
                            br()),
                          mainPanel(highchartOutput("q3plot"))
                          )
