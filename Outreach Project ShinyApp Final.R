@@ -24,7 +24,10 @@ site_gps <- site_gps %>%
                             "Average temperature", Avg_temp))
 
 # filter data for lompoc and set axis for highchart
-lompoc <- dplyr::filter(ph_clean_final, site=="Lompoc Landing")
+lompoc <- ph_clean_final %>% 
+  dplyr::filter(site=="Lompoc Landing") %>% 
+  unite("date_time", "date", "time", sep="\ ", remove = FALSE) %>%
+  mutate(date_time=ymd_hms(date_time))
 
 y1 <- lompoc$temp_c #set first y axis
 y2 <- lompoc$p_h  #set second y axis
@@ -187,7 +190,7 @@ ui <- fluidPage(
                          h4("Question 2"),
                          sidebarPanel(selectInput(inputId = "ph_temp",
                                                   label = "select pH or temperature",
-                                                  choices = c("Temperature" = "temp_c", "Ph" = "p_h"))),
+                                                  choices = c("Temperature"="temp_c","pH"="p_h"))),
                          mainPanel(plotOutput(outputId = "q2plot"))),
                 tabPanel(
                          h4("Question 3"),
@@ -303,24 +306,30 @@ server <- function(input, output) {
       
     
   })
+  # lompoc reactive
+  
+  lompocReactive <- reactive({
+    lompoc %>%
+      select(date_time, input$ph_temp) %>%
+      mutate(variable = input$ph_temp)
+  })
   
   # data_q2_plot
   output$q2plot <- renderPlot({
-    ggplot(data = lompoc, aes(x=date_time, y=input$ph_temp)) + #plot pH here
-      #geom_line(aes(color="#009E73"), size=0.7) + #make it a line chart
-      #geom_smooth(aes(color="#009E73"), method="loess", span=0.1) + #plot trend line for each site
-      #scale_x_datetime(breaks = scales::date_breaks("1 week"), 
-                      # labels = date_format("%m/%d %H:%m")) + #change x axis to make it look cleaner - each tick is one week, display month/day hour/minute
+    ggplot(lompoc, aes(x=date_time, y=get(input$ph_temp)))+ #plot pH here
+      geom_line(size = 0.7,color = ifelse(input$ph_temp == "temp_c", "#D55E00","#009E73" )) + #make it a line chart
+      geom_smooth(method="loess", span=0.1) + #plot trend line for each site
+      #scale_color_manual(values = ifelse(input$ph_temp == "temp_c", "#D55E00","#009E73" )) + #color lines by custom site color palette
+      scale_x_datetime(breaks = scales::date_breaks("1 week"), 
+                       labels = date_format("%m/%d %H:%m")) + #change x axis to make it look cleaner - each tick is one week, display month/day hour/minute
       xlab("Date time") + #change x axis label
-      ylab("Variable") + #change y axis label
+      ylab(ifelse(input$ph_temp == "temp_c", "Temperature", "pH")) + #change y axis label
       theme_bw() +
-      theme(legend.position = "none", #remove legend
+      theme(#legend.position = "none", #remove legend
         axis.text.x=element_text(angle=45, vjust = 1, hjust=1, size=12), #adjust x axis text format
         axis.title.x=element_text(size=15),
         axis.text.y=element_text(size=12), #adjust y axis text format
-        axis.title.y=element_text(size=15)) +
-      scale_alpha_manual(values=c(0.5,0.5,1)) #make focal site more opaque, make all other site points more transparent
-    
+        axis.title.y=element_text(size=15))
   })
   
   # data_q3plot
