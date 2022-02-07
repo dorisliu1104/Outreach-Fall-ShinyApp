@@ -235,6 +235,10 @@ ui <- fluidPage(
         # acknowledgements tab content
         tabItem(tabName="acknowledgements",
                 h1("Acknowledgements"),
+                h4(p(strong("This app was developed by Amelia Ritger, Aanchal Garg, Doris Liu, and Zoe Fung."))),
+                br(),
+                br(),
+                h4(p("Special thanks to ___ for their guidance in the development of the app."))
         )))))
 
 ## Create the Server
