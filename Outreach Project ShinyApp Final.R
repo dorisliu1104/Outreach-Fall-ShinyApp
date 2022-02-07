@@ -216,21 +216,21 @@ ui <- fluidPage(
         # conclusion & global implications tab content
         tabItem(tabName = "conclusions",
                 h1("Conclusion and Global Implications"),
-                sidebarPanel("Scatterplot Visualization", ##Adding a title within the sidebar
-                             selectInput(inputId = "x",
-                                         label = "X variable",
-                                         choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" )),
-                             selectInput(inputId = "y",
-                                         label = "Y variable",
-                                         choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" ))
-                             
-                ),
+                tabsetPanel(id="conclusiontabs",
+                            tabPanel(h4("Questions"),
+                                     h4(p("1. What have you learned about ocean acidification? Check your comprehension and summarize what you know about ocean acidification by creating a concept map using these terms. Add to the map as you learn more about OA:",
+                                      br(),
+                                      br(),
+                                      em("Burning fossil fuels, Nutrient runoff, Eutrophication, Carbon emissions, Bicarbonate, shelled organisms, ocean acidification, coral reefs, & intertidal"),
+                                      style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
+                                      br(),
+                                      p("2. How can the data collected and its conclusions be used to inform conservation and management efforts in the intertidal?",
+                                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")
+)),
+                            tabPanel(h4("Get involved"),
+                                        h4(p(strong("Click on each logo to explore the organization's website!"))),
+                                        tags$a(imageOutput("ucsblogo.jpeg"), href="https://www.ucsb.edu")))),
                 
-                mainPanel("Some text for the main panel",
-                          plotOutput(outputId="ph_scatterplot_Alegria", width = "50%", height = "200px"),
-                          plotOutput(outputId="ph_scatterplot_Bodega", width = "50%",height = "200px"),
-                          plotOutput(outputId="ph_scatterplot_Lompoc", width = "50%",height = "200px"))
-        ),
         
         # acknowledgements tab content
         tabItem(tabName="acknowledgements",
@@ -239,19 +239,6 @@ ui <- fluidPage(
 
 ## Create the Server
 server <- function(input, output) {
-  
-  # answers for "our research" tab
-  observeEvent(input$answer1, {
-    output$text1 <- renderText({"Alegria has a lot more sand and is flatter than rocky Bodega. Lompoc is structured like a shelf with steps. The sensor was exposed at the Bodega site."})
-  })
-  
-  observeEvent(input$answer2, {
-    output$text2 <- renderText({"Alegria is furthest south (only one south of Point Conception, meaning it has less intense upwelling and higher average pH), followed by Lompoc and Bodega Bay north of Point Conception which are in the same upwelling regime"})
-  })
-  
-  observeEvent(input$answer3, {
-    output$text3 <- renderText({"zonation, isolation of pools, depth"})
-  })
   
   ## map tab
   output$map <- renderLeaflet({
@@ -361,7 +348,8 @@ server <- function(input, output) {
     leaflet() %>% 
       addTiles() %>% 
       addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, radius = ~Avg_temp * 2, popup = ~popup_info, color = '#ff0000')
-  }) 
+  })
+  
 }
 
 ## Combine the UI and the server
