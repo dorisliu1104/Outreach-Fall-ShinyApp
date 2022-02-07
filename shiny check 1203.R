@@ -30,215 +30,215 @@ site_gps <- site_gps %>%
 ui <- fluidPage(
   
   dashboardPage(
-    
-    skin = "blue",
-    
-    dashboardHeader(title = "Outreach Project"),
-    dashboardSidebar(
-      sidebarMenu(
-        menuItem("About the Intertidal", tabName = "about_the_intertidal", icon = icon("compass",lib="font-awesome")),
-        menuItem("Our Research", tabName = "our_research", icon = icon("docker",lib="font-awesome")),
-        menuItem("Data (Lompoc Results)", tabName = "data", icon = icon("anchor",lib="font-awesome")),
-        menuItem("Compare and Contrast", tabName = "compare_and_contrast", icon = icon("chart-bar",lib="font-awesome")),
-        menuItem("Conclusion and Global Implications", tabName = "conclusions", icon = icon("fish", lib = "font-awesome")),
-        menuItem("Acknowledgements", tabName="acknowledgements",icon=icon("trophy",lib="font-awesome"))
-      )
-    ), ## end dashboardSidebar
-    
-    dashboardBody(
-      tabItems(
-        # First tab content: About the Intertidal
-        tabItem(tabName = "about_the_intertidal",
-                h1("About The Intertidal", align = "center"),
-                h3("What is ocean acidification?"),
-                fluidRow(
-                  column(
-                    br(),
-                    p("Ocean acidification (OA) is a process that occurs when the ocean absorbs excessive amounts of anthropogenically (*resulting from human influence*) produced CO2 from the air.",
-                      br(),
-                      br(),
-                      tags$img(src = "OCcycle.jpeg", align = "center"),
-                      style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
-                    br(),
-                    p("The ocean absorbs 25% of all anthropogenically released CO2 as a carbon sink. Ocean pH is normally ~8.1, which is pretty neutral, but becomes more acidic when CO2 dissolves in water.",
-                      br(),
-                      br(),
-                      tags$img(src = "phscaleEPA.png", align = "center",height=350,width=500),  
-                      style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
-                    br(),
-                    p("When CO2 dissolves in water, it releases H+ protons and combines with carbonate to produce bicarbonate, taking carbonate out of the water
+  
+  skin = "blue",
+  
+  dashboardHeader(title = "Outreach Project"),
+  dashboardSidebar(
+    sidebarMenu(
+      menuItem("About the Intertidal", tabName = "about_the_intertidal", icon = icon("compass",lib="font-awesome")),
+      menuItem("Our Research", tabName = "our_research", icon = icon("docker",lib="font-awesome")),
+      menuItem("Data (Lompoc Results)", tabName = "data", icon = icon("anchor",lib="font-awesome")),
+      menuItem("Compare and Contrast", tabName = "compare_and_contrast", icon = icon("chart-bar",lib="font-awesome")),
+      menuItem("Conclusion and Global Implications", tabName = "conclusions", icon = icon("fish", lib = "font-awesome")),
+      menuItem("Acknowledgements", tabName="acknowledgements",icon=icon("trophy",lib="font-awesome"))
+    )
+  ), ## end dashboardSidebar
+  
+  dashboardBody(
+    tabItems(
+      # First tab content: About the Intertidal
+      tabItem(tabName = "about_the_intertidal",
+              h1("About The Intertidal", align = "center"),
+              h3("What is ocean acidification?"),
+              fluidRow(
+              column(
+                br(),
+                p("Ocean acidification (OA) is a process that occurs when the ocean absorbs excessive amounts of anthropogenically (*resulting from human influence*) produced CO2 from the air.",
+                br(),
+                br(),
+                  tags$img(src = "OCcycle.jpeg", align = "center"),
+                  style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
+                br(),
+                p("The ocean absorbs 25% of all anthropogenically released CO2 as a carbon sink. Ocean pH is normally ~8.1, which is pretty neutral, but becomes more acidic when CO2 dissolves in water.",
+                br(),
+                br(),
+                  tags$img(src = "phscaleEPA.png", align = "center",height=350,width=500),  
+                  style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
+                br(),
+                p("When CO2 dissolves in water, it releases H+ protons and combines with carbonate to produce bicarbonate, taking carbonate out of the water
                 Many marine organisms use carbonate to make shells (calcium carbonate). Taking carbonate out of the water makes it harder to make hard shells
                 Furthermore, more H+ protons in the water means the water becomes more acidic and corrodes the shells of many organisms. For example, coral reefs feel OA’s impact because there’s less carbonate in the water to build the 3D reef structure.",
-                      br(),
-                      br(),
-                      tags$img(src = "corealreef.jpeg", align = "center",height=300,width=500),
-                      style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
-                    br(),
-                    p("OA occurs at different rates in different ecosystems; coastal environments like the intertidal experience more rapid rates of acidification due to eutrophication (nutrient runoff caused by human activity). 
+                br(),
+                br(),
+                tags$img(src = "corealreef.jpeg", align = "center",height=300,width=500),
+                  style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
+                br(),
+                p("OA occurs at different rates in different ecosystems; coastal environments like the intertidal experience more rapid rates of acidification due to eutrophication (nutrient runoff caused by human activity). 
                   Eutrophication can cause algal blooms, which release large amounts of CO2 that dissolve into the water when decomposed.
                   Coastal upwelling also introduces CO2 rich water from the deep sea.",
-                      br(),
-                      br(),
-                      tags$img(src = "algalbloom.jpeg", align = "center",height=300,width=500),  
-                      style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
-                    br(),
-                    p("The intertidal is highly variable and dynamic and has extreme environmental conditions when it comes to temperature, salinity, and pH.
+                br(),
+                br(),
+                  tags$img(src = "algalbloom.jpeg", align = "center",height=300,width=500),  
+                  style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
+                br(),
+                p("The intertidal is highly variable and dynamic and has extreme environmental conditions when it comes to temperature, salinity, and pH.
                   Coastal upwelling also introduces CO2 rich water from the deep sea, which contributes to coastal acidification.
                   Fossil fuels, carbon emmissions, and deforestation are humam impacts that further ocean acidification.",
-                      style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
-                    width = 12
-                  )),
-                h3("Your turn"),
-                h4("Using the information above, answer the following questions."),
+                  style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
+                  width = 12
+               )),
+              h3("Your turn"),
+              h4("Using the information above, answer the following questions."),
+              fluidRow(
+                column(
+                  br(),
+                  p("What do you know about ocean acidification? Follow this link to a Mentimeter[https://www.menti.com/uijfevceik] 
+                    and submit the first word/phrase that comes to mind when you think of ocean acidification.",
+                    style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
+                  br(),
+                  p("What makes the intertidal unique in terms of ocean acidification and other environmental processes?",
+                    style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
+                  br(),
+                  p("How do intertidal organisms adapt to the extreme environmental conditions in which they live?",
+                    style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
+                  width=12
+                  ))),
+  
+      # our research tab content
+      tabItem(tabName = "our_research",
+              h1("Our Research", align="center"),
+              sidebarPanel(
+                h3("Alegria"),
+                tags$img(src = "alegria.jpg", align = "center",height = 200, width = 333),
+                br(),
+                h3("Bodega"),
+                tags$img(src="bodega.jpg",align="center",height=200,width=333),
+                br(),
+                h3("Lompoc"),
+                tags$img(src="lompoc.jpg",align="center",height=200,width=333)),
+              mainPanel(
+                h3("Answer the following questions:"),
                 fluidRow(
                   column(
                     br(),
-                    p("What do you know about ocean acidification? Follow this link to a Mentimeter[https://www.menti.com/uijfevceik] 
-                    and submit the first word/phrase that comes to mind when you think of ocean acidification.",
-                      style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
+                    p("Examine the three pictures from the three different sites in which sensors were deloyed. What are some visual differences between each environment?",
+                      br(),
+                      br(),
+                      actionButton("answer1", label = "Show answer"),
+                      style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
                     br(),
-                    p("What makes the intertidal unique in terms of ocean acidification and other environmental processes?",
-                      style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
+                    p("Why were these three sites selected? What are the geographic differences between each site?",
+                      br(),
+                      br(),
+                      actionButton("answer2", label = "Show answer"),
+                      style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
                     br(),
-                    p("How do intertidal organisms adapt to the extreme environmental conditions in which they live?",
-                      style="text-align:justify;color:black;background-color:lavender;padding:15px;border-radius:10px"),
-                    width=12
-                  ))),
-        
-        # our research tab content
-        tabItem(tabName = "our_research",
-                h1("Our Research", align="center"),
-                sidebarPanel(
-                  h3("Alegria"),
-                  tags$img(src = "alegria.jpg", align = "center",height = 200, width = 333),
-                  br(),
-                  h3("Bodega"),
-                  tags$img(src="bodega.jpg",align="center",height=200,width=333),
-                  br(),
-                  h3("Lompoc"),
-                  tags$img(src="lompoc.jpg",align="center",height=200,width=333)),
-                mainPanel(
-                  h3("Answer the following questions:"),
-                  fluidRow(
-                    column(
+                    p("What other physical variables in the intertidal could affect the data collected by the sensors besides the ones being tested for (pH and temperature)?",
                       br(),
-                      p("Examine the three pictures from the three different sites in which sensors were deloyed. What are some visual differences between each environment?",
-                        br(),
-                        br(),
-                        actionButton("answer1", label = "Show answer"),
-                        style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
                       br(),
-                      p("Why were these three sites selected? What are the geographic differences between each site?",
-                        br(),
-                        br(),
-                        actionButton("answer2", label = "Show answer"),
-                        style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
-                      br(),
-                      p("What other physical variables in the intertidal could affect the data collected by the sensors besides the ones being tested for (pH and temperature)?",
-                        br(),
-                        br(),
-                        actionButton("answer3", label = "Show answer"),
-                        style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
-                      width=11
-                    ))
-                  
-                )),
-        
-        # data (lompoc) tab content
-        
-        tabItem(tabName = "data",
-                h1("Data (Lompoc Results)"),
-                fluidRow(
-                  column(5,
-                         tabPanel("Map", leafletOutput(outputId = "map", width = "100%", height = 600 ))),
-                  column(7, tabsetPanel(id="plot_tabs",
-                                        tabPanel("Picture of Sites",
-                                                 radioButtons("pics","Pictures of Sites", 
-                                                              choices=c("Alegria"="alegria" , "Bodega Bay"="bodega", "Lompoc Landing"="lompoc"), inline=T),
-                                                 imageOutput("pic_site")),
-                                        tabPanel("Questions",
-                                                 p("Q1. Examine the three pictures from the three different sites in which sensors were deployed. What are some visual differences between each environment?"),
-                                                 br(),
-                                                 p("Q2. Why were these three sites selected? What are the geographic differences between each site?"),
-                                                 br(),
-                                                 p("Q3. What other physical variables in the intertidal could affect the data collected by the sensors besides the ones being tested for?"))
-                  ))),
-                sidebarPanel("Lompoc Landing Visualization",
-                             selectInput(inputId = "x2",
-                                         label = "X variable",
-                                         choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" )),
-                             selectInput(inputId = "y2",
-                                         label = "Y variable",
-                                         choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" ))
-                             
-                ),
-                mainPanel("Some text for the main panel",
-                          plotOutput(outputId="scatterplot_lompoc"))
-        ),
-        
-        
-        
-        # compare & contrast tab content 
-        tabItem(tabName = "compare_and_contrast",
-                h1("Compare and Contrast (Alegria, Lompoc, and Bodega Bay Results)"),
-                sidebarPanel("Time Series Trend Visualization",  ##Adding a title within the sidebar
-                             selectInput(inputId = "site",   
-                                         label = "Visualization of sites(you can choose multiple sites)",
-                                         choices = c("Alegria","Lompoc Landing", "Bodega Bay" )),
-                             dateRangeInput(inputId = "date_range", 
-                                            label = 'Filter tide by date',
-                                            start = as.Date('2021-06-18') , end = as.Date('2021-10-08'))
-                             
-                ),
-                mainPanel("Some text for the main panel",
-                          plotOutput(outputId="ph_ts_plot")),
-                sidebarPanel("Alegria Visualization",
-                             selectInput(inputId = "x3",
-                                         label = "X variable",
-                                         choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" )),
-                             selectInput(inputId = "y3",
-                                         label = "Y variable",
-                                         choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" ))
-                             
-                ),
-                mainPanel("Some text for the main panel",
-                          plotOutput(outputId="scatterplot_alegria")),
-                sidebarPanel("Bodega Bay Visualization",
-                             selectInput(inputId = "x4",
-                                         label = "X variable",
-                                         choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" )),
-                             selectInput(inputId = "y4",
-                                         label = "Y variable",
-                                         choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" ))
-                ),
-                mainPanel("Some text for the main panel",
-                          plotOutput(outputId="scatterplot_bodega"))
-        ),
-        
-        # conclusion & global implications tab content
-        tabItem(tabName = "conclusions",
-                h1("Conclusion and Global Implications"),
-                sidebarPanel("Scatterplot Visualization", ##Adding a title within the sidebar
-                             selectInput(inputId = "x",
-                                         label = "X variable",
-                                         choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" )),
-                             selectInput(inputId = "y",
-                                         label = "Y variable",
-                                         choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" ))
-                             
-                ),
-                
-                mainPanel("Some text for the main panel",
-                          plotOutput(outputId="ph_scatterplot_Alegria", width = "50%", height = "200px"),
-                          plotOutput(outputId="ph_scatterplot_Bodega", width = "50%",height = "200px"),
-                          plotOutput(outputId="ph_scatterplot_Lompoc", width = "50%",height = "200px"))
-        ),
-        
-        # acknowledgements tab content
-        tabItem(tabName="acknowledgements",
-                h1("Acknowledgements"),
-        )
-      ))))
+                      actionButton("answer3", label = "Show answer"),
+                      style="text-align:justify;color:black;background-color:lightblue;padding:15px;border-radius:10px"),
+                    width=11
+              ))
+              
+      )),
+      
+      # data (lompoc) tab content
+      
+      tabItem(tabName = "data",
+              h1("Data (Lompoc Results)"),
+              fluidRow(
+                column(5,
+                       tabPanel("Map", leafletOutput(outputId = "map", width = "100%", height = 600 ))),
+                column(7, tabsetPanel(id="plot_tabs",
+                                      tabPanel("Picture of Sites",
+                                               radioButtons("pics","Pictures of Sites", 
+                                                            choices=c("Alegria"="alegria" , "Bodega Bay"="bodega", "Lompoc Landing"="lompoc"), inline=T),
+                                               imageOutput("pic_site")),
+                                      tabPanel("Questions",
+                                               p("Q1. Examine the three pictures from the three different sites in which sensors were deployed. What are some visual differences between each environment?"),
+                                               br(),
+                                               p("Q2. Why were these three sites selected? What are the geographic differences between each site?"),
+                                               br(),
+                                               p("Q3. What other physical variables in the intertidal could affect the data collected by the sensors besides the ones being tested for?"))
+                ))),
+              sidebarPanel("Lompoc Landing Visualization",
+                           selectInput(inputId = "x2",
+                                       label = "X variable",
+                                       choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" )),
+                           selectInput(inputId = "y2",
+                                       label = "Y variable",
+                                       choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" ))
+                           
+              ),
+              mainPanel("Some text for the main panel",
+                        plotOutput(outputId="scatterplot_lompoc"))
+      ),
+              
+                    
+      
+      # compare & contrast tab content 
+      tabItem(tabName = "compare_and_contrast",
+              h1("Compare and Contrast (Alegria, Lompoc, and Bodega Bay Results)"),
+              sidebarPanel("Time Series Trend Visualization",  ##Adding a title within the sidebar
+                           selectInput(inputId = "site",   
+                                       label = "Visualization of sites(you can choose multiple sites)",
+                                       choices = c("Alegria","Lompoc Landing", "Bodega Bay" )),
+                           dateRangeInput(inputId = "date_range", 
+                                          label = 'Filter tide by date',
+                                          start = as.Date('2021-06-18') , end = as.Date('2021-10-08'))
+                           
+              ),
+              mainPanel("Some text for the main panel",
+                        plotOutput(outputId="ph_ts_plot")),
+              sidebarPanel("Alegria Visualization",
+                           selectInput(inputId = "x3",
+                                       label = "X variable",
+                                       choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" )),
+                           selectInput(inputId = "y3",
+                                       label = "Y variable",
+                                       choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" ))
+                           
+              ),
+              mainPanel("Some text for the main panel",
+                        plotOutput(outputId="scatterplot_alegria")),
+              sidebarPanel("Bodega Bay Visualization",
+                          selectInput(inputId = "x4",
+                                        label = "X variable",
+                                        choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" )),
+                          selectInput(inputId = "y4",
+                                        label = "Y variable",
+                                        choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" ))
+              ),
+                      mainPanel("Some text for the main panel",
+                                plotOutput(outputId="scatterplot_bodega"))
+      ),
+      
+      # conclusion & global implications tab content
+      tabItem(tabName = "conclusions",
+              h1("Conclusion and Global Implications"),
+              sidebarPanel("Scatterplot Visualization", ##Adding a title within the sidebar
+                           selectInput(inputId = "x",
+                                       label = "X variable",
+                                       choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" )),
+                           selectInput(inputId = "y",
+                                       label = "Y variable",
+                                       choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" ))
+                           
+              ),
+              
+              mainPanel("Some text for the main panel",
+                        plotOutput(outputId="ph_scatterplot_Alegria", width = "50%", height = "200px"),
+                        plotOutput(outputId="ph_scatterplot_Bodega", width = "50%",height = "200px"),
+                        plotOutput(outputId="ph_scatterplot_Lompoc", width = "50%",height = "200px"))
+      ),
+      
+      # acknowledgements tab content
+      tabItem(tabName="acknowledgements",
+              h1("Acknowledgements"),
+              )
+        ))))
 
 ## Create the Server
 server <- function(input, output) {
@@ -254,7 +254,7 @@ server <- function(input, output) {
     leaflet() %>% 
       addTiles() %>% 
       addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, radius = ~Avg_temp * 2, popup = ~popup_info, color = '#ff0000')
-  }) 
+    }) 
   
   output$pic_site <- renderImage({
     filename <- normalizePath(file.path('./www/', paste(input$pics, ".png", sep="")))
