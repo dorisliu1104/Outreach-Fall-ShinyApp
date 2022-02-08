@@ -59,10 +59,10 @@ ui <- fluidPage(
       tabItems(
         # First tab content: About the Intertidal
         tabItem(tabName = "about_the_intertidal",
-                h1("About The Intertidal", align = "center"),
+                h1("About The Intertidal"),
                 tabsetPanel(id="about_the_intertidal",
                             tabPanel(h4("What is ocean acidification?"),
-                                     h4(p("Ocean acidification (OA) is a process that occurs when the ocean absorbs excessive amounts of anthropogenically (*resulting from human influence*) produced CO2 from the air.",
+                                     h4(p("Ocean acidification (OA) is a process that occurs when the ocean absorbs excessive amounts of anthropogenically produced CO2 from the air.",
                                        br(),
                                        br(),
                                        tags$img(src = "OCcycle.jpeg", style="display: block; margin-left: auto; margin-right: auto;"),
@@ -94,24 +94,28 @@ ui <- fluidPage(
                                          Lastly, fossil fuels, carbon emmissions, and deforestation are humam impacts that further ocean acidification.",
                                          style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))),
                             tabPanel(h4("Your turn"),
-                                     h4(p(strong("Using the information you just learned, answer the following questions."),
+                                     h4(p(strong("Please watch the following video. Then, using the information you just learned, answer the following questions.",
+                                                 br(),
+                                                 br(),
+                                                 HTML('<iframe width="560" height="315" src="https://www.youtube.com/embed/gZGj0BbDT38" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
+                                     )),
                                           style="text-align:center"),
                                      br(),
-                                     p("1. What do you know about ocean acidification? Follow this link to a",
+                                     h4(p("1. What do you know about ocean acidification? Follow this link to a",
                                        tags$a(href="https://www.menti.com/uijfevceik", "Mentimeter"), 
                                        "and submit the first word/phrase that comes to mind when you think of ocean acidification.",
                                        br(),
                                        em("View your class's Mentimeter",
                                        tags$a(href="https://www.mentimeter.com/s/29f86468afbfa7aa26f27554857d25d9/974479e8d82c", "here.")),
-                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
-                                     br(),
-                                     p("2. What makes the intertidal unique in terms of ocean acidification and other environmental processes?",
-                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
-                                     br(),
-                                     p("3. How do intertidal organisms adapt to the extreme environmental conditions in which they live?",
                                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
-                                     width=12
-                            ))),
+                                     br(),
+                                     h4(p("2. What makes the intertidal unique in terms of ocean acidification and other environmental processes?",
+                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
+                                     br(),
+                                     h4(p("3. How do intertidal organisms adapt to the extreme environmental conditions in which they live?",
+                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))),
+                                    
+                            )),
         
         # our research tab content
         
@@ -173,7 +177,7 @@ ui <- fluidPage(
                   )))),
         
         tabItem(tabName = "data",
-                titlePanel(h1("Time Series Trend Visualization for Lompoc Landing"),
+                h1("Time Series Trend Visualization for Lompoc Landing"),
                 tabsetPanel(id = "lomdata",
                 tabPanel(h4("Question 1"),
                           sidebarPanel(dateRangeInput(inputId = "date_range", 
@@ -205,9 +209,10 @@ ui <- fluidPage(
                          )
                 
                          
-                ))),
+                )),
         
         tabItem(tabName = "compare",
+                h1("Compare and Contrast"),
                 fluidRow(
                   column(5,
                          tabPanel("Map", leafletOutput(outputId = "map2", width = "100%", height = 600 ))))),
@@ -229,7 +234,7 @@ ui <- fluidPage(
 )),
                             tabPanel(h4("Get involved"),
                                         h4(p(strong("Click on each logo to explore the organization's website!"))),
-                                        tags$a(imageOutput("/www/ucsblogo.jpeg"), href="https://www.ucsb.edu")))),
+                                        tags$a(imageOutput("/www/ucsblogo3.png"), href="https://www.ucsb.edu")))),
                 
         
         # acknowledgements tab content
