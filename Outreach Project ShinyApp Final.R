@@ -173,7 +173,7 @@ ui <- fluidPage(
                   )))),
         
         tabItem(tabName = "data",
-                titlePanel("Time Series Trend Visualization for Lompoc Landing"),
+                titlePanel(h1("Time Series Trend Visualization for Lompoc Landing"),
                 tabsetPanel(id = "lomdata",
                 tabPanel(h4("Question 1"),
                           sidebarPanel(dateRangeInput(inputId = "date_range", 
@@ -205,7 +205,7 @@ ui <- fluidPage(
                          )
                 
                          
-                )),
+                ))),
         
         tabItem(tabName = "compare",
                 fluidRow(
@@ -229,16 +229,23 @@ ui <- fluidPage(
 )),
                             tabPanel(h4("Get involved"),
                                         h4(p(strong("Click on each logo to explore the organization's website!"))),
-                                        tags$a(imageOutput("ucsblogo.jpeg"), href="https://www.ucsb.edu")))),
+                                        tags$a(imageOutput("/www/ucsblogo.jpeg"), href="https://www.ucsb.edu")))),
                 
         
         # acknowledgements tab content
         tabItem(tabName="acknowledgements",
-                h1("Acknowledgements"),
-                h4(p(strong("This app was developed by Amelia Ritger, Aanchal Garg, Doris Liu, and Zoe Fung."))),
+                h1("Acknowledgements", align = "center"),
                 br(),
                 br(),
-                h4(p("Special thanks to ___ for their guidance in the development of the app."))
+                h4(p(strong("This app was developed by Amelia Ritger, Aanchal Garg, Doris Liu, and Zoe Fung."),
+                     style="text-align: center")),
+                br(),
+                br(),
+                h4(p("Special thanks to ___ for their guidance in the development of the app.",
+                     style="text-align:center")),
+                tags$img(src = "sbbeach.jpeg", style="display: block; margin-left: auto; margin-right: auto;", height=500,width=833),
+                h3(p("Thank you for using this app!",
+                     style = "text-align: center"))
         )))))
 
 ## Create the Server
