@@ -9,6 +9,8 @@ library(lubridate)
 library(xts)
 library(reshape)
 library(highcharter)
+library(DT)
+library(scales)
 
 ## Read the Updated Data
 ph_clean_final <- read_csv(here("data", "ph_clean_final.csv"))
@@ -35,6 +37,23 @@ y3 <- lompoc$tide_height #set third y axis
 x <- lompoc$date_time #set x axis
 
 lompoc2 <- filter(lompoc, between(date, as.Date("2021-07-25"), as.Date("2021-08-05")))
+
+## create dataframe for compare and contrast plots
+comdata <- ph_clean_final %>% 
+  unite("date_time", "date", "time", sep="\ ") %>%
+  mutate(date_time=ymd_hms(date_time)) #apply lubridate to date/time column
+
+comdata$site <- factor(comdata$site, levels=c("Lompoc Landing","Bodega Bay", "Alegria"))
+
+pal <- c(
+  "Alegria" = "#D55E00",
+  "Lompoc Landing" = "#009E73", 
+  "Bodega Bay" = "#0072B2"
+)
+
+## import data summary table
+data_summary_table <- read_excel("data/data_summary_table.xlsx")
+
 
 ## Create the ui (user interface)
 ui <- fluidPage(
@@ -212,10 +231,26 @@ ui <- fluidPage(
                 )),
         
         tabItem(tabName = "compare",
-                h1("Compare and Contrast"),
-                fluidRow(
-                  column(5,
-                         tabPanel("Map", leafletOutput(outputId = "map2", width = "100%", height = 600 ))))),
+                titlePanel("Compare and Contrast(Alegria, Lompoc, & Bodega Bay Results)"),
+                tabsetPanel(id = "com",
+                            tabPanel(h4("Question 1"),
+                                     fluidRow(
+                                       column(width = 5,
+                                              tabPanel("Map", leafletOutput(outputId = "map2", width = "100%", height = 600 ))),
+                                       column(width = 7,
+                                              plotOutput(outputId = "cplot1a"),
+                                              plotOutput(outputId = "cplot1b")
+                                       ))
+                                     
+                            ),
+                            tabPanel(h4("Question 2"),
+                                     fluidRow(
+                                       column(width = 3,
+                                              checkboxGroupInput("show_vars", "Columns in summary table to show:",
+                                                                 names(data_summary_table), selected = names(data_summary_table))),
+                                       column(width = 12,
+                                              mainPanel(DT::dataTableOutput("mytable1"))
+                                       ))))),
         
         
         # conclusion & global implications tab content
@@ -358,12 +393,54 @@ server <- function(input, output) {
                   "#0072B2"))
   })
   
-  
+
   ## compare and contrast
   output$map2 <- renderLeaflet({
     leaflet() %>% 
       addTiles() %>% 
       addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, radius = ~Avg_temp * 2, popup = ~popup_info, color = '#ff0000')
+  }) 
+  
+  ## compare and contrast tab 1 plots
+  output$cplot1a <- renderPlot({
+    ggplot(comdata, aes(x=date_time, y=p_h, group=site)) + #plot pH here
+      geom_line(aes(color=site, alpha=site), size=0.7) + #make it a line chart
+      geom_smooth(aes(color=site), method="loess", span=0.1) + #plot trend line for each site
+      scale_color_manual(values = pal) + #color lines by custom site color palette
+      scale_x_datetime(breaks = scales::date_breaks("1 week"), 
+                       labels = date_format("%m/%d %H:%m")) + #change x axis to make it look cleaner - each tick is one week, display month/day hour/minute
+      xlab("Date time") + #change x axis label
+      ylab("Temperature") + #change y axis label
+      theme_bw() +
+      theme(#legend.position = "none", #remove legend
+        axis.text.x=element_text(angle=45, vjust = 1, hjust=1, size=12), #adjust x axis text format
+        axis.title.x=element_text(size=15),
+        axis.text.y=element_text(size=12), #adjust y axis text format
+        axis.title.y=element_text(size=15)) +
+      scale_alpha_manual(values=c(0.5,0.5,1))
+  })
+  
+  output$cplot1b <- renderPlot({
+    ggplot(comdata, aes(x=date_time, y=temp_c, group=site)) + #plot pH here
+      geom_line(aes(color=site, alpha=site), size=0.7) + #make it a line chart
+      geom_smooth(aes(color=site), method="loess", span=0.1) + #plot trend line for each site
+      scale_color_manual(values = pal) + #color lines by custom site color palette
+      scale_x_datetime(breaks = scales::date_breaks("1 week"), 
+                       labels = date_format("%m/%d %H:%m")) + #change x axis to make it look cleaner - each tick is one week, display month/day hour/minute
+      xlab("Date time") + #change x axis label
+      ylab("Temperature") + #change y axis label
+      theme_bw() +
+      theme(#legend.position = "none", #remove legend
+        axis.text.x=element_text(angle=45, vjust = 1, hjust=1, size=12), #adjust x axis text format
+        axis.title.x=element_text(size=15),
+        axis.text.y=element_text(size=12), #adjust y axis text format
+        axis.title.y=element_text(size=15)) +
+      scale_alpha_manual(values=c(0.5,0.5,1))
+  })
+  
+  ## table output
+  output$mytable1 <- DT::renderDataTable({
+    DT::datatable(data_summary_table[, input$show_vars, drop = FALSE])
   })
   
 }
