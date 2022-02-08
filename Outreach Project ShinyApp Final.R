@@ -269,7 +269,7 @@ ui <- fluidPage(
 )),
                             tabPanel(h4("Get involved"),
                                         h4(p(strong("Click on each logo to explore the organization's website!"))),
-                                        tags$a(imageOutput("/www/ucsblogo3.png"), href="https://www.ucsb.edu")))),
+                                     a(img(src="ucsblogo3.png"), href="https://www.ucsb.edu")))),
                 
         
         # acknowledgements tab content
