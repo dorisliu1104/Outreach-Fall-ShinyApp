@@ -248,9 +248,17 @@ ui <- fluidPage(
                             tabPanel(h4("Question 2"),
                                      fluidRow(
                                        column(width = 12,
-                                              mainPanel(DT::dataTableOutput("mytable1"))
-                                       ))),
+                                              mainPanel(DT::dataTableOutput("mytable1"))),
+                                       column(width = 8,
+                                              h4("Question 2"),
+                                              br(),
+                                              p("What is the average pH and temperature for each site?"))
+                                       )),
                             tabPanel(h4("Question 3")),
+                            tabPanel(h4("Question 4"),
+                                     column(width = 7,
+                                          highchart("tab4_plot")  
+                                            )),
                             tabPanel(h4("Question 5"),
                                      fluidRow(
                                        column(width = 5,
@@ -412,7 +420,7 @@ server <- function(input, output) {
 
   ## compare and contrast
 
-  ## compare and contrast tab 1 plots
+  ## tab 1 plots
   output$cplot1a <- renderPlot({
     ggplot(comdata, aes(x=date_time, y=get(input$compare_tab1), group=site)) + #plot pH here
       geom_line(aes(color=site, alpha=site), size=0.7) + #make it a line chart
@@ -431,30 +439,14 @@ server <- function(input, output) {
       scale_alpha_manual(values=c(0.5,0.5,1))
   })
   
-  output$cplot1b <- renderPlot({
-    ggplot(comdata, aes(x=date_time, y=temp_c, group=site)) + #plot pH here
-      geom_line(aes(color=site, alpha=site), size=0.7) + #make it a line chart
-      geom_smooth(aes(color=site), method="loess", span=0.1) + #plot trend line for each site
-      scale_color_manual(values = pal) + #color lines by custom site color palette
-      scale_x_datetime(breaks = scales::date_breaks("1 week"), 
-                       labels = date_format("%m/%d %H:%m")) + #change x axis to make it look cleaner - each tick is one week, display month/day hour/minute
-      xlab("Date time") + #change x axis label
-      ylab("Temperature") + #change y axis label
-      theme_bw() +
-      theme(#legend.position = "none", #remove legend
-        axis.text.x=element_text(angle=45, vjust = 1, hjust=1, size=12), #adjust x axis text format
-        axis.title.x=element_text(size=15),
-        axis.text.y=element_text(size=12), #adjust y axis text format
-        axis.title.y=element_text(size=15)) +
-      scale_alpha_manual(values=c(0.5,0.5,1))
-  })
-  
-  ## table output
+  ## tab 2 table output
   output$mytable1 <- DT::renderDataTable({
     DT::datatable(data_summary_table)
   })
   
-  ## tab5 scatterplot
+  ## tab 4 highchart output
+
+  ## tab 5 scatterplot
   siteFiltered <- reactive({
     ph_clean_final %>%
       filter(site == input$compare_site)
