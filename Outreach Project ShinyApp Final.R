@@ -235,21 +235,38 @@ ui <- fluidPage(
                             tabPanel(h4("Question 1"),
                                      fluidRow(
                                        column(width = 5,
-                                              tabPanel("Map", leafletOutput(outputId = "map2", width = "100%", height = 600 ))),
+                                              selectInput(inputId = "compare_tab1",
+                                                          label = "select pH or temperature",
+                                                          choices = c("Temperature"="temp_c","pH"="p_h")),
+                                              h4("Question 1"),
+                                              br(),
+                                              p("Compare data from Lompoc site to Allegria and Bodega Bay. What are overarching trends you can take away from the data?")),
+                                      
+                                              
                                        column(width = 7,
-                                              plotOutput(outputId = "cplot1a"),
-                                              plotOutput(outputId = "cplot1b")
-                                       ))
-                                     
-                            ),
+                                              plotOutput(outputId = "cplot1a")))),
                             tabPanel(h4("Question 2"),
                                      fluidRow(
-                                       column(width = 3,
-                                              checkboxGroupInput("show_vars", "Columns in summary table to show:",
-                                                                 names(data_summary_table), selected = names(data_summary_table))),
                                        column(width = 12,
                                               mainPanel(DT::dataTableOutput("mytable1"))
-                                       ))))),
+                                       ))),
+                            tabPanel(h4("Question 3")),
+                            tabPanel(h4("Question 5"),
+                                     fluidRow(
+                                       column(width = 5,
+                                         selectInput(inputId = "x",
+                                                   label = "X variable",
+                                                   choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" )),
+                                         selectInput(inputId = "y",
+                                                   label = "Y variable",
+                                                   choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" )),
+                                         selectInput(inputId = "compare_site",
+                                                     label = "Please select a site",
+                                                     choices = c("Alegria","Lompoc Landing", "Bodega Bay" ))),
+                                       column(width = 7,
+                                              plotOutput(outputId = "scatterplot"))
+                                       
+                                     )))),
         
         
         # conclusion & global implications tab content
@@ -394,22 +411,17 @@ server <- function(input, output) {
   
 
   ## compare and contrast
-  output$map2 <- renderLeaflet({
-    leaflet() %>% 
-      addTiles() %>% 
-      addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, radius = ~Avg_temp * 2, popup = ~popup_info, color = '#ff0000')
-  }) 
-  
+
   ## compare and contrast tab 1 plots
   output$cplot1a <- renderPlot({
-    ggplot(comdata, aes(x=date_time, y=p_h, group=site)) + #plot pH here
+    ggplot(comdata, aes(x=date_time, y=get(input$compare_tab1), group=site)) + #plot pH here
       geom_line(aes(color=site, alpha=site), size=0.7) + #make it a line chart
       geom_smooth(aes(color=site), method="loess", span=0.1) + #plot trend line for each site
       scale_color_manual(values = pal) + #color lines by custom site color palette
       scale_x_datetime(breaks = scales::date_breaks("1 week"), 
                        labels = date_format("%m/%d %H:%m")) + #change x axis to make it look cleaner - each tick is one week, display month/day hour/minute
       xlab("Date time") + #change x axis label
-      ylab("Temperature") + #change y axis label
+      ylab(ifelse(input$ph_temp == "temp_c", "Temperature", "pH")) + #change y axis label
       theme_bw() +
       theme(#legend.position = "none", #remove legend
         axis.text.x=element_text(angle=45, vjust = 1, hjust=1, size=12), #adjust x axis text format
@@ -439,7 +451,19 @@ server <- function(input, output) {
   
   ## table output
   output$mytable1 <- DT::renderDataTable({
-    DT::datatable(data_summary_table[, input$show_vars, drop = FALSE])
+    DT::datatable(data_summary_table)
+  })
+  
+  ## tab5 scatterplot
+  siteFiltered <- reactive({
+    ph_clean_final %>%
+      filter(site == input$compare_site)
+  })
+    
+  output$scatterplot <- renderPlot({
+    ggplot(siteFiltered(), 
+           aes_string(x = input$x, y = input$y)) +
+      geom_point(aes(color = SetDateMonth))
   })
   
 }
