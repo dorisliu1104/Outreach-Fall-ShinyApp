@@ -39,6 +39,9 @@ x <- lompoc$date_time #set x axis
 lompoc2 <- filter(lompoc, between(date, as.Date("2021-07-25"), as.Date("2021-08-05")))
 
 ## create dataframe for compare and contrast plots
+
+ph2 <- filter(ph_clean_final, between(date, as.Date("2021-08-26"), as.Date("2021-09-27")))
+
 comdata <- ph_clean_final %>% 
   unite("date_time", "date", "time", sep="\ ") %>%
   mutate(date_time=ymd_hms(date_time)) #apply lubridate to date/time column
@@ -244,7 +247,7 @@ ui <- fluidPage(
                                       
                                               
                                        column(width = 7,
-                                              plotOutput(outputId = "cplot1a")))),
+                                              plotOutput(outputId = "tab1_plot")))),
                             tabPanel(h4("Question 2"),
                                      fluidRow(
                                        column(width = 12,
@@ -254,7 +257,13 @@ ui <- fluidPage(
                                               br(),
                                               p("What is the average pH and temperature for each site?"))
                                        )),
-                            tabPanel(h4("Question 3")),
+                            tabPanel(h4("Question 3"),
+                                     fluidRow(
+                                     column(width = 5,
+                                            h4("Click a site"),
+                                            leafletOutput(outputId = "map2", width = "100%", height = 600 )),
+                                     column(width = 8,
+                                            plotOutput("tab3_plot")))),
                             tabPanel(h4("Question 4"),
                                      column(width = 7,
                                           highchart("tab4_plot")  
@@ -421,7 +430,7 @@ server <- function(input, output) {
   ## compare and contrast
 
   ## tab 1 plots
-  output$cplot1a <- renderPlot({
+  output$tab1_plot <- renderPlot({
     ggplot(comdata, aes(x=date_time, y=get(input$compare_tab1), group=site)) + #plot pH here
       geom_line(aes(color=site, alpha=site), size=0.7) + #make it a line chart
       geom_smooth(aes(color=site), method="loess", span=0.1) + #plot trend line for each site
@@ -444,7 +453,33 @@ server <- function(input, output) {
     DT::datatable(data_summary_table)
   })
   
+  ## tab 3 map
+  output$map2 <- renderLeaflet({
+    leaflet() %>% 
+      addTiles() %>% 
+      addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, radius = 7, popup = ~popup_info, color = '#ff0000') %>%
+      addLabelOnlyMarkers(
+        lng = -125.5921856, lat = 38.31875756,
+        label = "Bodega Bay",
+        labelOptions = labelOptions(noHide = T, textOnly = TRUE, textsize = "15px",
+                                    style = list("font-style" = "italic"))) %>%
+      addLabelOnlyMarkers(
+        lng = -121.3505135, lat = 34.70743071,
+        label = "Lompoc Landing",
+        labelOptions = labelOptions(noHide = T, textOnly = TRUE, textsize = "15px",
+                                    style = list("font-style" = "italic"))) %>%
+      addLabelOnlyMarkers(
+        lng = -121.1519116, lat = 34.19907704,
+        label = "Alegria",
+        labelOptions = labelOptions(noHide = T, textOnly = TRUE, textsize = "15px",
+                                    style = list("font-style" = "italic")))
+    
+  }) 
   ## tab 4 highchart output
+  output$tab4_plot <- renderHighchart({
+    highchart() %>% 
+      hc_add_series(ph2, type = "line", hcaes(x = date_time, y = temp_c, group = site ))
+  })
 
   ## tab 5 scatterplot
   siteFiltered <- reactive({
