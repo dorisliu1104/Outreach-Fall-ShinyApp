@@ -69,12 +69,13 @@ ui <- fluidPage(
     
     skin = "blue",
     
-    dashboardHeader(title = "Outreach Project"),
+    dashboardHeader(title = "Ocean Acidification on the CA Coast",
+                    titleWidth = 375),
     dashboardSidebar(
       sidebarMenu(
         menuItem("About the Intertidal", tabName = "about_the_intertidal", icon = icon("compass",lib="font-awesome")),
         menuItem("Our Research", tabName = "research", icon = icon("docker",lib="font-awesome")),
-        menuItem("Data (Lompoc Results)", tabName = "data", icon = icon("anchor",lib="font-awesome")),
+        menuItem("Lompoc Landing Data", tabName = "data", icon = icon("anchor",lib="font-awesome")),
         menuItem("Compare and Contrast", tabName = "compare", icon = icon("chart-bar",lib="font-awesome")),
         menuItem("Conclusion", tabName = "conclusions", icon = icon("fish", lib = "font-awesome")),
         menuItem("Acknowledgements", tabName="acknowledgements",icon=icon("trophy",lib="font-awesome"))
@@ -202,15 +203,14 @@ ui <- fluidPage(
                   )))),
         
         tabItem(tabName = "data",
-                h1("Time Series Trend Visualization for Lompoc Landing"),
+                h1("Lompoc Landing Data"),
                 tabsetPanel(id = "lomdata",
                 tabPanel(h4("Question 1"),
                           sidebarPanel(dateRangeInput(inputId = "date_range", 
                                             label = 'Filter tide by date',
                                             start = as.Date('2021-06-14') , end = as.Date('2021-10-06')),
                                        br(),
-                                       h4("Question 1"),
-                                       h4("What trends do you notice between pH and temperature for the Lompoc site?")),
+                                       h4("1. What trends do you notice between pH and temperature for the Lompoc site?")),
                                        
                 mainPanel(highchartOutput("ph_ts_plot"))
                ),
@@ -221,14 +221,12 @@ ui <- fluidPage(
                                                   label = "select pH or temperature",
                                                   choices = c("Temperature"="temp_c","pH"="p_h")),
                                       br(),
-                                      h4("Question 2"),
-                                      h4("What do you notice about the scale of change for both pH and temp over hours? Days? Weeks/months?")),
+                                      h4("2. What do you notice about the scale of change for both pH and temp over hours? Days? Weeks/months?")),
                          mainPanel(plotOutput(outputId = "q2plot"))),
                 tabPanel(
                          h4("Question 3"),
                          sidebarPanel(
-                           h4("Question 3"),
-                           h4("Search up the weather for August 2 and compare it to the Lompoc data. What do you think could’ve caused the spikes in the data? What are some reasons why the temperature might’ve hit an extreme that day? "),
+                           h4("3. Search up the weather for August 2 and compare it to the Lompoc data. What do you think could’ve caused the spikes in the data? What are some reasons why the temperature might’ve hit an extreme that day? "),
                            br()),
                          mainPanel(highchartOutput("q3plot"))
                          )
@@ -237,7 +235,7 @@ ui <- fluidPage(
                 )),
         
         tabItem(tabName = "compare",
-                titlePanel("Compare and Contrast(Alegria, Lompoc, & Bodega Bay Results)"),
+                titlePanel("Compare and Contrast: All Sites"),
                 tabsetPanel(id = "com",
                             tabPanel(h4("Question 1"),
                                      fluidRow(
@@ -319,17 +317,45 @@ ui <- fluidPage(
         tabItem(tabName="acknowledgements",
                 h1("Acknowledgements", align = "center"),
                 br(),
-                br(),
-                h4(p(strong("This app was developed by Amelia Ritger, Aanchal Garg, Doris Liu, and Zoe Fung."),
-                     style="text-align: center")),
+                tags$img(src = "goletapier.JPG", style="display: block; margin-left: auto; margin-right: auto;", height=500,width=833),
                 br(),
                 br(),
-                h4(p("Special thanks to ___ for their guidance in the development of the app.",
+                h4(p(strong("This app was developed by:"),
+                     style="text-align: center"), 
+                   fluidRow(
+                     column(width = 3,
+                            h4(p(("Amelia Ritger"),
+                                 style="text-align: center"),
+                               br(),
+                               tags$img(src="aanchal.jpeg", style="display: block; margin-left: auto; margin-right: auto;", height=115,width=115))),
+                     column(width = 3,
+                            h4(p(("Aanchal Garg"),
+                                 style="text-align: center"),
+                            br(),
+                            tags$img(src="aanchal.jpeg", style="display: block; margin-left: auto; margin-right: auto;", height=115,width=115))),
+                     column(width = 3,
+                            h4(p(("Doris Liu"),
+                                 style="text-align: center"),
+                               br(),
+                               tags$img(src="aanchal.jpeg", style="display: block; margin-left: auto; margin-right: auto;", height=115,width=115))),
+                     column(width = 3,
+                            h4(p(("Zoe Fung"),
+                                 style="text-align: center"),
+                               br(),
+                               tags$img(src="zoe.jpg", style="display: block; margin-left: auto; margin-right: auto;", height=115,width=115))))),
+                   br(),
+                   h4(p(strong("With funding from UCSB AS Coastal Fund"),
+                        style="text-align: center"),
+                      br(),
+                      a(img(height=100,width=350,
+                            src="coastalfund.jpeg"), href="https://coastalfund.as.ucsb.edu"), style="text-align: center; display: block; margin-left: auto; margin-right: auto"),
+                br(),
+                br(),
+                h4(p("Special thanks to Robert Goettler and Logan Kozal for their guidance in the development of the app.",
                      style="text-align:center")),
-                tags$img(src = "sbbeach.jpeg", style="display: block; margin-left: auto; margin-right: auto;", height=500,width=833),
                 h3(p("Thank you for using this app!",
-                     style = "text-align: center"))
-        )))))
+                     style = "text-align: center"))))
+        )))
 
 ## Create the Server
 server <- function(input, output) {
