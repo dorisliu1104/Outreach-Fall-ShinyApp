@@ -57,6 +57,10 @@ pal <- c(
 ## import data summary table
 data_summary_table <- read_excel("data/data_summary_table.xlsx")
 
+## Filter data for alegria and bodega bay
+alegria <- dplyr::filter(ph_clean_final, site=="Alegria")  ## Filtering the data according to different sites
+bodega <- dplyr::filter(ph_clean_final, site=="Bodega Bay")
+
 
 ## Create the ui (user interface)
 ui <- fluidPage(
@@ -263,6 +267,9 @@ ui <- fluidPage(
                                             h4("Click a site"),
                                             leafletOutput(outputId = "map2", width = "100%", height = 600 )),
                                      column(width = 8,
+                                            selectInput(inputId = "compare_tab3",
+                                                        label = "select pH or temperature",
+                                                        choices = c("Temperature"="temp_c","pH"="p_h")),
                                             plotOutput("tab3_plot")))),
                             tabPanel(h4("Question 4"),
                                      column(width = 7,
@@ -273,13 +280,16 @@ ui <- fluidPage(
                                        column(width = 5,
                                          selectInput(inputId = "x",
                                                    label = "X variable",
-                                                   choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" )),
+                                                   choices = c("Temperature" = "temp_c", "Ph" = "p_h", "Tide" = "tide_height" )),
                                          selectInput(inputId = "y",
                                                    label = "Y variable",
-                                                   choices = c("Temperature" = "temp_durafet_c", "Ph" = "p_h", "Tide" = "tide" )),
+                                                   choices = c("Temperature" = "temp_c", "Ph" = "p_h", "Tide" = "tide_height" )),
                                          selectInput(inputId = "compare_site",
                                                      label = "Please select a site",
-                                                     choices = c("Alegria","Lompoc Landing", "Bodega Bay" ))),
+                                                     choices = c("Alegria","Lompoc Landing", "Bodega Bay" )),
+                                         h4("Question 5"),
+                                         br(),
+                                         p("Is there a correlation between tide and temperature? Are there any variations that affect the resulting pH of the site?")),
                                        column(width = 7,
                                               plotOutput(outputId = "scatterplot"))
                                        
@@ -457,7 +467,7 @@ server <- function(input, output) {
   output$map2 <- renderLeaflet({
     leaflet() %>% 
       addTiles() %>% 
-      addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, radius = 7, popup = ~popup_info, color = '#ff0000') %>%
+      addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, radius = ~ifelse(input$compare_tab3 == "temp_c", Avg_temp, Avg_ph), popup = ~popup_info, color = '#ff0000') %>%
       addLabelOnlyMarkers(
         lng = -125.5921856, lat = 38.31875756,
         label = "Bodega Bay",
@@ -475,6 +485,39 @@ server <- function(input, output) {
                                     style = list("font-style" = "italic")))
     
   }) 
+  
+   # store the click
+  #data_of_click <- reactiveValues(clickedMarker=NULL)
+  #observe(input$map_marker_click,{
+    #data_of_click$clickedMarker <- input$map_marker_click
+  #})
+  
+  observe({
+    click<-input$map_marker_click
+    if(is.null(click))
+      return()
+    text<-paste("Lattitude ", click$lat, "Longtitude ", click$lng)
+    text2<-paste("You've selected point ", click$lat)
+    map2$clearPopups()
+    map2$showPopup( click$lat, click$lng, text)
+    output$Click_text<-renderText({
+      text2
+    })
+  })
+  
+  # output$tab3_plot <- renderPlot({
+  #   site_click=data_of_click$clickedMarker$id
+  #   if(is.null(site_click)){site_click="Alegria"}
+  #   if(site_click=="Alegria"){
+  #     ggplot(alegria,aes(x=date_time, y=temp_c))
+  #   }
+  #   if(site_click=="Bodega Bay"){
+  #     ggplot(bodega,aes(x=date_time, y=temp_c))}
+  #   else{
+  #     ggplot(lompoc,aes(x=date_time, y=temp_c) )
+  #   }    
+  # })
+  
   ## tab 4 highchart output
   output$tab4_plot <- renderHighchart({
     highchart() %>% 
