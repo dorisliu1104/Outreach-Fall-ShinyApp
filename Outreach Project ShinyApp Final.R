@@ -37,10 +37,10 @@ y3 <- lompoc$tide_height #set third y axis
 x <- lompoc$date_time #set x axis
 
 lompoc2 <- filter(lompoc, between(date, as.Date("2021-07-25"), as.Date("2021-08-05")))
+lompoc3 <- filter(lompoc, between(date, as.Date("2021-08-26"), as.Date("2021-09-27")))
+
 
 ## create dataframe for compare and contrast plots
-
-ph2 <- filter(ph_clean_final, between(date, as.Date("2021-08-26"), as.Date("2021-09-27")))
 
 comdata <- ph_clean_final %>% 
   unite("date_time", "date", "time", sep="\ ") %>%
@@ -210,6 +210,8 @@ ui <- fluidPage(
                                             label = 'Filter tide by date',
                                             start = as.Date('2021-06-14') , end = as.Date('2021-10-06')),
                                        br(),
+                                       h4("Question 1"),
+                                       br(),
                                        h4("1. What trends do you notice between pH and temperature for the Lompoc site?")),
                                        
                 mainPanel(highchartOutput("ph_ts_plot"))
@@ -221,21 +223,35 @@ ui <- fluidPage(
                                                   label = "select pH or temperature",
                                                   choices = c("Temperature"="temp_c","pH"="p_h")),
                                       br(),
+                                      h4("Question 2"),
+                                      br(),
                                       h4("2. What do you notice about the scale of change for both pH and temp over hours? Days? Weeks/months?")),
                          mainPanel(plotOutput(outputId = "q2plot"))),
                 tabPanel(
                          h4("Question 3"),
                          sidebarPanel(
+                           h4("Question 3"),
+                           br(),
                            h4("3. Search up the weather for August 2 and compare it to the Lompoc data. What do you think could’ve caused the spikes in the data? What are some reasons why the temperature might’ve hit an extreme that day? "),
                            br()),
                          mainPanel(highchartOutput("q3plot"))
-                         )
+                         ),
+               tabPanel(
+                 h4("Question 4"),
+                 sidebarPanel(
+                   h4("Question 4"),
+                   br(),
+                   h4("4. We expect Bodega to have the lowest temperature, so what is happening from August 26 — September 27 where Lompoc is colder? Use water temperature data to brainstorm ideas on seasonal temperature variation."),
+                   br()),
+                 mainPanel(highchartOutput("q4plot"))
+               )
                 
                          
                 )),
         
         tabItem(tabName = "compare",
                 titlePanel("Compare and Contrast: All Sites"),
+                h4("(figures on this page may take longer to load)"),
                 tabsetPanel(id = "com",
                             tabPanel(h4("Question 1"),
                                      fluidRow(
@@ -245,11 +261,12 @@ ui <- fluidPage(
                                                           choices = c("Temperature"="temp_c","pH"="p_h")),
                                               h4("Question 1"),
                                               br(),
-                                              p("Compare data from Lompoc site to Allegria and Bodega Bay. What are overarching trends you can take away from the data?")),
+                                              h4("Compare data from Lompoc site to Allegria and Bodega Bay. What are overarching trends you can take away from the data?")),
                                       
                                               
                                        column(width = 7,
                                               plotOutput(outputId = "tab1_plot")))),
+                            
                             tabPanel(h4("Question 2"),
                                      fluidRow(
                                        column(width = 12,
@@ -257,23 +274,24 @@ ui <- fluidPage(
                                        column(width = 8,
                                               h4("Question 2"),
                                               br(),
-                                              p("What is the average pH and temperature for each site?"))
+                                              h4("What is the average pH and temperature for each site?"))
                                        )),
+                            
                             tabPanel(h4("Question 3"),
                                      fluidRow(
                                      column(width = 5,
                                             h4("Click a site"),
                                             leafletOutput(outputId = "map2", width = "100%", height = 600 )),
-                                     column(width = 8,
+                                     column(width = 7,
                                             selectInput(inputId = "compare_tab3",
                                                         label = "select pH or temperature",
                                                         choices = c("Temperature"="temp_c","pH"="p_h")),
+                                            selectInput(inputId = "compare_site",
+                                                        label = "please select a site",
+                                                        choices = c("Alegria","Lompoc Landing", "Bodega Bay")),
                                             plotOutput("tab3_plot")))),
+                            
                             tabPanel(h4("Question 4"),
-                                     column(width = 7,
-                                          highchart("tab4_plot")  
-                                            )),
-                            tabPanel(h4("Question 5"),
                                      fluidRow(
                                        column(width = 5,
                                          selectInput(inputId = "x",
@@ -282,12 +300,12 @@ ui <- fluidPage(
                                          selectInput(inputId = "y",
                                                    label = "Y variable",
                                                    choices = c("Temperature" = "temp_c", "Ph" = "p_h", "Tide" = "tide_height" )),
-                                         selectInput(inputId = "compare_site",
+                                         selectInput(inputId = "compare_site2",
                                                      label = "Please select a site",
                                                      choices = c("Alegria","Lompoc Landing", "Bodega Bay" )),
                                          h4("Question 5"),
                                          br(),
-                                         p("Is there a correlation between tide and temperature? Are there any variations that affect the resulting pH of the site?")),
+                                         h4("Is there a correlation between tide and temperature? Are there any variations that affect the resulting pH of the site?")),
                                        column(width = 7,
                                               plotOutput(outputId = "scatterplot"))
                                        
@@ -462,6 +480,27 @@ server <- function(input, output) {
                   "#0072B2"))
   })
   
+  
+  # data_q4plot
+  output$q4plot <- renderHighchart({
+    y7 <- lompoc3$temp_c #set first y axis
+    y8 <- lompoc3$p_h  #set second y axis
+    y9 <- lompoc3$tide_height #set third y axis
+    x <- lompoc3$date_time
+    
+    highchart() %>% 
+      hc_add_series(data = y7, dashStyle="solid", name = "Temperature") %>% #plot temp
+      hc_add_series(data = y8, yAxis = 1, name = "pH") %>% #plot pH
+      hc_add_series(data = y9, yAxis = 2, name = "Tide") %>% #plot tide height
+      hc_yAxis_multiples(
+        list(lineWidth = 3, lineColor='#D55E00', title=list(text="Temperature")), #label/colorize temp y axis
+        list(lineWidth = 3, lineColor="#009E73", title=list(text="pH")), #label/colorize pH y axis
+        list(lineWidth = 3, lineColor="#0072B2", title=list(text="Tide"))) %>% #label/colorize tide y axis
+      hc_xAxis(title = "Date", categories = x, breaks=10) %>% #label x axis
+      hc_colors(c("#D55E00", #set specific colors for points (note same color order as y axis)
+                  "#009E73",
+                  "#0072B2"))
+  })
 
   ## compare and contrast
 
@@ -512,55 +551,31 @@ server <- function(input, output) {
     
   }) 
   
-   # store the click
-  #data_of_click <- reactiveValues(clickedMarker=NULL)
-  #observe(input$map_marker_click,{
-    #data_of_click$clickedMarker <- input$map_marker_click
-  #})
-  
-  observe({
-    click<-input$map_marker_click
-    if(is.null(click))
-      return()
-    text<-paste("Lattitude ", click$lat, "Longtitude ", click$lng)
-    text2<-paste("You've selected point ", click$lat)
-    map2$clearPopups()
-    map2$showPopup( click$lat, click$lng, text)
-    output$Click_text<-renderText({
-      text2
-    })
-  })
-  
-  # output$tab3_plot <- renderPlot({
-  #   site_click=data_of_click$clickedMarker$id
-  #   if(is.null(site_click)){site_click="Alegria"}
-  #   if(site_click=="Alegria"){
-  #     ggplot(alegria,aes(x=date_time, y=temp_c))
-  #   }
-  #   if(site_click=="Bodega Bay"){
-  #     ggplot(bodega,aes(x=date_time, y=temp_c))}
-  #   else{
-  #     ggplot(lompoc,aes(x=date_time, y=temp_c) )
-  #   }    
-  # })
-  
-  ## tab 4 highchart output
-  output$tab4_plot <- renderHighchart({
-    highchart() %>% 
-      hc_add_series(ph2, type = "line", hcaes(x = date_time, y = temp_c, group = site ))
-  })
-
-  ## tab 5 scatterplot
+  # tab 3 plot
   siteFiltered <- reactive({
-    ph_clean_final %>%
-      filter(site == input$compare_site)
+    ph_clean_final %>% 
+    dplyr::filter(site== input$compare_site) %>% 
+    unite("date_time", "date", "time", sep="\ ", remove = FALSE) %>%
+    mutate(date_time=ymd_hms(date_time))
   })
-    
-  output$scatterplot <- renderPlot({
-    ggplot(siteFiltered(), 
-           aes_string(x = input$x, y = input$y)) +
-      geom_point(aes(color = SetDateMonth))
+  
+  output$tab3_plot <- renderPlot({
+    ggplot(siteFiltered(), aes(x=date_time, y=get(input$compare_tab3)))+ #plot pH here
+      geom_line(size = 0.7,color = ifelse(input$compare_tab3 == "temp_c", "#D55E00","#009E73" )) + #make it a line chart
+      geom_smooth(method="loess", span=0.1) + #plot trend line for each site
+      #scale_color_manual(values = ifelse(input$ph_temp == "temp_c", "#D55E00","#009E73" )) + #color lines by custom site color palette
+      scale_x_datetime(breaks = scales::date_breaks("1 week"), 
+                       labels = date_format("%m/%d %H:%m")) + #change x axis to make it look cleaner - each tick is one week, display month/day hour/minute
+      xlab("Date time") + #change x axis label
+      ylab(ifelse(input$compare_tab3 == "temp_c", "Temperature", "pH")) + #change y axis label
+      theme_bw() +
+      theme(#legend.position = "none", #remove legend
+        axis.text.x=element_text(angle=45, vjust = 1, hjust=1, size=12), #adjust x axis text format
+        axis.title.x=element_text(size=15),
+        axis.text.y=element_text(size=12), #adjust y axis text format
+        axis.title.y=element_text(size=15))
   })
+ 
   
 }
 
