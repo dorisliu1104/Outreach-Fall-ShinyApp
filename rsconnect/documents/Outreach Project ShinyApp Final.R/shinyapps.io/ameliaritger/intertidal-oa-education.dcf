@@ -1,0 +1,14 @@
+name: intertidal-oa-education
+title: intertidal-oa-education
+username:
+account: ameliaritger
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5653995
+bundleId: 5579244
+url: https://ameliaritger.shinyapps.io/intertidal-oa-education/
+when: 1644882327.70406
+lastSyncTime: 1644882327.70409
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: 1203 copy.R|check.R|Filtered data (high and low).Rmd|highcharter.R|Ph Linear Regression.Rmd|Ph TS Plot.Rmd|README.md|relevant-code.R|Shiny 0118.R|Shiny 1101.R|Shiny 1115.R|Shiny 1121.R|Shiny App Version 1028.R|Shiny app.R|shiny check 0118.R|Shiny check 0125.R|shiny check 1203.R|ShinyApp 1028.R|ShinyApp.R

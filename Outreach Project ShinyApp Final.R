@@ -12,6 +12,11 @@ library(highcharter)
 library(DT)
 library(scales)
 
+#add functionality to publish app
+library(rsconnect)
+library(BiocManager)
+options(repos = BiocManager::repositories())
+
 ## Read the Updated Data
 ph_clean_final <- read_csv(here("data", "ph_clean_final.csv"))
 ph_clean_final <- ph_clean_final %>%
