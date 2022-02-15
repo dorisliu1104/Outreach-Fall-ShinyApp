@@ -12,6 +12,7 @@ library(highcharter)
 library(DT)
 library(scales)
 library(slickR)
+library(janitor)
 
 # #add functionality to publish app
 # library(rsconnect)
@@ -62,7 +63,16 @@ pal <- c(
 )
 
 ## import data summary table
-data_summary_table <- read_excel("data/data_summary_table.xlsx")
+data_summary_table <- site_gps %>%
+  clean_names() %>%
+  select(site, min_temp, avg_temp, max_temp, min_ph, avg_ph, max_ph) %>%
+  dplyr::rename("Site"=1,
+         "Minimum Temperature"=2,
+         "Maximum Temperature"=4,
+         "Average Temperature"=3,
+         "Minimum pH"=5,
+         "Maximum pH"=7,
+         "Average pH"=6)
 
 ## Filter data for alegria and bodega bay
 alegria <- dplyr::filter(ph_clean_final, site=="Alegria")  ## Filtering the data according to different sites
@@ -544,11 +554,13 @@ server <- function(input, output) {
     DT::datatable(data_summary_table)
   })
   
+  gps_radius <- c(15,8,11)
+  
   ## tab 3 map
   output$map2 <- renderLeaflet({
     leaflet() %>% 
       addTiles() %>% 
-      addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, radius = 7, popup = ~popup_info, color = ~ifelse(input$compare_tab3 == "temp_c", "#D55E00", "#009E73")) %>%
+      addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, radius = ~gps_radius, popup = ~popup_info, color = ~ifelse(input$compare_tab3 == "temp_c", "#D55E00", "#009E73")) %>%
       addLabelOnlyMarkers(
         lng = -125.5921856, lat = 38.31875756,
         label = "Bodega Bay",
