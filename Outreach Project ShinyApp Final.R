@@ -158,21 +158,22 @@ ui <- fluidPage(
                          h3("About the sites"),
                          tabsetPanel(id="about_the_sites_tabs",
                                      tabPanel(h4("Site pictures"),
-                                              tags$div(
-                                                slickROutput("bodegabay", height="100px", width="350px")),
                                               h4("Bodega Bay",
                                                  style="text-align:center"),
-                                              tags$img(src = "bodega_site.jpg", align = "center",height=225,width=375),
+                                              tags$div(
+                                                slickROutput("bodegabay")),
                                               br(),
                                               br(),
                                               h4("Lompoc Landing",
                                                  style="text-align:center"),
-                                              tags$img(src = "lol_site.jpg", align = "center",height=225,width=375),
+                                              tags$div(
+                                                slickROutput("lompoc")),
                                               br(),
                                               br(),
                                               h4("Alegria",
                                                  style="text-align:center"),
-                                              tags$img(src = "alegria_site.jpg", align = "center",height=225,width=375),
+                                              tags$div(
+                                                slickROutput("alegria")),
                                               ),
                                      tabPanel(h4("On the map"),
                                               leafletOutput(outputId = "map", width = "100%", height = 600 )))),
@@ -218,7 +219,8 @@ ui <- fluidPage(
                                             label = 'Filter tide by date',
                                             start = as.Date('2021-06-14') , end = as.Date('2021-10-06')),
                                        br(),
-                                       h4("1. What trends do you notice between pH and temperature for the Lompoc site?")),
+                                       h4("1. What trends do you notice between pH and temperature for the Lompoc site?"),
+                                       ),
                                        
                 mainPanel(highchartOutput("ph_ts_plot"))
                ),
@@ -229,20 +231,27 @@ ui <- fluidPage(
                                                   label = "select pH or temperature",
                                                   choices = c("Temperature"="temp_c","pH"="p_h")),
                                       br(),
-                                      h4("2. What do you notice about the scale of change for both pH and temp over hours? Days? Weeks/months?")),
+                                      h4("2. What do you notice about the scale of change for both pH and temp over hours? Days? Weeks/months?"),
+                                      column(12, align="right",
+                                             checkboxInput("checkbox_lompoc2",label = "Show answer", value = FALSE)),
+                                      br(),
+                                      conditionalPanel(
+                                        condition = "input.checkbox_lompoc2 == 1",
+                                        h4(p(em("The temperature tracks with the pH over the scale of days and weeks."),
+                                             style="text-align:left")))),
                          mainPanel(plotOutput(outputId = "q2plot"))),
                 tabPanel(
                          h4("Question 3"),
                          sidebarPanel(
-                           h4("3. Search up the weather for August 2 and compare it to the Lompoc data. What do you think could’ve caused the spikes in the data? What are some reasons why the temperature might’ve hit an extreme that day? "),
-                           br()),
+                           h4("3. Search up the weather for August 2 and compare it to the Lompoc data. What do you think could’ve caused the spikes in the data? What are some reasons why the temperature might’ve hit an extreme that day?"),
+                           ),
                          mainPanel(highchartOutput("q3plot"))
                          ),
                tabPanel(
                  h4("Question 4"),
                  sidebarPanel(
                    h4("4. We expect Bodega to have the lowest temperature, so what is happening from August 26 — September 27 where Lompoc is colder? Use water temperature data to brainstorm ideas on seasonal temperature variation."),
-                   br()),
+                   ),
                  mainPanel(highchartOutput("q4plot"))
                )
                 
@@ -257,7 +266,15 @@ ui <- fluidPage(
                                      fluidRow(
                                        column(width = 5,
                                               h4("1. Compare data from Lompoc site to Allegria and Bodega Bay. What are overarching trends you can take away from the data?",
-                                                 style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
+                                              column(12, align="right",
+                                                     checkboxInput("checkbox_compare1",label = "Show answer", value = FALSE)),
+                                              br(),
+                                              br(),
+                                              conditionalPanel(
+                                                condition = "input.checkbox_compare1 == 1",
+                                                h4(p(em("Alegria has the highest pH and temp, then Lompoc, then Bodega Bay"),
+                                                     style="text-align:left"))),
+                                              style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
                                               br(),
                                               selectInput(inputId = "compare_tab1",
                                                           label = "Select pH or temperature",
@@ -285,8 +302,16 @@ ui <- fluidPage(
                                             h4("Click a site"),
                                             leafletOutput(outputId = "map2", width = "100%", height = 600 )),
                                      column(width = 7,
-                                            h4(p("3. Where do you see the most variation between temperature, tide, and pH? Discuss potential causes for variations in the data.",
-                                                 style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
+                                            h4("3. Where do you see the most variation between temperature, tide, and pH? Discuss potential causes for variations in the data.",
+                                                 column(12, align="right",
+                                                        checkboxInput("checkbox_compare2",label = "Show answer", value = FALSE)),
+                                                 br(),
+                                                 br(),
+                                                 conditionalPanel(
+                                                   condition = "input.checkbox_compare2 == 1",
+                                                   h4(p(em("Bodega bay dropoff is unclear, might’ve been an upwelling event due to strong winds; sensor is in low tide in Alegria and high tide in Lompoc and Bodega"),
+                                                        style="text-align:left"))),
+                                                 style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
                                             br(),
                                             selectInput(inputId = "compare_tab3",
                                                         label = "Select pH or temperature",
@@ -535,6 +560,16 @@ server <- function(input, output) {
   # our research slideshows
   output$bodegabay <- renderSlickR({
     imgs <- list.files("www/Bodega", pattern=".jpg", full.names = TRUE)
+    slickR(imgs)
+  })
+  
+  output$lompoc <- renderSlickR({
+    imgs <- list.files("www/Lompoc", pattern=".jpg", full.names = TRUE)
+    slickR(imgs)
+  })
+  
+  output$alegria <- renderSlickR({
+    imgs <- list.files("www/Alegria", pattern=".jpg", full.names = TRUE)
     slickR(imgs)
   })
   
