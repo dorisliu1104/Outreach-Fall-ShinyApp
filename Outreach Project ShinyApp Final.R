@@ -171,21 +171,18 @@ ui <- fluidPage(
                                      tabPanel(h4("Site pictures"),
                                               h4("Bodega Bay",
                                                  style="text-align:center"),
-                                              tags$div(
-                                                slickROutput("bodegabay")),
+                                              tags$img(src = "bodega_site.jpg", align = "center",height=225,width=375),
                                               br(),
                                               br(),
                                               h4("Lompoc Landing",
                                                  style="text-align:center"),
-                                              tags$div(
-                                                slickROutput("lompoc")),
+                                              tags$img(src = "lol_site.jpg", align = "center",height=225,width=375),
                                               br(),
                                               br(),
                                               h4("Alegria",
                                                  style="text-align:center"),
-                                              tags$div(
-                                                slickROutput("alegria")),
-                                              ),
+                                              tags$img(src = "alegria_site.jpg", align = "center",height=225,width=375),
+                                     ),
                                      tabPanel(h4("On the map"),
                                               leafletOutput(outputId = "map", width = "100%", height = 600 )))),
                          
@@ -226,30 +223,31 @@ ui <- fluidPage(
                 h1("Lompoc Landing Data"),
                 tabsetPanel(id = "lomdata",
                 tabPanel(h4("Question 1"),
-                          sidebarPanel(dateRangeInput(inputId = "date_range", 
-                                            label = 'Filter tide by date',
-                                            start = as.Date('2021-06-14') , end = as.Date('2021-10-06')),
-                                       br(),
-                                       h4("1. What trends do you notice between pH and temperature for the Lompoc site?"),
-                                       ),
+                          sidebarPanel(sidebarPanel(h4("1. What trends do you notice between pH and temperature for the Lompoc site?"),
+                                                    br(),
+                                                    dateRangeInput(inputId = "date_range", 
+                                                                   label = 'Filter tide by date',
+                                                                   start = as.Date('2021-06-14') , end = as.Date('2021-10-06'))
+                          )),
                                        
                 mainPanel(highchartOutput("ph_ts_plot"))
                ),
                 
                 tabPanel(
                          h4("Question 2"),
-                         sidebarPanel(selectInput(inputId = "ph_temp",
-                                                  label = "select pH or temperature",
-                                                  choices = c("Temperature"="temp_c","pH"="p_h")),
-                                      br(),
-                                      h4("2. What do you notice about the scale of change for both pH and temp over hours? Days? Weeks/months?"),
+                         sidebarPanel(h4("2. What do you notice about the scale of change for both pH and temp over hours? Days? Weeks/months?"),
                                       column(12, align="right",
                                              checkboxInput("checkbox_lompoc2",label = "Show answer", value = FALSE)),
                                       br(),
                                       conditionalPanel(
                                         condition = "input.checkbox_lompoc2 == 1",
                                         h4(p(em("The temperature tracks with the pH over the scale of days and weeks."),
-                                             style="text-align:left")))),
+                                             style="text-align:left"))),
+                                      br(),
+                                      selectInput(inputId = "ph_temp",
+                                                  label = "select pH or temperature",
+                                                  choices = c("Temperature"="temp_c","pH"="p_h"))
+                         ),
                          mainPanel(plotOutput(outputId = "q2plot"))),
                 tabPanel(
                          h4("Question 3"),
