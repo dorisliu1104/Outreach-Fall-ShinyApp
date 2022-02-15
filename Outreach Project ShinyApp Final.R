@@ -13,14 +13,15 @@ library(DT)
 library(scales)
 library(slickR)
 
-#add functionality to publish app
-library(rsconnect)
-library(BiocManager)
-options(repos = BiocManager::repositories())
+# #add functionality to publish app
+# library(rsconnect)
+# library(BiocManager)
+# options(repos = BiocManager::repositories())
 
 ## Read the Updated Data
 ph_clean_final <- read_csv(here("data", "ph_clean_final.csv"))
 ph_clean_final <- ph_clean_final %>%
+  arrange(date_time) %>% 
   mutate(date=mdy(date))
 f = "%m/%d/%Y" 
 ph_clean_final$SetDateMonth <- format(as.POSIXct(ph_clean_final$date, format = f), "%m")
