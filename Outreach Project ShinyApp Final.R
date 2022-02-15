@@ -11,6 +11,7 @@ library(reshape)
 library(highcharter)
 library(DT)
 library(scales)
+library(slickR)
 
 #add functionality to publish app
 library(rsconnect)
@@ -157,6 +158,8 @@ ui <- fluidPage(
                          h3("About the sites"),
                          tabsetPanel(id="about_the_sites_tabs",
                                      tabPanel(h4("Site pictures"),
+                                              tags$div(
+                                                slickROutput("bodegabay", height="100px", width="350px")),
                                               h4("Bodega Bay",
                                                  style="text-align:center"),
                                               tags$img(src = "bodega_site.jpg", align = "center",height=225,width=375),
@@ -524,6 +527,12 @@ server <- function(input, output) {
         axis.text.y=element_text(size=12), #adjust y axis text format
         axis.title.y=element_text(size=15)) +
       scale_alpha_manual(values=c(0.5,0.5,1))
+  })
+  
+  # our research slideshows
+  output$bodegabay <- renderSlickR({
+    imgs <- list.files("www/Bodega", pattern=".jpg", full.names = TRUE)
+    slickR(imgs)
   })
   
   ## tab 2 table output
