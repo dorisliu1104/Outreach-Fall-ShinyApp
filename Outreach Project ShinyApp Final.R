@@ -215,8 +215,6 @@ ui <- fluidPage(
                                             label = 'Filter tide by date',
                                             start = as.Date('2021-06-14') , end = as.Date('2021-10-06')),
                                        br(),
-                                       h4("Question 1"),
-                                       br(),
                                        h4("1. What trends do you notice between pH and temperature for the Lompoc site?")),
                                        
                 mainPanel(highchartOutput("ph_ts_plot"))
@@ -228,15 +226,11 @@ ui <- fluidPage(
                                                   label = "select pH or temperature",
                                                   choices = c("Temperature"="temp_c","pH"="p_h")),
                                       br(),
-                                      h4("Question 2"),
-                                      br(),
                                       h4("2. What do you notice about the scale of change for both pH and temp over hours? Days? Weeks/months?")),
                          mainPanel(plotOutput(outputId = "q2plot"))),
                 tabPanel(
                          h4("Question 3"),
                          sidebarPanel(
-                           h4("Question 3"),
-                           br(),
                            h4("3. Search up the weather for August 2 and compare it to the Lompoc data. What do you think could’ve caused the spikes in the data? What are some reasons why the temperature might’ve hit an extreme that day? "),
                            br()),
                          mainPanel(highchartOutput("q3plot"))
@@ -244,8 +238,6 @@ ui <- fluidPage(
                tabPanel(
                  h4("Question 4"),
                  sidebarPanel(
-                   h4("Question 4"),
-                   br(),
                    h4("4. We expect Bodega to have the lowest temperature, so what is happening from August 26 — September 27 where Lompoc is colder? Use water temperature data to brainstorm ideas on seasonal temperature variation."),
                    br()),
                  mainPanel(highchartOutput("q4plot"))
@@ -256,17 +248,18 @@ ui <- fluidPage(
         
         tabItem(tabName = "compare",
                 titlePanel("Compare and Contrast: All Sites"),
-                h4("(figures on this page may take longer to load)"),
+                h5(em("Figures on this page may take longer to load")),
                 tabsetPanel(id = "com",
                             tabPanel(h4("Question 1"),
                                      fluidRow(
                                        column(width = 5,
-                                              selectInput(inputId = "compare_tab1",
-                                                          label = "select pH or temperature",
-                                                          choices = c("Temperature"="temp_c","pH"="p_h")),
-                                              h4("Question 1"),
+                                              h4("1. Compare data from Lompoc site to Allegria and Bodega Bay. What are overarching trends you can take away from the data?",
+                                                 style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
                                               br(),
-                                              h4("Compare data from Lompoc site to Allegria and Bodega Bay. What are overarching trends you can take away from the data?")),
+                                              selectInput(inputId = "compare_tab1",
+                                                          label = "Select pH or temperature",
+                                                          choices = c("Temperature"="temp_c","pH"="p_h"))
+                                              ),
                                       
                                               
                                        column(width = 7,
@@ -274,12 +267,13 @@ ui <- fluidPage(
                             
                             tabPanel(h4("Question 2"),
                                      fluidRow(
-                                       column(width = 12,
-                                              mainPanel(DT::dataTableOutput("mytable1"))),
                                        column(width = 8,
-                                              h4("Question 2"),
                                               br(),
-                                              h4("What is the average pH and temperature for each site?"))
+                                              h4("2. What is the average pH and temperature for each site?",
+                                                 style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
+                                       br(),
+                                       column(width = 12,
+                                              mainPanel(DT::dataTableOutput("mytable1")))
                                        )),
                             
                             tabPanel(h4("Question 3"),
@@ -288,17 +282,22 @@ ui <- fluidPage(
                                             h4("Click a site"),
                                             leafletOutput(outputId = "map2", width = "100%", height = 600 )),
                                      column(width = 7,
+                                            h4(p("3. Where do you see the most variation between temperature, tide, and pH? Discuss potential causes for variations in the data.",
+                                                 style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
+                                            br(),
                                             selectInput(inputId = "compare_tab3",
-                                                        label = "select pH or temperature",
+                                                        label = "Select pH or temperature",
                                                         choices = c("Temperature"="temp_c","pH"="p_h")),
                                             selectInput(inputId = "compare_site",
-                                                        label = "please select a site",
+                                                        label = "Please select a site",
                                                         choices = c("Alegria","Lompoc Landing", "Bodega Bay")),
                                             plotOutput("tab3_plot")))),
                             
                             tabPanel(h4("Question 4"),
                                      fluidRow(
                                        column(width = 5,
+                                              h4("4. Is there a correlation between tide and temperature? Are there any variations that affect the resulting pH of the site?",
+                                                 style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
                                          selectInput(inputId = "x",
                                                    label = "X variable",
                                                    choices = c("Temperature" = "temp_c", "Ph" = "p_h", "Tide" = "tide_height" )),
@@ -308,9 +307,7 @@ ui <- fluidPage(
                                          selectInput(inputId = "compare_site2",
                                                      label = "Please select a site",
                                                      choices = c("Alegria","Lompoc Landing", "Bodega Bay" )),
-                                         h4("Question 5"),
-                                         br(),
-                                         h4("Is there a correlation between tide and temperature? Are there any variations that affect the resulting pH of the site?")),
+                                         ),
                                        column(width = 7,
                                               plotOutput(outputId = "scatterplot"))
                                        
@@ -333,7 +330,8 @@ ui <- fluidPage(
 )),
                             tabPanel(h4("Get involved"),
                                         h4(p(strong("Click on each logo to explore the organization's website!"))),
-                                     a(img(src="ucsblogo3.png"), href="https://www.ucsb.edu")))),
+                                     a(img(height=100, width=175,
+                                           src="ucsblogo3.png"), href="https://www.ucsb.edu")))),
                 
         
         # acknowledgements tab content
@@ -350,7 +348,7 @@ ui <- fluidPage(
                             h4(p(("Amelia Ritger"),
                                  style="text-align: center"),
                                br(),
-                               tags$img(src="aanchal.jpeg", style="display: block; margin-left: auto; margin-right: auto;", height=115,width=115))),
+                               tags$img(src="amelia.jpg", style="display: block; margin-left: auto; margin-right: auto;", height=115,width=115))),
                      column(width = 3,
                             h4(p(("Aanchal Garg"),
                                  style="text-align: center"),
