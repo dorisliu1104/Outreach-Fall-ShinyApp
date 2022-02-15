@@ -329,7 +329,10 @@ ui <- fluidPage(
                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
                                       br(),
                                       p("2. How can the data collected and its conclusions be used to inform conservation and management efforts in the intertidal?",
-                                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")
+                                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
+                                      br(),
+                                      h4(p("3. Considering the implications from the data you observed, what is a follow-up research project you would design?",
+                                           style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))
 )),
                             tabPanel(h4("Get involved"),
                                         h4(p(strong("Click on each logo to explore the organization's website!"))),
