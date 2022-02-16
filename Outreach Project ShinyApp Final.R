@@ -39,14 +39,13 @@ lompoc <- ph_clean_final %>%
   unite("date_time", "date", "time", sep="\ ", remove = FALSE) %>%
   mutate(date_time=ymd_hms(date_time))
 
-y1 <- lompoc$temp_c #set first y axis
-y2 <- lompoc$p_h  #set second y axis
-y3 <- lompoc$tide_height #set third y axis
-x <- lompoc$date_time #set x axis
-
 lompoc2 <- filter(lompoc, between(date, as.Date("2021-07-25"), as.Date("2021-08-05")))
 lompoc3 <- filter(lompoc, between(date, as.Date("2021-08-26"), as.Date("2021-09-27")))
-
+lompoc4 <- filter(lompoc, between(date, as.Date("2021-06-17"), as.Date("2021-06-23")))
+alegria4 <- dplyr::filter(ph_clean_final, site=="Alegria") %>% 
+  filter(between(date, as.Date("2021-08-07"), as.Date("2021-08-17")))
+bodega4 <- dplyr::filter(ph_clean_final, site=="Bodega Bay") %>% 
+  filter(between(date, as.Date("2021-07-05"), as.Date("2021-07-09")))
 
 ## create dataframe for compare and contrast plots
 
@@ -281,12 +280,12 @@ ui <- fluidPage(
                 h1("Lompoc Landing Data"),
                 tabsetPanel(id = "lomdata",
                 tabPanel(h4("Question 1"),
-                          sidebarPanel(sidebarPanel(h4("1. What trends do you notice between pH and temperature for the Lompoc site?"),
+                          sidebarPanel(h4("1. What trends do you notice between pH and temperature for the Lompoc site?"),
                                                     br(),
                                                     dateRangeInput(inputId = "date_range", 
                                                                    label = 'Filter tide by date',
                                                                    start = as.Date('2021-06-14') , end = as.Date('2021-10-06'))
-                          )),
+                          ),
                                        
                 mainPanel(highchartOutput("ph_ts_plot"))
                ),
@@ -390,23 +389,18 @@ ui <- fluidPage(
                             
                             tabPanel(h4("Question 4"),
                                      fluidRow(
-                                       column(width = 5,
+                                       column(width = 4,
                                               h4("4. Is there a correlation between tide and temperature? Are there any variations that affect the resulting pH of the site?",
                                                  style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
-                                         selectInput(inputId = "x",
-                                                   label = "X variable",
-                                                   choices = c("Temperature" = "temp_c", "Ph" = "p_h", "Tide" = "tide_height" )),
-                                         selectInput(inputId = "y",
-                                                   label = "Y variable",
-                                                   choices = c("Temperature" = "temp_c", "Ph" = "p_h", "Tide" = "tide_height" )),
-                                         selectInput(inputId = "compare_site2",
-                                                     label = "Please select a site",
-                                                     choices = c("Alegria","Lompoc Landing", "Bodega Bay" )),
-                                         ),
-                                       column(width = 7,
-                                              plotOutput(outputId = "scatterplot"))
-                                       
-                                     )))),
+                                         radioButtons(inputId = "compare_tab4", 
+                                                      label = "Please select an example",
+                                                      choices = c('Example 1 (Alegria)' = "tab4_alegria", 
+                                                                  'Example 2 (Lompoc Landing)' = "tab4_lompoc", 
+                                                                  'Example 3 (Bodega Bay)' = "tab4_bodega"))),
+                                       column(width = 8,
+                                              imageOutput("tab4_img"))
+                                       ))
+                            )),
         
         
         # conclusion & global implications tab content
@@ -689,7 +683,15 @@ server <- function(input, output) {
         axis.text.y=element_text(size=12), #adjust y axis text format
         axis.title.y=element_text(size=15))
   })
- 
+  
+  
+  #tab4 output
+  output$tab4_img <- renderImage({
+    filename <- normalizePath(file.path('./www/', paste(input$compare_tab4, ".png", sep="")))
+    list(src = filename, height = 400, width = 600)
+  }, deleteFile = FALSE
+  )
+  
   
 }
 
