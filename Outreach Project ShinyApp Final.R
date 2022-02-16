@@ -368,10 +368,15 @@ ui <- fluidPage(
                                       h4(p("3. Considering the implications from the data you observed, what is a follow-up research project you would design?",
                                            style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))
 )),
-                            tabPanel(h4("Get involved"),
-                                        h4(p(strong("Click on each logo to explore the organization's website!"))),
-                                     a(img(height=100, width=175,
-                                           src="ucsblogo3.png"), href="https://www.ucsb.edu")))),
+                            tabPanel(h4("Learn more"),
+                                        h4(p(em("Click on each logo to explore the organization's website"))),
+                                     a(img(height="50%", width="50%", src="oaplogo.png"), href="https://oceanacidification.noaa.gov/Home.aspx", style="text-align: center; display: block; margin-left: auto; margin-right: auto"),
+                                     br(),
+                                     a(img(height="50%", width="50%", src="ccanlogo.jpg"), href="https://c-can.info/", style="text-align: center; display: block; margin-left: auto; margin-right: auto"),
+                                     br(),
+                                     a(img(height="50%", width="50%", src="goa-onlogo.png"), href="http://www.goa-on.org/home.php", style="text-align: center; display: block; margin-left: auto; margin-right: auto"),
+                                     br(),
+                                     a(img(height="50%", width="50%", src="OAIElogo.png"), href="https://www.oainfoexchange.org/index.html", style="text-align: center; display: block; margin-left: auto; margin-right: auto")))),
                 
         
         # acknowledgements tab content
