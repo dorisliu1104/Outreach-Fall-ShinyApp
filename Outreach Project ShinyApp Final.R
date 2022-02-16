@@ -196,31 +196,59 @@ ui <- fluidPage(
                 h1("Our Research"),
                 fluidRow(
                   column(5,
-                         h3("About the sites"),
+                         h3("Research methods"),
                          tabsetPanel(id="about_the_sites_tabs",
+                                     tabPanel(h4("Background"),
+                                              h4("California has two upwelling regimes, geographically separated by Point Conception:", strong("strong upwelling in the north"), ", where marine environments are subject to persistent colder temperatures and low pH conditions, and", strong("weak upwelling in the south"), ", where marine environments are subject to persistent warmer temperatures and higher pH conditions."),
+                                              br(),
+                                              tags$img(src = "caupwelling-noaa.jpg", align = "center",height="100%",width="100%"),
+                                              br(),
+                                              h5(em("California sea surface water temperature")),
+                                              br(),
+                                              h4("However, the current environmental conditions of the intertidal zone are virtually unexplored in California.")
+                                     ),
+                                     tabPanel(h4("Question"),
+                                              h4(strong("Question:"), "What are the pH and temperature conditions across the California coastline?"),
+                                              br(),
+                                              h4(strong("Hypothesis:"), "pH will decrease with increasing latitude, and temperature will increase with decreasing latitude."),
+                                              br(),
+                                              h4(strong("Predictions:"), "Bodega Bay, the northernmost site, will experience the lowest pH and temperatures, whereas Alegria, the southernmost site, will experience the highest pH and temperatures.")
+                                     ),
+                                     tabPanel(h4("Methods"),
+                                              h4(strong("Sensor deployments:"), "pH and temperature sensors were deployed in the rocky intertidal zone at three sites - Bodega Bay, Lompoc Landing, and Alegria - from May 2021 until November 2021. Sensors took temperature and pH measurements every 15 minutes."),
+                                              br(),
+                                              h4(strong("Site selection:"), "Sites were selected because they had 1) been studied before, which would allow us to build upon historical datasets, 2) capture variation California's two upwelling regimes, and 3) limit public access, which protects the valuable sensor equipment."),
+                                              br(),
+                                              h4(strong("Site map")),
+                                              leafletOutput(outputId = "map", width = "100%", height = 400),
+                                              br(),
+                                              h4(em("Take a look at",
+                                                 tags$a(href="https://www.windy.com/?36.364,-121.838,7,i:pressure", "this website"), "to explore more physical differences between these three sites and across the California coastline"))),
                                      tabPanel(h4("Site pictures"),
+                                              "**we will add more photos from each site in the final version of the app**",
                                               h4("Bodega Bay",
                                                  style="text-align:center"),
-                                              tags$img(src = "bodega_site.jpg", align = "center",height=225,width=375),
+                                              tags$img(src = "bodega_site.jpg", align = "center",height="100%",width="100%"),
                                               br(),
                                               br(),
                                               h4("Lompoc Landing",
                                                  style="text-align:center"),
-                                              tags$img(src = "lol_site.jpg", align = "center",height=225,width=375),
+                                              tags$img(src = "lol_site.jpg", align = "center",height="100%",width="100%"),
                                               br(),
                                               br(),
                                               h4("Alegria",
                                                  style="text-align:center"),
-                                              tags$img(src = "alegria_site.jpg", align = "center",height=225,width=375),
-                                     ),
-                                     tabPanel(h4("On the map"),
-                                              leafletOutput(outputId = "map", width = "100%", height = 600 )))),
+                                              tags$img(src = "alegria_site.jpg", align = "center",height="100%",width="100%"),
+                                     )
+                                     #tabPanel(h4("Site map")
+                                              #leafletOutput(outputId = "map", width = "100%", height = 600 )
+                                              )),
                          
                   column(7, 
                          h3("Your turn"),
                          tabsetPanel(id="our_research_tabs",
                                      tabPanel(h4("Question 1"),
-                                              h4(p("Examine the three pictures from the three different sites in which sensors were deloyed. What are some visual differences between each environment?",
+                                              h4(p("Examine the pictures from the three different study sites. What are some visual differences between each environment?",
                                                 style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
                                               column(12, align="right",
                                                      checkboxInput("checkbox1", label = "Show answer", value = FALSE)),
@@ -229,7 +257,7 @@ ui <- fluidPage(
                                                   h4(p(em("A lot more sand in Alegria, more flat than rocky Bodega; Lompoc is structured like a shelf with steps; sensor was exposed at Bodega site"),
                                                     style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")))),
                                      tabPanel(h4("Question 2"),
-                                              h4(p("Why were these three sites selected? What are the geographic differences between each site?",
+                                              h4(p("Why were these three sites selected? How are these sites similar? How are they different?",
                                                 style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
                                                 column(12, align="right",
                                                        checkboxInput("checkbox2",label = "Show answer", value = FALSE)),
@@ -239,7 +267,7 @@ ui <- fluidPage(
                                                     style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))
                                                 )),
                                      tabPanel(h4("Question 3"),
-                                              h4(p("What other physical variables in the intertidal could affect the data collected by the sensors besides the ones being tested for?",
+                                              h4(p("What physical conditions unique to the intertidal might affect the temperature and pH data collected by the sensors?",
                                                 style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
                                                 column(12, align="right",
                                                        checkboxInput("checkbox3", label = "Show answer", value = FALSE)),
@@ -452,7 +480,7 @@ server <- function(input, output) {
   output$map <- renderLeaflet({
     leaflet() %>% 
       addTiles() %>% 
-      addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, radius = 7, popup = ~popup_info, color = '#ff0000') %>%
+      addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, radius = 7, color = '#2e4057') %>%
       addLabelOnlyMarkers(
         lng = -125.5921856, lat = 38.31875756,
         label = "Bodega Bay",
@@ -467,10 +495,8 @@ server <- function(input, output) {
         lng = -121.1519116, lat = 34.19907704,
         label = "Alegria",
         labelOptions = labelOptions(noHide = T, textOnly = TRUE, textsize = "15px",
-                                    style = list("font-style" = "italic")))
-      
-      
-    
+                                    style = list("font-style" = "italic"))) %>%
+      setView(lng = -121.6555, lat =  36.0, zoom = 6)
   }) 
   
   ## Data (Lompoc) Tab
