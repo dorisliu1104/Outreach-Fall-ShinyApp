@@ -90,7 +90,7 @@ ui <- fluidPage(
                     titleWidth = 375),
     dashboardSidebar(
       sidebarMenu(
-        menuItem("About the Intertidal", tabName = "about_the_intertidal", icon = icon("compass",lib="font-awesome")),
+        menuItem("About Ocean Acidification", tabName = "about_the_intertidal", icon = icon("compass",lib="font-awesome")),
         menuItem("Our Research", tabName = "research", icon = icon("docker",lib="font-awesome")),
         menuItem("Lompoc Landing Data", tabName = "data", icon = icon("anchor",lib="font-awesome")),
         menuItem("Compare and Contrast", tabName = "compare", icon = icon("chart-bar",lib="font-awesome")),
@@ -103,51 +103,78 @@ ui <- fluidPage(
       tabItems(
         # First tab content: About the Intertidal
         tabItem(tabName = "about_the_intertidal",
-                h1("About The Intertidal"),
+                h1("About Ocean Acidification"),
                 tabsetPanel(id="intertidal_tab",
                             tabPanel(h4("What is ocean acidification?"),
-                                     h4(p("Ocean acidification (OA) is a process that occurs when the ocean absorbs excessive amounts of anthropogenically produced CO2 from the air.",
+                                     h4(p("The ocean is a carbon sink that absorbs around 30% of the carbon dioxide (CO2) released to the atmosphere by human activities, such as burning fossil fuels and deforestation.
+                                          Ocean pH is normally around 8.1, but the pH drops when CO2 dissolves in seawater.",
                                           br(),
                                           br(),
-                                          tags$img(src = "OCcycle.jpeg", style="display: block; margin-left: auto; margin-right: auto;"),
+                                          tags$img(src = "OCcycle.jpeg", style="display: block; margin-left: auto; margin-right: auto;"),  
+                                          br(),
+                                          "Ocean acidification (OA) is a chemical change that occurs when seawater absorbs excessive amounts of anthropogenically-produced CO2 from the air.
+                                          When CO2 dissolves in water, it releases hydrogen ions that combine with carbonate ions to produce bicarbonate, thereby removing carbonate from seawater.",
                                           br(),
                                           br(),
-                                          "The ocean absorbs 25% of all anthropogenically released CO2 as a carbon sink. Ocean pH is normally ~8.1, which is pretty neutral, but becomes more acidic when CO2 dissolves in water.",
+                                          em("Watch this short video for an overview of OA and its effects:"),
                                           br(),
-                                          br(),
-                                          tags$img(src = "phscaleEPA.png", style="display: block; margin-left: auto; margin-right: auto;", height=350,width=500),  
-                                          style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))),
-                            tabPanel(h4("The effect on coral and shelled organisms"),
-                                     h4(p("When CO2 dissolves in water, it releases H+ protons and combines with carbonate to produce bicarbonate, taking carbonate out of the water.
-                                       Many marine organisms use carbonate to make shells (calcium carbonate). Taking carbonate out of the water makes it harder to make hard shells.
-                                       Furthermore, more H+ protons in the water means the water becomes more acidic and corrodes the shells of many organisms. For example, coral reefs feel OA’s impact because there’s less carbonate in the water to build the 3D reef structure.",
-                                          br(),
-                                          br(),
-                                          tags$img(src = "corealreef.jpeg", style="display: block; margin-left: auto; margin-right: auto;", height=300,width=500),
-                                          style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))),
-                            tabPanel(h4("Eutrophication"),
-                                     h4(p("OA occurs at different rates in different ecosystems; coastal environments like the intertidal experience more rapid rates of acidification due to eutrophication (nutrient runoff caused by human activity).
-                                       Eutrophication can cause algal blooms, which release large amounts of CO2 that dissolve into the water when decomposed.
-                                       Coastal upwelling also introduces CO2 rich water from the deep sea.",
+                                          HTML('<center><iframe width="560" height="315" src="https://www.youtube.com/embed/gZGj0BbDT38" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>')),
+                                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
+                            ###
+                            tabPanel(h4("The effect on calcifying organisms"),
+                                     h4(p("The removal of carbonate and addition of hydrogen ions in seawater through the process of OA has serious consequences for many marine organisms, especially marine calcifiers.
+                                       Calcifying marine organisms use carbonate to make shells (calcium carbonate). Therefore, the removal of carbonate from seawater makes it harder for these organisms to form hard, strong shells.
+                                       Furthermore, the addition of hydrogen drops the seawater pH and corrodes calcifier's shells.
+                                       Corals, crabs, snails, and many other organisms that use carbonate to build their shells and skeletons are thus affected, and the effects cascade across the food chain.",
+                                       br(),
+                                       br(),
+                                       tags$img(src = "corealreef.jpeg", style="display: block; margin-left: auto; margin-right: auto;", height=300,width=500),
+                                       br(),
+                                       em("Watch this short video to learn more about the effects of OA on calcifying organisms:"),
+                                       br(),
+                                       HTML('<center><iframe width="560" height="315" src="https://www.youtube.com/embed/aG3n1fAa7vk" title="The Acid Test" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>')),
+                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
+                            ###
+                            tabPanel(h4("Along the coastline"),
+                                     h4(p("OA occurs at different rates in different ecosystems.
+                                          Coastal environments in particular experience more rapid rates of acidification due to local processes, often linked to human activities, that alter water chemistry. 
+                                          For example, eutrophication (nutrient runoff) can cause algal blooms that release CO2 when the algae die and decompose.",
                                           br(),
                                           br(),
                                           tags$img(src = "algalbloom.jpeg", style="display: block; margin-left: auto; margin-right: auto;", height=300,width=500),
                                           br(),
+                                          "Not all changes in water chemistry are caused by humans, however.
+                                          Coastal upwelling is a process that occurs along the California coastline, and elsewhere globally, whereby cold, nutrient-rich water is transported from the ocean's depths to the ocean's surface via surface winds.
+                                          Because the ocean acts as a carbon sink, the transport of water from the depth also brings along more acidic water to the surface and into shallow coastal ecosystems.",
                                           br(),
-                                          "The intertidal is highly variable and dynamic and has extreme environmental conditions when it comes to temperature, salinity, and pH.
-                                         Lastly, fossil fuels, carbon emmissions, and deforestation are humam impacts that further ocean acidification.",
+                                          br(),
+                                          tags$img(src = "upwelling.jpg", style="display: block; margin-left: auto; margin-right: auto;", height="75%",width="75%"),
                                           style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))),
+                            ### 
+                            tabPanel(h4("In the intertidal"),
+                                     h4(p("The intertidal zone is a highly variable and dynamic environment.
+                                          Organisms that live in the intertidal are subject to the extreme conditions resulting from waves and the daily rise and fall of the tides.
+                                          When the tide goes out, organisms must cope with increases in salinity and temperature, reduced oxygen availability, and even exposure to the air.
+                                          pH also fluctuates daily in the intertidal zone, thanks to photosynthesis and respiration by marine organisms that changes CO2 concentrations in the tidepools at low tides.",
+                                          br(),
+                                          br(),
+                                          tags$img(src = "intertidal-fig.jpg", style="display: block; margin-left: auto; margin-right: auto;", height="75%",width="75%"),
+                                          br(),
+                                          "As the figure above demonstrates, organisms in the intertidal zone are affected by both natural and human influences. For example, when the intertidal zone acidifies even further under OA conditions, marine organisms become stressed, which can negatively affect their development, behavior, and physiology.",
+                                          br(),
+                                          br(),
+                                       tags$img(src = "pachy-lol.jpg", style="display: block; margin-left: auto; margin-right: auto;", height="50%",width="50%"),
+                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))),
+                            ###
                             tabPanel(h4("Your turn"),
-                                     h4(p(strong("Please watch the following video. Then, using the information you just learned, answer the following questions.",
-                                                 br(),
-                                                 br(),
-                                                 HTML('<iframe width="560" height="315" src="https://www.youtube.com/embed/gZGj0BbDT38" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
+                                     h4(p(strong("Using the information you just learned, answer the following questions."
                                      )),
                                      style="text-align:center"),
                                      br(),
-                                     h4(p("1. What do you know about ocean acidification? Follow this link to a",
+                                     h4(p("1. What do you know about ocean acidification? Use a",
                                           tags$a(href="https://www.menti.com/uijfevceik", "Mentimeter"), 
-                                          "and submit the first word/phrase that comes to mind when you think of ocean acidification.",
+                                          "to submit the first word/phrase that comes to mind when you think of ocean acidification.",
+                                          br(),
                                           br(),
                                           em("View your class's Mentimeter",
                                              tags$a(href="https://www.mentimeter.com/s/29f86468afbfa7aa26f27554857d25d9/974479e8d82c", "here.")),
