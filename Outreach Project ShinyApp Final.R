@@ -448,7 +448,7 @@ ui <- fluidPage(
                      column(width = 3,
                             h4(p(("Doris Liu"),
                                  style="text-align: center"),
-                               tags$img(src="aanchal.jpeg", style="display: block; margin-left: auto; margin-right: auto;", height=150,width=150))),
+                               tags$img(src="doris.jpg", style="display: block; margin-left: auto; margin-right: auto;", height=150,width=150))),
                      column(width = 3,
                             h4(p(("Amelia Ritger"),
                                  style="text-align: center"),
