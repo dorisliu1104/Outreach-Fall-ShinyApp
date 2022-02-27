@@ -281,6 +281,12 @@ ui <- fluidPage(
                 tabsetPanel(id = "lomdata",
                 tabPanel(h4("Question 1"),
                           sidebarPanel(h4("1. What trends do you notice between pH and temperature for the Lompoc site?"),
+                                       column(12, align="right",
+                                              checkboxInput("checkbox_lompoc1", label = "Show answer", value = FALSE)),
+                                       conditionalPanel(
+                                         condition = "input.checkbox_lompoc1 == 1",
+                                         h4(p(em("answer will go here :)"),
+                                              style="text-align:left"))),
                                                     br(),
                                                     dateRangeInput(inputId = "date_range", 
                                                                    label = 'Filter tide by date',
@@ -310,14 +316,26 @@ ui <- fluidPage(
                          h4("Question 3"),
                          sidebarPanel(
                            h4("3. Search up the weather for August 2 and compare it to the Lompoc data. What do you think could’ve caused the spikes in the data? What are some reasons why the temperature might’ve hit an extreme that day?"),
-                           ),
+                           column(12, align="right",
+                                  checkboxInput("checkbox_lompoc3", label = "Show answer", value = FALSE)),
+                           conditionalPanel(
+                             condition = "input.checkbox_lompoc3 == 1",
+                             h4(p(em("answer will go here :)"),
+                                  style="text-align:left"))),
+                           br()),
                          mainPanel(highchartOutput("q3plot"))
                          ),
                tabPanel(
                  h4("Question 4"),
                  sidebarPanel(
                    h4("4. We expect Bodega to have the lowest temperature, so what is happening from August 26 — September 27 where Lompoc is colder? Use water temperature data to brainstorm ideas on seasonal temperature variation."),
-                   ),
+                   column(12, align="right",
+                          checkboxInput("checkbox_lompoc4", label = "Show answer", value = FALSE)),
+                   conditionalPanel(
+                     condition = "input.checkbox_lompoc4 == 1",
+                     h4(p(em("answer will go here :)"),
+                          style="text-align:left"))),
+                     br()),
                  mainPanel(highchartOutput("q4plot"))
                )
                 
@@ -356,8 +374,16 @@ ui <- fluidPage(
                                        column(width = 8,
                                               br(),
                                               h4("2. What is the average pH and temperature for each site?",
+                                                 column(12, align="right",
+                                                        checkboxInput("checkbox_compare2", label = "Show answer", value = FALSE)),
+                                                 br(),
+                                                 br(),
+                                                 conditionalPanel(
+                                                   condition = "input.checkbox_ compare2 == 1",
+                                                   h4(p(em("answer will go here :)"),
+                                                        style="text-align:left"))),
+                                                 br(),
                                                  style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
-                                       br(),
                                        column(width = 12,
                                               mainPanel(DT::dataTableOutput("mytable1")))
                                        )),
@@ -370,11 +396,11 @@ ui <- fluidPage(
                                      column(width = 7,
                                             h4("3. Where do you see the most variation between temperature, tide, and pH? Discuss potential causes for variations in the data.",
                                                  column(12, align="right",
-                                                        checkboxInput("checkbox_compare2",label = "Show answer", value = FALSE)),
+                                                        checkboxInput("checkbox_compare3",label = "Show answer", value = FALSE)),
                                                  br(),
                                                  br(),
                                                  conditionalPanel(
-                                                   condition = "input.checkbox_compare2 == 1",
+                                                   condition = "input.checkbox_compare3 == 1",
                                                    h4(p(em("Bodega bay dropoff is unclear, might’ve been an upwelling event due to strong winds; sensor is in low tide in Alegria and high tide in Lompoc and Bodega"),
                                                         style="text-align:left"))),
                                                  style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
