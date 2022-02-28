@@ -109,13 +109,18 @@ ui <- fluidPage(
                                           Ocean pH is normally around 8.1, but the pH drops when CO2 dissolves in seawater.",
                                           br(),
                                           br(),
-                                          tags$img(src = "OCcycle.jpeg", style="display: block; margin-left: auto; margin-right: auto;"),  
+                                          tags$img(src = "OCcycle.jpeg", style="display: block; margin-left: auto; margin-right: auto;"),
+                                          column(width = 12,
+                                                 h6(p("Source: Northeast Coastal Acidification Network, http://www.necan.org/overview"),
+                                                    style="text-align:center;color:darkgray")),
+                                          br(),
                                           br(),
                                           "Ocean acidification (OA) is a chemical change that occurs when seawater absorbs excessive amounts of anthropogenically-produced CO2 from the air.
                                           When CO2 dissolves in water, it releases hydrogen ions that combine with carbonate ions to produce bicarbonate, thereby removing carbonate from seawater.",
                                           br(),
                                           br(),
                                           em("Watch this short video for an overview of OA and its effects:"),
+                                          br(),
                                           br(),
                                           HTML('<center><iframe width="560" height="315" src="https://www.youtube.com/embed/gZGj0BbDT38" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>')),
                                         style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
@@ -128,8 +133,13 @@ ui <- fluidPage(
                                        br(),
                                        br(),
                                        tags$img(src = "corealreef.jpeg", style="display: block; margin-left: auto; margin-right: auto;", height=300,width=500),
+                                       column(width = 12,
+                                              h6(p("Source: Scientific American, https://www.scientificamerican.com/article/corals-may-get-temporary-reprieve-from-bleaching/"),
+                                                 style="text-align:center;color:darkgray")),
+                                       br(),
                                        br(),
                                        em("Watch this short video to learn more about the effects of OA on calcifying organisms:"),
+                                       br(),
                                        br(),
                                        HTML('<center><iframe width="560" height="315" src="https://www.youtube.com/embed/aG3n1fAa7vk" title="The Acid Test" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>')),
                                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
@@ -141,6 +151,9 @@ ui <- fluidPage(
                                           br(),
                                           br(),
                                           tags$img(src = "algalbloom.jpeg", style="display: block; margin-left: auto; margin-right: auto;", height=300,width=500),
+                                          column(width = 12,
+                                                 h6(p("Source: American Rivers, https://www.americanrivers.org/2017/10/ohios-maumee-river-green/"),
+                                                    style="text-align:center;color:darkgray")),
                                           br(),
                                           "Not all changes in water chemistry are caused by humans, however.
                                           Coastal upwelling is a process that occurs along the California coastline, and elsewhere globally, whereby cold, nutrient-rich water is transported from the ocean's depths to the ocean's surface via surface winds.
@@ -148,7 +161,11 @@ ui <- fluidPage(
                                           br(),
                                           br(),
                                           tags$img(src = "upwelling.jpg", style="display: block; margin-left: auto; margin-right: auto;", height="75%",width="75%"),
-                                          style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))),
+                                          column(width = 12,
+                                                 h6(p("Source: National Oceanic and Atmospheric Administration (NOAA), https://oceanservice.noaa.gov/education/tutorial_currents/03coastal4.html"),
+                                                    style="text-align:center;color:darkgray")),
+                                          br()),
+                                          style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
                             ### 
                             tabPanel(h4("In the intertidal"),
                                      h4(p("The intertidal zone is a highly variable and dynamic environment.
@@ -158,15 +175,21 @@ ui <- fluidPage(
                                           br(),
                                           br(),
                                           tags$img(src = "intertidal-fig.jpg", style="display: block; margin-left: auto; margin-right: auto;", height="75%",width="75%"),
-                                          em("Figure by ",
-                                             tags$a(href="https://www.frontiersin.org/articles/10.3389/fmars.2021.667168/full", "Kunze et al 2021"), "."),
+                                          column(width = 12,
+                                                 h6(p(em("Figure by ",
+                                             tags$a(href="https://www.frontiersin.org/articles/10.3389/fmars.2021.667168/full", "Kunze et al 2021"), ".")),
+                                                    style="text-align:center;color:darkgray")),
                                           br(),
                                           br(),
                                           "As the figure above demonstrates, organisms in the intertidal zone are affected by both natural and human influences. For example, when the intertidal zone acidifies even further under OA conditions, marine organisms become stressed, which can negatively affect their development, behavior, and physiology.",
                                           br(),
                                           br(),
                                        tags$img(src = "pachy-lol.jpg", style="display: block; margin-left: auto; margin-right: auto;", height="50%",width="50%"),
-                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))),
+                                       column(width = 12,
+                                              h6(p("Source: Amelia Ritger"),
+                                                 style="text-align:center;color:darkgray")),
+                                       br()),
+                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
                             ###
                             tabPanel(h4("Your turn"),
                                      h4(p(strong("Using the information you just learned, answer the following questions."
@@ -308,7 +331,7 @@ ui <- fluidPage(
                                              style="text-align:left"))),
                                       br(),
                                       selectInput(inputId = "ph_temp",
-                                                  label = "select pH or temperature",
+                                                  label = "Select pH or temperature",
                                                   choices = c("Temperature"="temp_c","pH"="p_h"))
                          ),
                          mainPanel(plotOutput(outputId = "q2plot"))),
@@ -347,9 +370,8 @@ ui <- fluidPage(
                 h5(em("Figures on this page may take longer to load")),
                 tabsetPanel(id = "com",
                             tabPanel(h4("Question 1"),
-                                     fluidRow(
-                                       column(width = 5,
-                                              h4("1. Compare data from Lompoc site to Allegria and Bodega Bay. What are overarching trends you can take away from the data?",
+                                     sidebarPanel(
+                                       h4("1. Compare data from the Lompoc site to Alegria and Bodega Bay. What are the overarching trends you can take away from the data?"),
                                               column(12, align="right",
                                                      checkboxInput("checkbox_compare1",label = "Show answer", value = FALSE)),
                                               br(),
@@ -358,34 +380,39 @@ ui <- fluidPage(
                                                 condition = "input.checkbox_compare1 == 1",
                                                 h4(p(em("Alegria has the highest pH and temp, then Lompoc, then Bodega Bay"),
                                                      style="text-align:left"))),
-                                              style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
                                               br(),
                                               selectInput(inputId = "compare_tab1",
                                                           label = "Select pH or temperature",
                                                           choices = c("Temperature"="temp_c","pH"="p_h"))
                                               ),
-                                      
-                                              
-                                       column(width = 7,
-                                              plotOutput(outputId = "tab1_plot")))),
+                                     mainPanel(
+                                              plotOutput(outputId = "tab1_plot"))),
                             
                             tabPanel(h4("Question 2"),
-                                     fluidRow(
-                                       column(width = 8,
-                                              br(),
-                                              h4("2. What is the average pH and temperature for each site?",
-                                                 column(12, align="right",
-                                                        checkboxInput("checkbox_compare2", label = "Show answer", value = FALSE)),
-                                                 br(),
-                                                 br(),
-                                                 conditionalPanel(
-                                                   condition = "input.checkbox_ compare2 == 1",
-                                                   h4(p(em("answer will go here :)"),
-                                                        style="text-align:left"))),
-                                                 br(),
-                                                 style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
-                                       column(width = 12,
-                                              mainPanel(DT::dataTableOutput("mytable1")))
+                                     tabsetPanel(
+                                       tabPanel(h5("Question"),
+                                     sidebarLayout(position = "right",
+                                                   sidebarPanel(h3(p(strong(em(("Reminder: Our Research"))))),
+                                                                h4(strong("Question:"), "What are the pH and temperature conditions across the California coastline?"),
+                                                                br(),
+                                                                h4(strong("Hypothesis:"), "pH will decrease with increasing latitude, and temperature will increase with decreasing latitude."),
+                                                                br(),
+                                                                h4(strong("Predictions:"), "Bodega Bay, the northernmost site, will experience the lowest pH and temperatures, whereas Alegria, the southernmost site, will experience the highest pH and temperatures.")
+                                                   ),
+                                                   mainPanel(
+                                                     br(),
+                                                     h4(p("2. Using the data in the 'Data Table' tab, what is the average pH and temperature for each site?",
+                                                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
+                                                        column(12, align="right",
+                                                               checkboxInput("checkbox_compare2", label = "Show answer", value = FALSE)),
+                                                        br(),
+                                                        br(),
+                                                        conditionalPanel(
+                                                          condition = "input.checkbox_compare2 == 1",
+                                                          h4(p(em("answer will go here :)"),
+                                                               style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")))))),
+                                     tabPanel(h5("Data Table"),
+                                       (DT::dataTableOutput("mytable1")))
                                        )),
                             
                             tabPanel(h4("Question 3"),
@@ -414,19 +441,26 @@ ui <- fluidPage(
                                             plotOutput("tab3_plot")))),
                             
                             tabPanel(h4("Question 4"),
-                                     fluidRow(
-                                       column(width = 4,
-                                              h4("4. Is there a correlation between tide and temperature? Are there any variations that affect the resulting pH of the site?",
-                                                 style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
-                                         radioButtons(inputId = "compare_tab4", 
-                                                      label = "Please select an example",
-                                                      choices = c('Example 1 (Alegria)' = "tab4_alegria", 
-                                                                  'Example 2 (Lompoc Landing)' = "tab4_lompoc", 
-                                                                  'Example 3 (Bodega Bay)' = "tab4_bodega"))),
-                                       column(width = 8,
+                                     sidebarLayout(
+                                       sidebarPanel(
+                                         h4("4. Is there a correlation between tide and temperature? Are there any variations that affect the resulting pH of the site?"),
+                                       column(12, align="right",
+                                              checkboxInput("compare4", label = "Show answer", value = FALSE)),
+                                       br(),
+                                       br(),
+                                       conditionalPanel(
+                                         condition = "input.compare4 == 1",
+                                         h4(p(em("answer will go here :)"),
+                                              style="text-align:left"))),
+                                       radioButtons(inputId = "compare_tab4",
+                                                    label = "Please select an example",
+                                                    choices = c('Example 1 (Alegria)' = "tab4_alegria",
+                                                                'Example 2 (Lompoc Landing)' = "tab4_lompoc",
+                                                                'Example 3 (Bodega Bay)' = "tab4_bodega"))),
+                                     mainPanel(
                                               imageOutput("tab4_img"))
-                                       ))
-                            )),
+                                       )))
+                            ),
         
         
         # conclusion & global implications tab content
@@ -461,7 +495,7 @@ ui <- fluidPage(
         tabItem(tabName="acknowledgements",
                 h1("Acknowledgements", align = "center"),
                 h4(p(strong("This app was developed by:"),
-                     style="text-align: center"), 
+                     style="text-align: center"),
                    fluidRow(
                      column(width = 3,
                             h4(p(("Zoe Fung"),
@@ -490,7 +524,15 @@ ui <- fluidPage(
                      em("Robert Goettler, Logan Kozal, Melissa M. Moore, and Markie Wordley"),
                      style = "text-align: center")),
                 br(),
-                tags$img(src = "goletapier.JPG", style="display: block; margin-left: auto; margin-right: auto;", height="75%",width="75%")
+                h4(p(strong("Want to take a look at our code?")),
+                tags$a(href="https://github.com/dorisliu1104/Outreach-Fall-ShinyApp", "View the Github repository here"),
+                style="text-align: center; display: block; margin-left: auto; margin-right: auto"),
+                br(),
+                tags$img(src = "goletapier.JPG", style="display: block; margin-left: auto; margin-right: auto;", height="75%",width="75%"),
+                column(width = 11,
+                       h6(p("Source: Zoe Fung"),
+                          style="text-align:right;color:darkgray")),
+                br(),
                 )))))
 
 ## Create the Server
