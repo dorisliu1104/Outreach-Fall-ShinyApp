@@ -325,7 +325,7 @@ ui <- fluidPage(
                 h1("Lompoc Landing Data"),
                 tabsetPanel(id = "lomdata",
                             tabPanel(h4("Question 1"),
-                                     sidebarPanel(h4("1. What trends do you notice between pH and temperature for the Lompoc site?"),
+                                     sidebarPanel(h4("1. Describe the trends between pH, temperature, and tide heights at Lompoc Landing."),
                                                   column(12, align="right",
                                                          checkboxInput("checkbox_lompoc1", label = "Show answer", value = FALSE)),
                                                   conditionalPanel(
@@ -343,7 +343,7 @@ ui <- fluidPage(
                             
                             tabPanel(
                               h4("Question 2"),
-                              sidebarPanel(h4("2. What do you notice about the scale of change for both pH and temp over hours? Days? Weeks/months?"),
+                              sidebarPanel(h4("2. What do you notice about the scale of change for pH and temperature over days? Weeks? Months?"),
                                            column(12, align="right",
                                                   checkboxInput("checkbox_lompoc2",label = "Show answer", value = FALSE)),
                                            br(),
@@ -363,7 +363,9 @@ ui <- fluidPage(
                             tabPanel(
                               h4("Question 3"),
                               sidebarPanel(
-                                h4("3. Search up the weather for August 2 and compare it to the Lompoc data. What do you think could’ve caused the spikes in the data? What are some reasons why the temperature might’ve hit an extreme that day?"),
+                                h4("3.", 
+                                   tags$a(href="https://www.wunderground.com/weather/us/ca/lompoc/KCALOMPO108", "Look up the weather"), "for August 1st and August 3rd, and compare it with the data collected by the sensor at Lompoc Landing. What do you think could’ve caused the differences in temperature and pH between those two dates?"),
+                              br(),
                                 column(12, align="right",
                                        checkboxInput("checkbox_lompoc3", label = "Show answer", value = FALSE)),
                                 conditionalPanel(
@@ -372,20 +374,20 @@ ui <- fluidPage(
                                        style="text-align:left"))),
                                 br()),
                               mainPanel(highchartOutput("q3plot"))
-                            ),
-                            tabPanel(
-                              h4("Question 4"),
-                              sidebarPanel(
-                                h4("4. We expect Bodega to have the lowest temperature, so what is happening from August 26 — September 27 where Lompoc is colder? Use water temperature data to brainstorm ideas on seasonal temperature variation."),
-                                column(12, align="right",
-                                       checkboxInput("checkbox_lompoc4", label = "Show answer", value = FALSE)),
-                                conditionalPanel(
-                                  condition = "input.checkbox_lompoc4 == 1",
-                                  h4(p(em("answer will go here :)"),
-                                       style="text-align:left"))),
-                                br()),
-                              mainPanel(highchartOutput("q4plot"))
                             )
+                            # tabPanel(
+                            #   h4("Question 4"),
+                            #   sidebarPanel(
+                            #     h4("4. We expect Bodega to have the lowest temperature, so what is happening from August 26 — September 27 where Lompoc is colder? Use water temperature data to brainstorm ideas on seasonal temperature variation."),
+                            #     column(12, align="right",
+                            #            checkboxInput("checkbox_lompoc4", label = "Show answer", value = FALSE)),
+                            #     conditionalPanel(
+                            #       condition = "input.checkbox_lompoc4 == 1",
+                            #       h4(p(em("answer will go here :)"),
+                            #            style="text-align:left"))),
+                            #     br()),
+                            #   mainPanel(highchartOutput("q4plot"))
+                            # )
                             
                             
                 )),
@@ -396,7 +398,7 @@ ui <- fluidPage(
                 tabsetPanel(id = "com",
                             tabPanel(h4("Question 1"),
                                      sidebarPanel(
-                                       h4("1. Compare data from the Lompoc site to Alegria and Bodega Bay. What are the overarching trends you can take away from the data?"),
+                                       h4("1. Compare the data at all three sites. What general patterns do you see in the data?"),
                                        column(12, align="right",
                                               checkboxInput("checkbox_compare1",label = "Show answer", value = FALSE)),
                                        br(),
@@ -426,7 +428,7 @@ ui <- fluidPage(
                                                               ),
                                                               mainPanel(
                                                                 br(),
-                                                                h4(p("2. Using the data in the 'Data Table' tab, what is the average pH and temperature for each site?",
+                                                                h4(p("2. Look at the following table and consider: How do these data align with the study predictions?",
                                                                      style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
                                                                 column(12, align="right",
                                                                        checkboxInput("checkbox_compare2", label = "Show answer", value = FALSE)),
@@ -444,7 +446,7 @@ ui <- fluidPage(
                                               h4("Click a site"),
                                               leafletOutput(outputId = "map2", width = "100%", height = 600 )),
                                        column(width = 7,
-                                              h4(p("3. Where do you see the most variation between temperature, tide, and pH? Discuss potential causes for variations in the data."),
+                                              h4(p(" 3. What site has the most variation in temperature and pH? What are some possible causes for such variation? "),
                                                  style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
                                                  column(12, align="right",
                                                         checkboxInput("checkbox_compare3",label = "Show answer", value = FALSE)),
@@ -464,7 +466,7 @@ ui <- fluidPage(
                             tabPanel(h4("Question 4"),
                                      sidebarLayout(
                                        sidebarPanel(
-                                         h4("4. Is there a correlation between tide and temperature? Are there any variations that affect the resulting pH of the site?"),
+                                         h4("4. Is there a relationship between tide and temperature? How are tide and temperature related to pH at each site?"),
                                          column(12, align="right",
                                                 checkboxInput("compare4", label = "Show answer", value = FALSE)),
                                          br(),
@@ -489,16 +491,17 @@ ui <- fluidPage(
                 h1("Conclusions"),
                 tabsetPanel(id="conclusiontabs",
                             tabPanel(h4("Your turn"),
-                                     h4(p("1. What have you learned? Check your comprehension and summarize what you now know by creating a concept map using the following terms. Add to the map as you learn more about OA:",
+                                     h4(p("1. What did you learn about OA? Check your comprehension and summarize what you now know by creating a concept map using the following terms. Add to the map as you continue to learn about OA: ",
                                           br(),
                                           br(),
                                           em("Fossil fuels, Eutrophication, Carbon emissions, Bicarbonate, Calcifying organisms, Ocean acidification, Intertidal, pH, Temperature, Tide cycle"),
                                           style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
                                         br(),
-                                        p("2. Consider what you just learned: how would you design a research project as a follow-up to the current scientific study?",
+                                        p("2. Consider what you just learned: how would you design a research project as a follow-up to the current scientific study? What is your Question/Methods? What would your methods be?",
                                           style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
                                         br(),
-                                        h4(p("3. How can the data collected by scientists be used to inform conservation and management efforts in coastal marine ecosystems?",
+                                        h4(p("3. How can the data collected by scientists be used to inform conservation and management efforts in coastal marine ecosystems, such as the intertidal zone?
+",
                                              style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
                                      tags$img(src = "tidepool.jpeg", style="display: block; margin-left: auto; margin-right: auto;", height="75%",width="75%"),
                                      column(width = 12,
@@ -510,12 +513,14 @@ ui <- fluidPage(
                                      h4(p(em("Click on each logo to explore the organization's website"))),
                                      a(img(height="50%", width="50%", src="oaplogo.png"), href="https://oceanacidification.noaa.gov/Home.aspx", style="text-align: center; display: block; margin-left: auto; margin-right: auto"),
                                      br(),
+                                     a(img(height="50%", width="50%", src="sbck.jpg"), href="https://www.sbck.org/our-work/field-work/climate-change/ocean-acidification/", style="text-align: center; display: block; margin-left: auto; margin-right: auto"),
+                                     br(),
                                      a(img(height="50%", width="50%", src="ccanlogo.jpg"), href="https://c-can.info/", style="text-align: center; display: block; margin-left: auto; margin-right: auto"),
                                      br(),
                                      a(img(height="50%", width="50%", src="goa-onlogo.png"), href="http://www.goa-on.org/home.php", style="text-align: center; display: block; margin-left: auto; margin-right: auto"),
                                      br(),
                                      a(img(height="50%", width="50%", src="OAIElogo.png"), href="https://www.oainfoexchange.org/index.html", style="text-align: center; display: block; margin-left: auto; margin-right: auto")))),
-        
+
         
         # acknowledgements tab content
         tabItem(tabName="acknowledgements",
