@@ -39,13 +39,15 @@ lompoc <- ph_clean_final %>%
   unite("date_time", "date", "time", sep="\ ", remove = FALSE) %>%
   mutate(date_time=ymd_hms(date_time))
 
-lompoc2 <- filter(lompoc, between(date, as.Date("2021-07-25"), as.Date("2021-08-05")))
-lompoc3 <- filter(lompoc, between(date, as.Date("2021-08-26"), as.Date("2021-09-27")))
+lompoc_day <- filter(lompoc, between(date, as.Date("2021-07-25"), as.Date("2021-07-26")))
+lompoc2 <- filter(lompoc, between(date, as.Date("2021-07-25"), as.Date("2021-08-05"))) ## lompoc question 3
+lompoc3 <- filter(lompoc, between(date, as.Date("2021-08-26"), as.Date("2021-09-27"))) ## lompoc question 4
 lompoc4 <- filter(lompoc, between(date, as.Date("2021-06-17"), as.Date("2021-06-23")))
 alegria4 <- dplyr::filter(ph_clean_final, site=="Alegria") %>% 
   filter(between(date, as.Date("2021-08-07"), as.Date("2021-08-17")))
 bodega4 <- dplyr::filter(ph_clean_final, site=="Bodega Bay") %>% 
   filter(between(date, as.Date("2021-07-05"), as.Date("2021-07-09")))
+datafiles <- list(lompoc_day, lompoc2, lompoc)
 
 ## create dataframe for compare and contrast plots
 
@@ -260,7 +262,7 @@ ui <- fluidPage(
                                               br(),
                                               h4("Alegria",
                                                  style="text-align:center"),
-                                              tags$img(src = "alegria_site.jpg", align = "center",height="100%",width="100%"),
+                                              tags$img(src = "alegria_site.jpg", align = "center",height="100%",width="100%")
                                      )
                                      #tabPanel(h4("Site map")
                                               #leafletOutput(outputId = "map", width = "100%", height = 600 )
@@ -332,7 +334,10 @@ ui <- fluidPage(
                                       br(),
                                       selectInput(inputId = "ph_temp",
                                                   label = "Select pH or temperature",
-                                                  choices = c("Temperature"="temp_c","pH"="p_h"))
+                                                  choices = c("Temperature"="temp_c","pH"="p_h")),
+                                      selectInput(inputId = "week_day",
+                                                  label = "Select to see changes over days/weeks/months",
+                                                  choices = c("days", "weeks" , "months"))
                          ),
                          mainPanel(plotOutput(outputId = "q2plot"))),
                 tabPanel(
@@ -532,7 +537,7 @@ ui <- fluidPage(
                 column(width = 11,
                        h6(p("Source: Zoe Fung"),
                           style="text-align:right;color:darkgray")),
-                br(),
+                br()
                 )))))
 
 ## Create the Server
@@ -584,29 +589,33 @@ server <- function(input, output) {
         list(lineWidth = 3, lineColor='#D55E00', title=list(text="Temperature")), #label/colorize temp y axis
         list(lineWidth = 3, lineColor="#009E73", title=list(text="pH")), #label/colorize pH y axis
         list(lineWidth = 3, lineColor="#0072B2", title=list(text="Tide"))) %>% #label/colorize tide y axis
-      hc_xAxis(title = "Date", categories = x, breaks=10) %>% #label x axis
+      hc_xAxis(title = "Date", categories = x, breaks=10, labels = list(format = "{%Y/%m/%d}", useHTML = TRUE)) %>% #label x axis
       hc_colors(c("#D55E00", #set specific colors for points (note same color order as y axis)
                   "#009E73",
                   "#0072B2"))
-      
-    
   })
   # lompoc reactive
   
-  lompocReactive <- reactive({
-    lompoc %>%
-      select(date_time, input$ph_temp) %>%
-      mutate(variable = input$ph_temp)
+  lompoc_reactive <- reactive({
+    if(input$week_day == "days") {
+      dt <- lompoc_day
+    }else if(input$week_day == "weeks") {
+      dt <- lompoc2
+    } else if(input$week_day == "months") {
+      dt <- lompoc
+    } 
+    return(dt)
   })
+  
   
   # data_q2_plot
   output$q2plot <- renderPlot({
-    ggplot(lompoc, aes(x=date_time, y=get(input$ph_temp)))+ #plot pH here
+    ggplot(lompoc_reactive(), aes(x=date_time, y=get(input$ph_temp)))+ #plot pH here
       geom_line(size = 0.7,color = ifelse(input$ph_temp == "temp_c", "#D55E00","#009E73" )) + #make it a line chart
       geom_smooth(method="loess", span=0.1) + #plot trend line for each site
       #scale_color_manual(values = ifelse(input$ph_temp == "temp_c", "#D55E00","#009E73" )) + #color lines by custom site color palette
-      scale_x_datetime(breaks = scales::date_breaks("1 week"), 
-                       labels = date_format("%m/%d %H:%m")) + #change x axis to make it look cleaner - each tick is one week, display month/day hour/minute
+      #scale_x_datetime(breaks = scales::date_breaks("1 week"), 
+                       #labels = date_format("%m/%d %H:%m")) + #change x axis to make it look cleaner - each tick is one week, display month/day hour/minute
       xlab("Date time") + #change x axis label
       ylab(ifelse(input$ph_temp == "temp_c", "Temperature", "pH")) + #change y axis label
       theme_bw() +
@@ -616,6 +625,7 @@ server <- function(input, output) {
         axis.text.y=element_text(size=12), #adjust y axis text format
         axis.title.y=element_text(size=15))
   })
+  
   
   # data_q3plot
   output$q3plot <- renderHighchart({
@@ -681,7 +691,7 @@ server <- function(input, output) {
       scale_alpha_manual(values=c(0.5,0.5,1))
   })
   
-  # our research slideshows
+  # tab 2 our research slideshows
   output$bodegabay <- renderSlickR({
     imgs <- list.files("www/Bodega", pattern=".jpg", full.names = TRUE)
     slickR(imgs)
@@ -699,7 +709,8 @@ server <- function(input, output) {
   
   ## tab 2 table output
   output$mytable1 <- DT::renderDataTable({
-    DT::datatable(data_summary_table)
+    DT::datatable(data_summary_table,  options = list(pageLength = 15, lengthChange = FALSE, sDom  = '<"top">lrt<"bottom">ip'),
+                  rownames= FALSE)
   })
   
   gps_radius <- c(15,8,11)
