@@ -39,7 +39,7 @@ lompoc <- ph_clean_final %>%
   unite("date_time", "date", "time", sep="\ ", remove = FALSE) %>%
   mutate(date_time=ymd_hms(date_time))
 
-lompoc2 <- filter(lompoc, between(date, as.Date("2021-07-25"), as.Date("2021-08-05")))
+lompoc2 <- filter(lompoc, between(date, as.Date("2021-07-30"), as.Date("2021-08-04")))
 lompoc3 <- filter(lompoc, between(date, as.Date("2021-08-26"), as.Date("2021-09-27")))
 lompoc4 <- filter(lompoc, between(date, as.Date("2021-06-17"), as.Date("2021-06-23")))
 alegria4 <- dplyr::filter(ph_clean_final, site=="Alegria") %>% 
@@ -91,9 +91,9 @@ ui <- fluidPage(
       sidebarMenu(
         menuItem("About Ocean Acidification", tabName = "about_the_intertidal", icon = icon("compass",lib="font-awesome")),
         menuItem("Our Research", tabName = "research", icon = icon("docker",lib="font-awesome")),
-        menuItem("Lompoc Landing Data", tabName = "data", icon = icon("anchor",lib="font-awesome")),
-        menuItem("Compare and Contrast", tabName = "compare", icon = icon("chart-bar",lib="font-awesome")),
-        menuItem("Conclusion", tabName = "conclusions", icon = icon("fish", lib = "font-awesome")),
+        menuItem("Zoom In: Lompoc Landing", tabName = "data", icon = icon("anchor",lib="font-awesome")),
+        menuItem("Zoom Out: Compare/Contrast", tabName = "compare", icon = icon("chart-bar",lib="font-awesome")),
+        menuItem("Conclusions", tabName = "conclusions", icon = icon("fish", lib = "font-awesome")),
         menuItem("Acknowledgements", tabName="acknowledgements",icon=icon("trophy",lib="font-awesome"))
       )
     ), ## end dashboardSidebar
@@ -169,7 +169,7 @@ ui <- fluidPage(
                                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))),
                             ###
                             tabPanel(h4("Your turn"),
-                                     h4(p(strong("Using the information you just learned, answer the following questions."
+                                     h4(p(strong("Using the information you just read, answer the following questions."
                                      )),
                                      style="text-align:center"),
                                      br(),
@@ -182,7 +182,7 @@ ui <- fluidPage(
                                              tags$a(href="https://www.mentimeter.com/s/29f86468afbfa7aa26f27554857d25d9/974479e8d82c", "here.")),
                                           style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
                                      br(),
-                                     h4(p("2. What is cause and effect of ocean acidification?",
+                                     h4(p("2. What is causing ocean acidification? What are its effects?",
                                           style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
                                      br(),
                                      h4(p("3. What makes the intertidal zone uniquely affected by ocean acidification?",
@@ -253,7 +253,7 @@ ui <- fluidPage(
                                                      checkboxInput("checkbox1", label = "Show answer", value = FALSE)),
                                                 conditionalPanel(
                                                   condition = "input.checkbox1 == 1",
-                                                  h4(p(em("A lot more sand in Alegria, more flat than rocky Bodega; Lompoc is structured like a shelf with steps; sensor was exposed at Bodega site"),
+                                                  h5(p(em("A lot more sand in Alegria, more flat than rocky Bodega; Lompoc is structured like a shelf with steps; sensor was exposed at Bodega site"),
                                                     style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")))),
                                      tabPanel(h4("Question 2"),
                                               h4(p("Why were these three sites selected? How are these sites similar? How are they different?",
@@ -262,7 +262,7 @@ ui <- fluidPage(
                                                        checkboxInput("checkbox2",label = "Show answer", value = FALSE)),
                                                 conditionalPanel(
                                                   condition = "input.checkbox2 == 1",
-                                                  h4(p(em("Alegria is furthest south (only one south of Point Conception, meaning it has less intense upwelling and higher average pH), followed by Lompoc and Bodega Bay north of Point Conception which are in the same upwelling regime"),
+                                                  h5(p(em("Alegria is furthest south (only one south of Point Conception, meaning it has less intense upwelling and higher average pH), followed by Lompoc and Bodega Bay north of Point Conception which are in the same upwelling regime"),
                                                     style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))
                                                 )),
                                      tabPanel(h4("Question 3"),
@@ -272,19 +272,22 @@ ui <- fluidPage(
                                                        checkboxInput("checkbox3", label = "Show answer", value = FALSE)),
                                                 conditionalPanel(
                                                   condition = "input.checkbox3 == 1",
-                                                  h4(p(em("zonation, isolation of pools, depth"),
+                                                  h5(p(em("zonation, isolation of pools, depth"),
                                                     style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))))
                   )))),
         
         tabItem(tabName = "data",
-                h1("Lompoc Landing Data"),
+                h1("Case study: Lompoc Landing"),
                 tabsetPanel(id = "lomdata",
                 tabPanel(h4("Question 1"),
-                          sidebarPanel(h4("1. What trends do you notice between pH and temperature for the Lompoc site?"),
-                                                    br(),
-                                                    dateRangeInput(inputId = "date_range", 
+                          sidebarPanel(h4("1. Describe the trends between pH, temperature, and tide heights at Lompoc Landing."),
+                                       br(),
+                                       dateRangeInput(inputId = "date_range", 
                                                                    label = 'Filter tide by date',
-                                                                   start = as.Date('2021-06-14') , end = as.Date('2021-10-06'))
+                                                                   start = as.Date('2021-06-14') , end = as.Date('2021-10-06')),
+                                       br(),
+                                       h5("we will include a show answer button here")
+                                       
                           ),
                                        
                 mainPanel(highchartOutput("ph_ts_plot"))
@@ -292,59 +295,66 @@ ui <- fluidPage(
                 
                 tabPanel(
                          h4("Question 2"),
-                         sidebarPanel(h4("2. What do you notice about the scale of change for both pH and temp over hours? Days? Weeks/months?"),
+                         sidebarPanel(h4("2. What do you notice about the scale of change for pH and temperature over days? Weeks? Months?"),
+                                      br(),
+                                      selectInput(inputId = "ph_temp",
+                                                  label = "select pH or temperature",
+                                                  choices = c("Temperature"="temp_c","pH"="p_h")),
                                       column(12, align="right",
                                              checkboxInput("checkbox_lompoc2",label = "Show answer", value = FALSE)),
                                       br(),
                                       conditionalPanel(
                                         condition = "input.checkbox_lompoc2 == 1",
-                                        h4(p(em("The temperature tracks with the pH over the scale of days and weeks."),
-                                             style="text-align:left"))),
-                                      br(),
-                                      selectInput(inputId = "ph_temp",
-                                                  label = "select pH or temperature",
-                                                  choices = c("Temperature"="temp_c","pH"="p_h"))
-                         ),
+                                        h5(p(em("The temperature tracks with the pH over the scale of days and weeks."),
+                                             style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))
+                                        )),
                          mainPanel(plotOutput(outputId = "q2plot"))),
                 tabPanel(
                          h4("Question 3"),
                          sidebarPanel(
-                           h4("3. Search up the weather for August 2 and compare it to the Lompoc data. What do you think could’ve caused the spikes in the data? What are some reasons why the temperature might’ve hit an extreme that day?"),
+                           h4("3.", 
+                              tags$a(href="https://www.wunderground.com/weather/us/ca/lompoc/KCALOMPO108", "Look up the weather"),
+                              "for August 1st and August 3rd, and compare it with the data collected by the sensor at Lompoc Landing.
+                              What do you think could’ve caused the differences in temperature and pH between those two dates?"),
+                           br(),
+                           h5("we will include a show answer button here")
                            ),
                          mainPanel(highchartOutput("q3plot"))
-                         ),
-               tabPanel(
-                 h4("Question 4"),
-                 sidebarPanel(
-                   h4("4. We expect Bodega to have the lowest temperature, so what is happening from August 26 — September 27 where Lompoc is colder? Use water temperature data to brainstorm ideas on seasonal temperature variation."),
-                   ),
-                 mainPanel(highchartOutput("q4plot"))
-               )
+                         )
+               # tabPanel(
+               #   h4("Question 4"),
+               #   sidebarPanel(
+               #     h4("4. We expect Bodega to have the lowest temperature, so what is happening from August 26 — September 27 where Lompoc is colder? Use water temperature data to brainstorm ideas on seasonal temperature variation."),
+               #     ),
+               #   mainPanel(highchartOutput("q4plot"))
+               # )
                 
                          
                 )),
         
         tabItem(tabName = "compare",
                 titlePanel("Compare and Contrast: All Sites"),
-                h5(em("Figures on this page may take longer to load")),
+                h5(em("Please be patient, figures on this page may take longer to load")),
                 tabsetPanel(id = "com",
                             tabPanel(h4("Question 1"),
                                      fluidRow(
                                        column(width = 5,
-                                              h4("1. Compare data from Lompoc site to Allegria and Bodega Bay. What are overarching trends you can take away from the data?",
+                                              h4("1. Compare the data at all three sites. What general patterns do you see in the data?",
+                                                 br(),
+                                                 br(),
+                                                 selectInput(inputId = "compare_tab1",
+                                                             label = "Select pH or temperature",
+                                                             choices = c("Temperature"="temp_c","pH"="p_h")),
+                                                 br(),
                                               column(12, align="right",
                                                      checkboxInput("checkbox_compare1",label = "Show answer", value = FALSE)),
                                               br(),
                                               br(),
                                               conditionalPanel(
                                                 condition = "input.checkbox_compare1 == 1",
-                                                h4(p(em("Alegria has the highest pH and temp, then Lompoc, then Bodega Bay"),
+                                                h5(p(em("Alegria has the highest pH and temp, then Lompoc, then Bodega Bay"),
                                                      style="text-align:left"))),
-                                              style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
-                                              br(),
-                                              selectInput(inputId = "compare_tab1",
-                                                          label = "Select pH or temperature",
-                                                          choices = c("Temperature"="temp_c","pH"="p_h"))
+                                              style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")
                                               ),
                                       
                                               
@@ -355,8 +365,11 @@ ui <- fluidPage(
                                      fluidRow(
                                        column(width = 8,
                                               br(),
-                                              h4("2. What is the average pH and temperature for each site?",
-                                                 style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
+                                              h4("2. Look at the following table and consider: How do these data align with the study predictions?",
+                                                 style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
+                                              br(),
+                                              h5("we will include a show answer button here")
+                                       ),
                                        br(),
                                        column(width = 12,
                                               mainPanel(DT::dataTableOutput("mytable1")))
@@ -368,35 +381,38 @@ ui <- fluidPage(
                                             h4("Click a site"),
                                             leafletOutput(outputId = "map2", width = "100%", height = 600 )),
                                      column(width = 7,
-                                            h4("3. Where do you see the most variation between temperature, tide, and pH? Discuss potential causes for variations in the data.",
-                                                 column(12, align="right",
-                                                        checkboxInput("checkbox_compare2",label = "Show answer", value = FALSE)),
+                                            h4("3. What site has the most variation in temperature and pH? What are some possible causes for such variation?",
                                                  br(),
                                                  br(),
-                                                 conditionalPanel(
-                                                   condition = "input.checkbox_compare2 == 1",
-                                                   h4(p(em("Bodega bay dropoff is unclear, might’ve been an upwelling event due to strong winds; sensor is in low tide in Alegria and high tide in Lompoc and Bodega"),
-                                                        style="text-align:left"))),
-                                                 style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
-                                            br(),
                                             selectInput(inputId = "compare_tab3",
                                                         label = "Select pH or temperature",
                                                         choices = c("Temperature"="temp_c","pH"="p_h")),
                                             selectInput(inputId = "compare_site",
-                                                        label = "Please select a site",
+                                                        label = "Select a site",
                                                         choices = c("Alegria","Lompoc Landing", "Bodega Bay")),
-                                            plotOutput("tab3_plot")))),
+                                            column(12, align="right",
+                                                   checkboxInput("checkbox_compare2",label = "Show answer", value = FALSE)),
+                                            conditionalPanel(
+                                              condition = "input.checkbox_compare2 == 1",
+                                              h5(p(em("Bodega bay dropoff is unclear, might’ve been an upwelling event due to strong winds; sensor is in low tide in Alegria and high tide in Lompoc and Bodega"),
+                                                   style="text-align:left"))),
+                                            br(),
+                                            plotOutput("tab3_plot"),
+                                            br(),
+                                            style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")))),
                             
                             tabPanel(h4("Question 4"),
                                      fluidRow(
                                        column(width = 4,
-                                              h4("4. Is there a correlation between tide and temperature? Are there any variations that affect the resulting pH of the site?",
+                                              h4("4. Is there a correlation between tide and temperature? How are tide and temperature related to pH at each site?",
                                                  style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
                                          radioButtons(inputId = "compare_tab4", 
-                                                      label = "Please select an example",
+                                                      label = "Select an example",
                                                       choices = c('Example 1 (Alegria)' = "tab4_alegria", 
                                                                   'Example 2 (Lompoc Landing)' = "tab4_lompoc", 
-                                                                  'Example 3 (Bodega Bay)' = "tab4_bodega"))),
+                                                                  'Example 3 (Bodega Bay)' = "tab4_bodega")),
+                                         h5("we will include a show answer button here")
+                                       ),
                                        column(width = 8,
                                               imageOutput("tab4_img"))
                                        ))
@@ -408,21 +424,23 @@ ui <- fluidPage(
                 h1("Conclusions"),
                 tabsetPanel(id="conclusiontabs",
                             tabPanel(h4("Your turn"),
-                                     h4(p("1. What have you learned? Check your comprehension and summarize what you now know by creating a concept map using the following terms. Add to the map as you learn more about OA:",
+                                     h4(p("1. What did you learn about OA? Check your comprehension and summarize what you now know by creating a concept map using the following terms. Add to the map as you continue to learn about OA:",
                                       br(),
                                       br(),
                                       em("Fossil fuels, Eutrophication, Carbon emissions, Bicarbonate, Calcifying organisms, Ocean acidification, Intertidal, pH, Temperature, Tide cycle"),
                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
                                       br(),
-                                      p("2. Consider what you just learned: how would you design a research project as a follow-up to the current scientific study?",
+                                      p("2. Consider what you just learned: how would you design a research project as a follow-up to the current scientific study? What is your Question/Methods? What would your methods be?",
                                         style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
                                       br(),
-                                      h4(p("3. How can the data collected by scientists be used to inform conservation and management efforts in coastal marine ecosystems?",
+                                      h4(p("3. How can the data collected by scientists be used to inform conservation and management efforts in coastal marine ecosystems, such as the intertidal zone?",
                                            style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))
 )),
                             tabPanel(h4("Learn more"),
                                         h4(p(em("Click on each logo to explore the organization's website"))),
                                      a(img(height="50%", width="50%", src="oaplogo.png"), href="https://oceanacidification.noaa.gov/Home.aspx", style="text-align: center; display: block; margin-left: auto; margin-right: auto"),
+                                     br(),
+                                     a(img(height="50%", width="50%", src="sbck.jpg"), href="https://www.sbck.org/our-work/field-work/climate-change/ocean-acidification/", style="text-align: center; display: block; margin-left: auto; margin-right: auto"),
                                      br(),
                                      a(img(height="50%", width="50%", src="ccanlogo.jpg"), href="https://c-can.info/", style="text-align: center; display: block; margin-left: auto; margin-right: auto"),
                                      br(),
@@ -597,7 +615,7 @@ server <- function(input, output) {
   ## tab 1 plots
   output$tab1_plot <- renderPlot({
     ggplot(comdata, aes(x=date_time, y=get(input$compare_tab1), group=site)) + #plot pH here
-      geom_line(aes(color=site, alpha=site), size=0.7) + #make it a line chart
+      geom_line(aes(color=site), alpha=0.5, size=0.7) + #make it a line chart
       geom_smooth(aes(color=site), method="loess", span=0.1) + #plot trend line for each site
       scale_color_manual(values = pal) + #color lines by custom site color palette
       scale_x_datetime(breaks = scales::date_breaks("1 week"), 
