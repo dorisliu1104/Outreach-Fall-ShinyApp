@@ -44,7 +44,7 @@ lompoc2 <- filter(lompoc, between(date, as.Date("2021-07-25"), as.Date("2021-08-
 lompoc3 <- filter(lompoc, between(date, as.Date("2021-08-26"), as.Date("2021-09-27"))) ## lompoc question 4
 lompoc4 <- filter(lompoc, between(date, as.Date("2021-06-17"), as.Date("2021-06-23")))
 alegria4 <- dplyr::filter(ph_clean_final, site=="Alegria") %>% 
-  filter(between(date, as.Date("2021-08-07"), as.Date("2021-08-17")))
+  filter(between(date, as.Date("2021-08-07"), as.Date("2021-08-14")))
 bodega4 <- dplyr::filter(ph_clean_final, site=="Bodega Bay") %>% 
   filter(between(date, as.Date("2021-07-05"), as.Date("2021-07-09")))
 datafiles <- list(lompoc_day, lompoc2, lompoc)
@@ -477,11 +477,11 @@ ui <- fluidPage(
                                                 style="text-align:left"))),
                                          radioButtons(inputId = "compare_tab4",
                                                       label = "Please select an example",
-                                                      choices = c('Example 1 (Alegria)' = "tab4_alegria",
-                                                                  'Example 2 (Lompoc Landing)' = "tab4_lompoc",
-                                                                  'Example 3 (Bodega Bay)' = "tab4_bodega"))),
+                                                      choices = c('Example 1 (Alegria)',
+                                                                  'Example 2 (Lompoc Landing)',
+                                                                  'Example 3 (Bodega Bay)'))),
                                        mainPanel(
-                                         imageOutput("tab4_img"))
+                                        highchartOutput("tab4_plot") )
                                      )))
         ),
         
@@ -791,12 +791,39 @@ server <- function(input, output) {
   
   
   #tab4 output
-  output$tab4_img <- renderImage({
-    filename <- normalizePath(file.path('./www/', paste(input$compare_tab4, ".png", sep="")))
-    list(src = filename, height = 400, width = 600)
-  }, deleteFile = FALSE
-  )
+  tab4_reactive <- reactive({
+    if(input$compare_tab4 == "Example 1 (Alegria)") {
+      data <- alegria4
+    }else if(input$compare_tab4 == "Example 2 (Lompoc Landing)") {
+      data <- lompoc4
+    } else if(input$compare_tab4 == "Example 3 (Bodega Bay)") {
+      data <- bodega4
+    } 
+    return(data)
+  })
   
+  
+  
+  output$tab4_plot <- renderHighchart({ 
+    y10 <- tab4_reactive()$temp_c #set first y axis
+    y11 <- tab4_reactive()$p_h  #set second y axis
+    y12 <- tab4_reactive()$tide_height #set third y axis
+    x <- tab4_reactive()$date_time
+    
+    highchart() %>% 
+      hc_add_series(data = y10, dashStyle="solid", name = "Temperature") %>% #plot temp
+      hc_add_series(data = y11, yAxis = 1, name = "pH") %>% #plot pH
+      hc_add_series(data = y12, yAxis = 2, name = "Tide") %>% #plot tide height
+      hc_yAxis_multiples(
+        list(lineWidth = 3, lineColor='#D55E00', title=list(text="Temperature")), #label/colorize temp y axis
+        list(lineWidth = 3, lineColor="#009E73", title=list(text="pH")), #label/colorize pH y axis
+        list(lineWidth = 3, lineColor="#0072B2", title=list(text="Tide"))) %>% #label/colorize tide y axis
+      hc_xAxis(title = "Date", categories = x, breaks=10) %>% #label x axis
+      hc_colors(c("#D55E00", #set specific colors for points (note same color order as y axis)
+                  "#009E73",
+                  "#0072B2"))
+    })
+ 
   
 }
 
