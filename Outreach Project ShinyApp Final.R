@@ -23,7 +23,8 @@ library(janitor)
 ph_clean_final <- read_csv(here("data", "ph_clean_final.csv"))
 ph_clean_final <- ph_clean_final %>%
   arrange(date_time) %>% 
-  mutate(date=mdy(date))
+  mutate(date=mdy(date)) %>% 
+  mutate(date_highchart =as.character(date, format="%d %B %Y"))
 f = "%m/%d/%Y" 
 ph_clean_final$SetDateMonth <- format(as.POSIXct(ph_clean_final$date, format = f), "%m")
 
@@ -37,7 +38,8 @@ site_gps <- site_gps %>%
 lompoc <- ph_clean_final %>% 
   dplyr::filter(site=="Lompoc Landing") %>% 
   unite("date_time", "date", "time", sep="\ ", remove = FALSE) %>%
-  mutate(date_time=ymd_hms(date_time))
+  mutate(date_time=ymd_hms(date_time)) %>% 
+  arrange(ymd(date))
 
 lompoc_day <- filter(lompoc, between(date, as.Date("2021-07-25"), as.Date("2021-07-26")))
 lompoc2 <- filter(lompoc, between(date, as.Date("2021-07-25"), as.Date("2021-08-05"))) ## lompoc question 3
@@ -539,7 +541,7 @@ ui <- fluidPage(
                      column(width = 3,
                             h4(p(("Doris Liu"),
                                  style="text-align: center"),
-                               tags$img(src="doris.jpg", style="display: block; margin-left: auto; margin-right: auto;", height=150,width=150))),
+                               tags$img(src="dorisliu.jpg", style="display: block; margin-left: auto; margin-right: auto;", height=150,width=150))),
                      column(width = 3,
                             h4(p(("Amelia Ritger"),
                                  style="text-align: center"),
@@ -615,7 +617,7 @@ server <- function(input, output) {
         list(lineWidth = 3, lineColor='#D55E00', title=list(text="Temperature")), #label/colorize temp y axis
         list(lineWidth = 3, lineColor="#009E73", title=list(text="pH")), #label/colorize pH y axis
         list(lineWidth = 3, lineColor="#0072B2", title=list(text="Tide"))) %>% #label/colorize tide y axis
-      hc_xAxis(title = "Date", categories = x, breaks=10, labels = list(format = "{%Y/%m/%d}", useHTML = TRUE)) %>% #label x axis
+      hc_xAxis(title = "Date", categories = lompoc$date_highchart, tickInterval = 7* 24 * 4 *2) %>% #label x axis
       hc_colors(c("#D55E00", #set specific colors for points (note same color order as y axis)
                   "#009E73",
                   "#0072B2"))
@@ -668,7 +670,7 @@ server <- function(input, output) {
         list(lineWidth = 3, lineColor='#D55E00', title=list(text="Temperature")), #label/colorize temp y axis
         list(lineWidth = 3, lineColor="#009E73", title=list(text="pH")), #label/colorize pH y axis
         list(lineWidth = 3, lineColor="#0072B2", title=list(text="Tide"))) %>% #label/colorize tide y axis
-      hc_xAxis(title = "Date", categories = x, breaks=10) %>% #label x axis
+      hc_xAxis(title = "Date", categories = lompoc2$date_highchart, tickInterval = 7 *24*4*2) %>% #label x axis
       hc_colors(c("#D55E00", #set specific colors for points (note same color order as y axis)
                   "#009E73",
                   "#0072B2"))
@@ -690,7 +692,7 @@ server <- function(input, output) {
         list(lineWidth = 3, lineColor='#D55E00', title=list(text="Temperature")), #label/colorize temp y axis
         list(lineWidth = 3, lineColor="#009E73", title=list(text="pH")), #label/colorize pH y axis
         list(lineWidth = 3, lineColor="#0072B2", title=list(text="Tide"))) %>% #label/colorize tide y axis
-      hc_xAxis(title = "Date", categories = x, breaks=10) %>% #label x axis
+      hc_xAxis(title = "Date", categories = lompoc3$date_highchart, tickInterval = 7 *24*4*2) %>% #label x axis
       hc_colors(c("#D55E00", #set specific colors for points (note same color order as y axis)
                   "#009E73",
                   "#0072B2"))
@@ -818,7 +820,7 @@ server <- function(input, output) {
         list(lineWidth = 3, lineColor='#D55E00', title=list(text="Temperature")), #label/colorize temp y axis
         list(lineWidth = 3, lineColor="#009E73", title=list(text="pH")), #label/colorize pH y axis
         list(lineWidth = 3, lineColor="#0072B2", title=list(text="Tide"))) %>% #label/colorize tide y axis
-      hc_xAxis(title = "Date", categories = x, breaks=10) %>% #label x axis
+      hc_xAxis(title = "Date", categories = tab4_reactive()$date_highchart, tickInterval = 7 *24*4*2) %>% #label x axis
       hc_colors(c("#D55E00", #set specific colors for points (note same color order as y axis)
                   "#009E73",
                   "#0072B2"))
