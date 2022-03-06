@@ -98,6 +98,7 @@ ui <- fluidPage(
         menuItem("Lompoc Landing Data", tabName = "data", icon = icon("anchor",lib="font-awesome")),
         menuItem("Compare and Contrast", tabName = "compare", icon = icon("chart-bar",lib="font-awesome")),
         menuItem("Conclusion", tabName = "conclusions", icon = icon("fish", lib = "font-awesome")),
+        menuItem("Glossary", tabName = "glossary", icon = icon("binoculars", lib="font-awesome")),
         menuItem("Acknowledgements", tabName="acknowledgements",icon=icon("trophy",lib="font-awesome"))
       )
     ), ## end dashboardSidebar
@@ -127,12 +128,11 @@ ui <- fluidPage(
                                           em("Watch this short video for an overview of OA and its effects:"),
                                           br(),
                                           br(),
-                                          HTML('<center><iframe width="560" height="315" src="https://www.youtube.com/embed/gZGj0BbDT38" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>')),
-                                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
-                                     h3(p(em(strong("Check your knowledge:")),
-                                          br(),
-                                          "Check your knowledge?"),
-                                        style="text-align:center;color:black;background-color:lavender;padding:15x;border-radius:10px")),
+                                          HTML('<center><iframe width="560" height="315" src="https://www.youtube.com/embed/gZGj0BbDT38" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>'),
+                                          tags$head(tags$script(src = "message-handler.js")),
+                                          actionButton("about_1", "Check your comprehension")),
+                                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")
+                                     ),
                             ###
                             tabPanel(h4("The effect on calcifying organisms"),
                                      h4(p("The removal of carbonate and addition of hydrogen ions in seawater through the process of OA has serious consequences for many marine organisms, especially marine calcifiers.
@@ -153,10 +153,17 @@ ui <- fluidPage(
                                        br(),
                                        HTML('<center><iframe width="560" height="315" src="https://www.youtube.com/embed/aG3n1fAa7vk" title="The Acid Test" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>')),
                                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
-                                     h3(p(em(strong("Check your knowledge:")),
-                                          br(),
-                                          "Check your knowledge?"),
-                                        style="text-align:center;color:black;background-color:lavender;padding:15x;border-radius:10px")),
+                                     column(12, align="right",
+                                            tags$head(
+                                              tags$style(HTML('#about2{color:white;background-color:skyblue}'))),
+                                            actionButton(inputId = "about2", label = "Check your comprehension")),
+                                     conditionalPanel(
+                                       condition = "input.about2%2==1",
+                                       h4(p("How does ocean acidification affect intertidal animals like crabs?",
+                                            style="text-align:center;color:black;background-color:azure;padding:10px;border-radius:10px"),
+                                          )),
+                                     br(),
+                                     br()),
                             ###
                             tabPanel(h4("Along the coastline"),
                                      h4(p("OA occurs at different rates in different ecosystems.
@@ -395,7 +402,7 @@ ui <- fluidPage(
                 )),
         
         tabItem(tabName = "compare",
-                titlePanel("Compare and Contrast: All Sites"),
+                h1("Compare and Contrast: All Sites", align = "left"),
                 h5(em("Figures on this page may take longer to load")),
                 tabsetPanel(id = "com",
                             tabPanel(h4("Question 1"),
@@ -418,8 +425,6 @@ ui <- fluidPage(
                                        plotOutput(outputId = "tab1_plot"))),
                             
                             tabPanel(h4("Question 2"),
-                                     tabsetPanel(
-                                       tabPanel(h5("Question"),
                                                 sidebarLayout(position = "right",
                                                               sidebarPanel(h3(p(strong(em(("Reminder: Our Research"))))),
                                                                            h4(strong("Question:"), "What are the pH and temperature conditions across the California coastline?"),
@@ -437,10 +442,8 @@ ui <- fluidPage(
                                                                 conditionalPanel(
                                                                   condition = "input.checkbox_compare2 == 1",
                                                                   h4(p(em("answer will go here :)"),
-                                                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")))))),
-                                       tabPanel(h5("Data Table"),
-                                                (DT::dataTableOutput("mytable1")))
-                                     )),
+                                                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))),
+                                                                (DT::dataTableOutput("mytable1", width="50%"))))),
                             
                             tabPanel(h4("Question 3"),
                                      fluidRow(
@@ -523,6 +526,20 @@ ui <- fluidPage(
                                      br(),
                                      a(img(height="50%", width="50%", src="OAIElogo.png"), href="https://www.oainfoexchange.org/index.html", style="text-align: center; display: block; margin-left: auto; margin-right: auto")))),
 
+        # glossary tab content
+        tabItem(tabName="glossary",
+                h1("Glossary", align = "left"),
+                h4(p(strong("Atmosphere")),
+                   br(),
+                   p(strong("Anthropogenic")),
+                   br(),
+                   p(strong("Carbonate")),
+                   br(),
+                   p(strong("Eutrophication")),
+                   br(),
+                   p(strong("Salinity")),
+                   br(),
+                   p(strong("Upwelling")))),
         
         # acknowledgements tab content
         tabItem(tabName="acknowledgements",
@@ -570,6 +587,12 @@ ui <- fluidPage(
 
 ## Create the Server
 server <- function(input, output) {
+  
+  ## about the intertidal
+  observeEvent(input$about_1, {
+    session$sendCustomMessage(type = 'testmessage',
+                              message = 'After watching the video...')
+  })
   
   ## map tab
   output$map <- renderLeaflet({
