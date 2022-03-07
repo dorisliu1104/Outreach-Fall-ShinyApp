@@ -98,6 +98,7 @@ ui <- fluidPage(
         menuItem("Lompoc Landing Data", tabName = "data", icon = icon("anchor",lib="font-awesome")),
         menuItem("Compare and Contrast", tabName = "compare", icon = icon("chart-bar",lib="font-awesome")),
         menuItem("Conclusion", tabName = "conclusions", icon = icon("fish", lib = "font-awesome")),
+        menuItem("Glossary", tabName = "glossary", icon = icon("binoculars", lib="font-awesome")),
         menuItem("Acknowledgements", tabName="acknowledgements",icon=icon("trophy",lib="font-awesome"))
       )
     ), ## end dashboardSidebar
@@ -129,10 +130,8 @@ ui <- fluidPage(
                                           br(),
                                           HTML('<center><iframe width="560" height="315" src="https://www.youtube.com/embed/gZGj0BbDT38" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>')),
                                         style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
-                                     h3(p(em(strong("Check your knowledge:")),
-                                          br(),
-                                          "Check your knowledge?"),
-                                        style="text-align:center;color:black;background-color:lavender;padding:15x;border-radius:10px")),
+                                     tags$head(tags$script(src = "message-handler.js")),
+                                     actionButton("about_1", "Check your comprehension")),
                             ###
                             tabPanel(h4("The effect on calcifying organisms"),
                                      h4(p("The removal of carbonate and addition of hydrogen ions in seawater through the process of OA has serious consequences for many marine organisms, especially marine calcifiers.
@@ -153,10 +152,17 @@ ui <- fluidPage(
                                        br(),
                                        HTML('<center><iframe width="560" height="315" src="https://www.youtube.com/embed/aG3n1fAa7vk" title="The Acid Test" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>')),
                                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
-                                     h3(p(em(strong("Check your knowledge:")),
-                                          br(),
-                                          "Check your knowledge?"),
-                                        style="text-align:center;color:black;background-color:lavender;padding:15x;border-radius:10px")),
+                                     column(12, align="right",
+                                            tags$head(
+                                              tags$style(HTML('#about2{color:white;background-color:skyblue}'))),
+                                            actionButton(inputId = "about2", label = "Check your comprehension")),
+                                     conditionalPanel(
+                                       condition = "input.about2%2==1",
+                                       h4(p("How does ocean acidification affect intertidal animals like crabs?",
+                                            style="text-align:center;color:black;background-color:azure;padding:10px;border-radius:10px"),
+                                       )),
+                                     br(),
+                                     br()),
                             ###
                             tabPanel(h4("Along the coastline"),
                                      h4(p("OA occurs at different rates in different ecosystems.
@@ -277,6 +283,36 @@ ui <- fluidPage(
                                               tags$img(src = "bodega_site.jpg", align = "center",height="100%",width="100%"),
                                               br(),
                                               br(),
+                                              span(
+                                                  tags$button(
+                                                    class = "right floated circular ui info icon button", style = "margin: 50px;",
+                                                    tags$i(class = "info icon")
+                                                  ),
+                                                  div(
+                                                    class = "ui info modal",
+                                                    div(class = "header", "Info"),
+                                                    div(
+                                                      class = "content",
+                                                      h5(
+                                                        "Welcome to the Pokémon 20 Question app. This works in the same way as a standard 20 Question but in the",
+                                                        "world of Pokémon. You can select any one of the 721 monsters from Generations 1-6 and go through each",
+                                                        "question, answering yes/no/don't know until there is either one Pokémon left\n and will show you the one it has guessed,",
+                                                        "or if it can't guess in time then you have won."
+                                                      ),
+                                                      h5(
+                                                        "If you are finding that it is guessing it correctly too much for your liking, then to",
+                                                        "make it easier for\n you, you can reduce the amount of questions the app can ask."
+                                                      ),
+                                                      h6(
+                                                        "Source code is available on",
+                                                        a("GitHub.", href = "https://github.com/ashbaldry/Pokemon_20Q", target = "_blank"),
+                                                        "All data and images have been retreived from",
+                                                        a("veekun.com", href = "https://veekun.com", target = "_blank")
+                                                      )
+                                                    )
+                                                  ),
+                                                  tags$script("$('.info.modal').modal('attach events', '.info.button', 'show');")
+                                                ),
                                               h4("Lompoc Landing",
                                                  style="text-align:center"),
                                               tags$img(src = "lol_site.jpg", align = "center",height="100%",width="100%"),
@@ -395,7 +431,7 @@ ui <- fluidPage(
                 )),
         
         tabItem(tabName = "compare",
-                titlePanel("Compare and Contrast: All Sites"),
+                h1("Compare and Contrast: All Sites", align = "left"),
                 h5(em("Figures on this page may take longer to load")),
                 tabsetPanel(id = "com",
                             tabPanel(h4("Question 1"),
@@ -418,28 +454,25 @@ ui <- fluidPage(
                                        plotOutput(outputId = "tab1_plot"))),
                             
                             tabPanel(h4("Question 2"),
-                                     tabsetPanel(
-                                       tabPanel(h5("Question"),
-                                                sidebarLayout(position = "right",
-                                                              sidebarPanel(h3(p(strong(em(("Reminder: Our Research"))))),
-                                                                           h4(strong("Question:"), "What are the pH and temperature conditions across the California coastline?"),
-                                                                           br(),
-                                                                           h4(strong("Hypothesis:"), "pH will decrease with increasing latitude, and temperature will increase with decreasing latitude."),
-                                                                           br(),
-                                                                           h4(strong("Predictions:"), "Bodega Bay, the northernmost site, will experience the lowest pH and temperatures, whereas Alegria, the southernmost site, will experience the highest pH and temperatures.")
-                                                              ),
-                                                              mainPanel(
+                                     sidebarLayout(position = "right",
+                                                   sidebarPanel(h3(p(strong(em(("Reminder: Our Research"))))),
+                                                                h4(strong("Question:"), "What are the pH and temperature conditions across the California coastline?"),
                                                                 br(),
-                                                                h4(p("2. Look at the following table and consider: How do these data align with the study predictions?",
-                                                                     style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
-                                                                column(12, align="right",
-                                                                       checkboxInput("checkbox_compare2", label = "Show answer", value = FALSE)),
-                                                                conditionalPanel(
-                                                                  condition = "input.checkbox_compare2 == 1",
-                                                                  h4(p(em("answer will go here :)"),
-                                                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")))))),
-                                       tabPanel(h5("Data Table"),
-                                                (DT::dataTableOutput("mytable1")))
+                                                                h4(strong("Hypothesis:"), "pH will decrease with increasing latitude, and temperature will increase with decreasing latitude."),
+                                                                br(),
+                                                                h4(strong("Predictions:"), "Bodega Bay, the northernmost site, will experience the lowest pH and temperatures, whereas Alegria, the southernmost site, will experience the highest pH and temperatures.")
+                                                              ),
+                                                   mainPanel(
+                                                     br(),
+                                                     h4(p("2. Look at the following table and consider: How do these data align with the study predictions?",
+                                                          style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
+                                                     column(12, align="right",
+                                                            checkboxInput("checkbox_compare2", label = "Show answer", value = FALSE)),
+                                                     conditionalPanel(
+                                                       condition = "input.checkbox_compare2 == 1",
+                                                       h4(p(em("answer will go here :)"),
+                                                            style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))),
+                                                     (DT::dataTableOutput("mytable1")))
                                      )),
                             
                             tabPanel(h4("Question 3"),
@@ -523,8 +556,23 @@ ui <- fluidPage(
                                      br(),
                                      a(img(height="50%", width="50%", src="OAIElogo.png"), href="https://www.oainfoexchange.org/index.html", style="text-align: center; display: block; margin-left: auto; margin-right: auto")))),
 
+      # glossary tab content
+      tabItem(tabName="glossary",
+              h1("Glossary", align = "left"),
+              h4(p(strong("Atmosphere")),
+                br(),
+                p(strong("Anthropogenic")),
+                br(),
+                p(strong("Carbonate")),
+                br(),
+                p(strong("Eutrophication")),
+                br(),
+                p(strong("Salinity")),
+                br(),
+                p(strong("Upwelling")),
+              style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),        
         
-        # acknowledgements tab content
+      # acknowledgements tab content
         tabItem(tabName="acknowledgements",
                 h1("Acknowledgements", align = "center"),
                 h4(p(strong("This app was developed by:"),
@@ -570,6 +618,12 @@ ui <- fluidPage(
 
 ## Create the Server
 server <- function(input, output) {
+  
+  ## about the intertidal
+  observeEvent(input$about_1, {
+    session$sendCustomMessage(type = 'testmessage',
+                              message = 'After watching the video...')
+  })
   
   ## map tab
   output$map <- renderLeaflet({
