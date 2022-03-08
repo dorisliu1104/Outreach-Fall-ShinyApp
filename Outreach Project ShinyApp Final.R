@@ -435,23 +435,24 @@ ui <- fluidPage(
                 h5(em("Figures on this page may take longer to load")),
                 tabsetPanel(id = "com",
                             tabPanel(h4("Question 1"),
-                                     sidebarPanel(
-                                       h4("1. Compare the data at all three sites. What general patterns do you see in the data?"),
-                                       column(12, align="right",
-                                              checkboxInput("checkbox_compare1",label = "Show answer", value = FALSE)),
-                                       br(),
-                                       br(),
-                                       conditionalPanel(
-                                         condition = "input.checkbox_compare1 == 1",
-                                         h4(p(em("Alegria has the highest pH and temp, then Lompoc, then Bodega Bay"),
-                                              style="text-align:left"))),
-                                       br(),
-                                       selectInput(inputId = "compare_tab1",
-                                                   label = "Select pH or temperature",
-                                                   choices = c("Temperature"="temp_c","pH"="p_h"))
-                                     ),
-                                     mainPanel(
-                                       plotOutput(outputId = "tab1_plot"))),
+                                     fluidRow(
+                                       column(width = 5,
+                                              h4("Click a site"),
+                                              leafletOutput(outputId = "map3", width = "100%", height = 600 )),
+                                       column(width = 7,
+                                              h4(p(" 1. Compare the data at all three sites. What general patterns do you see in the data?"),
+                                                 style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
+                                              column(12, align="right",
+                                                     checkboxInput("checkbox_compare1",label = "Show answer", value = FALSE)),
+                                              conditionalPanel(
+                                                condition = "input.checkbox_compare1 == 1",
+                                                h4(p(em("Alegria has the highest pH and temp, then Lompoc, then Bodega Bay"),
+                                                     style="text-align:left"))),
+                                              br(),
+                                              selectInput(inputId = "compare_tab1",
+                                                          label = "Select pH or temperature",
+                                                          choices = c("Temperature"="temp_c","pH"="p_h")),
+                                              plotOutput("tab1_plot")))),
                             
                             tabPanel(h4("Question 2"),
                                      sidebarLayout(position = "right",
@@ -773,6 +774,28 @@ server <- function(input, output) {
       scale_alpha_manual(values=c(0.5,0.5,1))
   })
   
+  # tab 1 map output
+  output$map3 <- renderLeaflet({
+    leaflet() %>% 
+      addTiles() %>% 
+      addCircleMarkers(data = site_gps, lat = ~lat, lng = ~long, radius = ~gps_radius, popup = ~popup_info, color = ~ifelse(input$compare_tab1 == "temp_c", "#D55E00", "#009E73")) %>%
+      addLabelOnlyMarkers(
+        lng = -125.5921856, lat = 38.31875756,
+        label = "Bodega Bay",
+        labelOptions = labelOptions(noHide = T, textOnly = TRUE, textsize = "15px",
+                                    style = list("font-style" = "italic"))) %>%
+      addLabelOnlyMarkers(
+        lng = -121.3505135, lat = 34.70743071,
+        label = "Lompoc Landing",
+        labelOptions = labelOptions(noHide = T, textOnly = TRUE, textsize = "15px",
+                                    style = list("font-style" = "italic"))) %>%
+      addLabelOnlyMarkers(
+        lng = -121.1519116, lat = 34.19907704,
+        label = "Alegria",
+        labelOptions = labelOptions(noHide = T, textOnly = TRUE, textsize = "15px",
+                                    style = list("font-style" = "italic")))
+    
+  }) 
   # tab 2 our research slideshows
   output$bodegabay <- renderSlickR({
     imgs <- list.files("www/Bodega", pattern=".jpg", full.names = TRUE)
