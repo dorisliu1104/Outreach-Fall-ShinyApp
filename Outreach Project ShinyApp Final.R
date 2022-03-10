@@ -466,7 +466,8 @@ ui <- fluidPage(
                                                 condition = "input.checkbox_compare2 == 1",
                                                 h4(p(em("answer will go here :)"),
                                                      style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))),
-                                              (div(DT::dataTableOutput("mytable1"), style = "font-size: 90%; width: 75%"))),
+                                              (div(DT::dataTableOutput("mytable1", width = "100%"), style = "font-size: 90%; width: 100%")),
+                                              h6(p("Move your cursor to scroll left to right"))),
                                        
                                        column(width = 4,
                                               box(title = "Reminder: Our Research",
@@ -843,7 +844,7 @@ server <- function(input, output) {
   
   ## tab 2 table output
   output$mytable1 <- DT::renderDataTable({
-    DT::datatable(data_summary_table,  options = list(dom = 't'),
+    DT::datatable(data_summary_table,  options = list(dom = 't', scrollX = TRUE),
                   rownames= FALSE)
   })
   
