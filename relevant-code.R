@@ -52,3 +52,18 @@ highchart() %>%
               "#009E73",
               "#0072B2"))
 
+
+## Conditional panel, add something in a different location than the button
+fluidRow(column(10, align="left", 
+                checkboxInput("pickaplot", label = "Display heat map (interactive)", value = FALSE))),
+#p(strong("ADD ~Or, pick a genus~ HERE?")),
+br(),
+#plotlyOutput(outputId="plot_heatmap"),
+br(),
+h5(p(em("What is the difference between the plot and the table?"))),
+p(strong("The plot"), "displays the unique number of quadrats containing the focal organism and", em("each"), "neighbor organism.", strong("The table"), "displays the unique number of quadrats containing the focal organism and", em("all"), "neighbor organisms,", em("excluding"), "those neighbor organisms that are not present at the chosen location(s)."),
+p("Thus, if a single quadrat contains the focal organism and three neighbor organisms, the plot would allocate a value of 1 for each neighbor organism (each bar on the plot), and the table would allocate a value of 1 for that quadrat (column three on the table)."),
+conditionalPanel(
+  condition = "input.pickaplot == '1'",
+  p("Like the plot,", strong("the heat map"), "displays the unique number of quadrats containing the focal organism and each neighbor organism, as well as the focal organism. The darker the shade of the box, the more quadrats containing both the focal organism and the neighbor organism.")),
+),

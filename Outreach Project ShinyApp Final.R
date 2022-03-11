@@ -486,27 +486,59 @@ ui <- fluidPage(
                                               plotOutput("tab1_plot")))),
                             
                             tabPanel(h4("Question 2"),
-                                     sidebarLayout(position = "right",
-                                                   sidebarPanel(h3(p(strong(em(("Reminder: Our Research"))))),
-                                                                h4(strong("Question:"), "What are the pH and temperature conditions across the California coastline?"),
-                                                                br(),
-                                                                h4(strong("Hypothesis:"), "pH will decrease with increasing latitude, and temperature will increase with decreasing latitude."),
-                                                                br(),
-                                                                h4(strong("Predictions:"), "Bodega Bay, the northernmost site, will experience the lowest pH and temperatures, whereas Alegria, the southernmost site, will experience the highest pH and temperatures.")
-                                                              ),
-                                                   mainPanel(
-                                                     br(),
-                                                     h4(p("2. Look at the following table and consider: How do these data align with the study predictions?",
-                                                          style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
-                                                     column(12, align="right",
-                                                            checkboxInput("checkbox_compare2", label = "Show answer", value = FALSE)),
-                                                     conditionalPanel(
-                                                       condition = "input.checkbox_compare2 == 1",
-                                                       h4(p(em("answer will go here :)"),
-                                                            style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))),
-                                                     (DT::dataTableOutput("mytable1")))
-                                     )),
-                            
+                                     fluidRow(
+                                       column(width = 8,
+                                              br(),
+                                              h4(p("2. Look at the following table and consider: How do these data align with the study predictions?",
+                                                   style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
+                                              column(12, align="right",
+                                                     checkboxInput("checkbox_compare2", label = "Show answer", value = FALSE)),
+                                              conditionalPanel(
+                                                condition = "input.checkbox_compare2 == 1",
+                                                h4(p(em("answer will go here :)"),
+                                                     style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))),
+                                              (div(DT::dataTableOutput("mytable1", width = "100%"), style = "font-size: 90%; width: 100%")),
+                                              h6(p("Move your cursor to scroll left to right"))),
+                                       
+                                       column(width = 4,
+                                              br(),
+                                              br(),
+                                              box(title = "Reminder: Our Research",
+                                                solidHeader = T,
+                                                    collapsible = T,
+                                                    collapsed = F,
+                                                width = "50%",
+                                              h5(strong("Question:"), "What are the pH and temperature conditions across the California coastline?"),
+                                              br(),
+                                              h5(strong("Hypothesis:"), "pH will decrease with increasing latitude, and temperature will increase with decreasing latitude."),
+                                              br(),
+                                              h5(strong("Predictions:"), "Bodega Bay, the northernmost site, will experience the lowest pH and temperatures, whereas Alegria, the southernmost site, will experience the highest pH and temperatures.")))
+                                       
+                                       
+                                       )),
+          
+                             # sidebarLayout(position = "right",
+                                     #               sidebarPanel(h3(p(strong(em(("Reminder: Our Research"))))),
+                                     #                            h4(strong("Question:"), "What are the pH and temperature conditions across the California coastline?"),
+                                     #                            br(),
+                                     #                            h4(strong("Hypothesis:"), "pH will decrease with increasing latitude, and temperature will increase with decreasing latitude."),
+                                     #                            br(),
+                                     #                            h4(strong("Predictions:"), "Bodega Bay, the northernmost site, will experience the lowest pH and temperatures, whereas Alegria, the southernmost site, will experience the highest pH and temperatures.")
+                                     #                          ),
+                                     #               mainPanel(
+                                     #                 br(),
+                                     #                 h4(p("2. Look at the following table and consider: How do these data align with the study predictions?",
+                                     #                      style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
+                                     #                 column(12, align="right",
+                                     #                        checkboxInput("checkbox_compare2", label = "Show answer", value = FALSE)),
+                                     #                 conditionalPanel(
+                                     #                   condition = "input.checkbox_compare2 == 1",
+                                     #                   h4(p(em("answer will go here :)"),
+                                     #                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))),
+                                     #                 (div(DT::dataTableOutput("mytable1"), style = "font-size: 90%; width: 75%")))
+                                     # )),
+                                   
+                
                             tabPanel(h4("Question 3"),
                                      fluidRow(
                                        column(width = 5,
@@ -845,7 +877,7 @@ server <- function(input, output) {
   
   ## tab 2 table output
   output$mytable1 <- DT::renderDataTable({
-    DT::datatable(data_summary_table,  options = list(dom = 't'),
+    DT::datatable(data_summary_table,  options = list(dom = 't', scrollX = TRUE),
                   rownames= FALSE)
   })
   
