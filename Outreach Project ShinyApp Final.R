@@ -470,6 +470,8 @@ ui <- fluidPage(
                                               h6(p("Move your cursor to scroll left to right"))),
                                        
                                        column(width = 4,
+                                              br(),
+                                              br(),
                                               box(title = "Reminder: Our Research",
                                                 solidHeader = T,
                                                     collapsible = T,
