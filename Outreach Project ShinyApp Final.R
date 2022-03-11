@@ -98,7 +98,7 @@ ui <- fluidPage(
         menuItem("Lompoc Landing Data", tabName = "data", icon = icon("anchor",lib="font-awesome")),
         menuItem("Compare and Contrast", tabName = "compare", icon = icon("chart-bar",lib="font-awesome")),
         menuItem("Conclusion", tabName = "conclusions", icon = icon("fish", lib = "font-awesome")),
-        menuItem("Glossary", tabName = "glossary", icon = icon("binoculars", lib="font-awesome")),
+        menuItem("Glossary", tabName = "glossary", icon = icon("book-open", lib="font-awesome")),
         menuItem("Acknowledgements", tabName="acknowledgements",icon=icon("trophy",lib="font-awesome"))
       )
     ), ## end dashboardSidebar
@@ -130,8 +130,19 @@ ui <- fluidPage(
                                           br(),
                                           HTML('<center><iframe width="560" height="315" src="https://www.youtube.com/embed/gZGj0BbDT38" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>')),
                                         style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
-                                     tags$head(tags$script(src = "message-handler.js")),
-                                     actionButton("about_1", "Check your comprehension")),
+                                     column(12, align="center",
+                                            tags$head(
+                                              tags$style(HTML('#about1{color:white;background-color:skyblue}'))),
+                                            actionButton(inputId = "about1", label = "Check your comprehension")),
+                                     br(),
+                                     br(),
+                                     conditionalPanel(
+                                       condition = "input.about1%2==1",
+                                       h4(p("How does ocean acidification affect intertidal animals like crabs?",
+                                            style="text-align:center;color:black;background-color:azure;padding:10px;border-radius:10px"),
+                                       )),
+                                     br(),
+                                     br()),
                             ###
                             tabPanel(h4("The effect on calcifying organisms"),
                                      h4(p("The removal of carbonate and addition of hydrogen ions in seawater through the process of OA has serious consequences for many marine organisms, especially marine calcifiers.
@@ -152,10 +163,12 @@ ui <- fluidPage(
                                        br(),
                                        HTML('<center><iframe width="560" height="315" src="https://www.youtube.com/embed/aG3n1fAa7vk" title="The Acid Test" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>')),
                                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
-                                     column(12, align="right",
+                                     column(12, align="center",
                                             tags$head(
                                               tags$style(HTML('#about2{color:white;background-color:skyblue}'))),
                                             actionButton(inputId = "about2", label = "Check your comprehension")),
+                                     br(),
+                                     br(),
                                      conditionalPanel(
                                        condition = "input.about2%2==1",
                                        h4(p("How does ocean acidification affect intertidal animals like crabs?",
@@ -188,10 +201,19 @@ ui <- fluidPage(
                                                     style="text-align:center;color:darkgray")),
                                           br()),
                                         style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
-                                     h3(p(em(strong("Check your knowledge:")),
-                                          br(),
-                                          "Check your knowledge?"),
-                                        style="text-align:center;color:black;background-color:lavender;padding:15x;border-radius:10px")),
+                                     column(12, align="center",
+                                            tags$head(
+                                              tags$style(HTML('#about3{color:white;background-color:skyblue}'))),
+                                            actionButton(inputId = "about3", label = "Check your comprehension")),
+                                     br(),
+                                     br(),
+                                     conditionalPanel(
+                                       condition = "input.about3%2==1",
+                                       h4(p("How does ocean acidification affect intertidal animals like crabs?",
+                                            style="text-align:center;color:black;background-color:azure;padding:10px;border-radius:10px"),
+                                       )),
+                                     br(),
+                                     br()),
                             ### 
                             tabPanel(h4("In the intertidal"),
                                      h4(p("The intertidal zone is a highly variable and dynamic environment.
@@ -216,10 +238,19 @@ ui <- fluidPage(
                                                     style="text-align:center;color:darkgray")),
                                           br()),
                                         style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
-                                     h3(p(em(strong("Check your knowledge:")),
-                                          br(),
-                                          "Check your knowledge?"),
-                                        style="text-align:center;color:black;background-color:lavender;padding:15x;border-radius:10px")),
+                                     column(12, align="center",
+                                            tags$head(
+                                              tags$style(HTML('#about4{color:white;background-color:skyblue}'))),
+                                            actionButton(inputId = "about4", label = "Check your comprehension")),
+                                     br(),
+                                     br(),
+                                     conditionalPanel(
+                                       condition = "input.about4%2==1",
+                                       h4(p("How does ocean acidification affect intertidal animals like crabs?",
+                                            style="text-align:center;color:black;background-color:azure;padding:10px;border-radius:10px"),
+                                       )),
+                                     br(),
+                                     br()),
                             ###
                             tabPanel(h4("Your turn"),
                                      h4(p(strong("Using the information you just learned, answer the following questions."
