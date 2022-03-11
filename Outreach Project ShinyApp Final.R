@@ -13,6 +13,7 @@ library(DT)
 library(scales)
 library(slickR)
 library(janitor)
+library(shinyWidgets)
 
 # #add functionality to publish app
 # library(rsconnect)
@@ -308,42 +309,32 @@ ui <- fluidPage(
                                               h4(em("Take a look at",
                                                     tags$a(href="https://www.windy.com/?36.364,-121.838,7,i:pressure", "this website"), "to explore more physical differences between these three sites and across the California coastline"))),
                                      tabPanel(h4("Site pictures"),
+                                              fluidRow(
+                                                column=12,
+                                                align="center",
                                               "**we will add more photos from each site in the final version of the app**",
                                               h4("Bodega Bay",
                                                  style="text-align:center"),
-                                              tags$img(src = "bodega_site.jpg", align = "center",height="100%",width="100%"),
+                                              HTML('<left><img src="bodega_site.jpg" width="45%"></left>'),
+                                              HTML('<right><img src="bodega-sun.jpg" width="45%"></right>'),
                                               br(),
                                               br(),
-                                              span(
-                                                  tags$button(
-                                                    class = "right floated circular ui info icon button", style = "margin: 50px;",
-                                                    tags$i(class = "info icon")
-                                                  ),
-                                                  div(
-                                                    class = "ui info modal",
-                                                    div(class = "header", "Info"),
-                                                    div(
-                                                      class = "content",
-                                                      h5(
-                                                        "Welcome to the Pokémon 20 Question app. This works in the same way as a standard 20 Question but in the",
-                                                        "world of Pokémon. You can select any one of the 721 monsters from Generations 1-6 and go through each",
-                                                        "question, answering yes/no/don't know until there is either one Pokémon left\n and will show you the one it has guessed,",
-                                                        "or if it can't guess in time then you have won."
-                                                      ),
-                                                      h5(
-                                                        "If you are finding that it is guessing it correctly too much for your liking, then to",
-                                                        "make it easier for\n you, you can reduce the amount of questions the app can ask."
-                                                      ),
-                                                      h6(
-                                                        "Source code is available on",
-                                                        a("GitHub.", href = "https://github.com/ashbaldry/Pokemon_20Q", target = "_blank"),
-                                                        "All data and images have been retreived from",
-                                                        a("veekun.com", href = "https://veekun.com", target = "_blank")
-                                                      )
-                                                    )
-                                                  ),
-                                                  tags$script("$('.info.modal').modal('attach events', '.info.button', 'show');")
-                                                ),
+                                              p(" ", style = "margin-bottom: -10px;"),
+                                              actionButton('bodega1', 'Zoom in on Bodega Bay', class="btn-xs", style='font-size:75%'),
+                                              br(),
+                                              br(),
+                                              # tags$li(class = "dropdown",
+                                              #         dropMenu(
+                                              #           dropdownButton("Info", status = 'success', icon = icon('info')),
+                                              #           tags$img(src = "bodega_site.jpg", align = "center",height="100%",width="100%"),
+                                              #           h3(strong('Information')),
+                                              #           br(),
+                                              #           h5('This is really helpful'),
+                                              #           textInput('text', 'You can also put UI elements here'),
+                                              #           placement = "bottom",
+                                              #           maxWidth = 800,
+                                              #           arrow = TRUE)),
+                                        
                                               h4("Lompoc Landing",
                                                  style="text-align:center"),
                                               tags$img(src = "lol_site.jpg", align = "center",height="100%",width="100%"),
@@ -352,7 +343,7 @@ ui <- fluidPage(
                                               h4("Alegria",
                                                  style="text-align:center"),
                                               tags$img(src = "alegria_site.jpg", align = "center",height="100%",width="100%")
-                                     )
+                                     ))
                                      #tabPanel(h4("Site map")
                                      #leafletOutput(outputId = "map", width = "100%", height = 600 )
                          )),
@@ -965,7 +956,19 @@ server <- function(input, output) {
                   "#009E73",
                   "#0072B2"))
     })
- 
+  
+  # our research photos
+  observeEvent(input$bodega1,{
+    showModal(modalDialog(
+      title = "Bodega Bay",
+      size = "l",
+      HTML('<img src="bodega_site.jpg" width=100% />'),
+      br(),
+      br(),
+      HTML('<img src="bodega-sun.jpg" width=100% />')
+    ))
+  })
+
   
 }
 
