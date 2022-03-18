@@ -111,6 +111,8 @@ ui <- fluidPage(
                 h1("About Ocean Acidification"),
                 tabsetPanel(id="intertidal_tab",
                             tabPanel(h4("What is ocean acidification?"),
+                                     fluidRow(
+                                       column(width = 9,
                                      h4(p("The ocean is a carbon sink that absorbs around 30% of the carbon dioxide (CO2) released to the atmosphere by human activities, such as burning fossil fuels and deforestation.
                                           Ocean pH is normally around 8.1, but the pH drops when CO2 dissolves in seawater.",
                                           br(),
@@ -130,22 +132,22 @@ ui <- fluidPage(
                                           br(),
                                           br(),
                                           HTML('<center><iframe width="560" height="315" src="https://www.youtube.com/embed/gZGj0BbDT38" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>')),
-                                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
-                                     column(12, align="center",
-                                            tags$head(
-                                              tags$style(HTML('#about1{color:white;background-color:skyblue}'))),
-                                            actionButton(inputId = "about1", label = "Check your comprehension")),
+                                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
+                                     column(width = 3,
+                                            br(),
+                                            br(),
+                                            box(title = h5(strong("Check your comprehension")),
+                                                solidHeader = T,
+                                                collapsible = T,
+                                                collapsed = T,
+                                                width = "50%",column(12, align="center",
+                                                                     h5("Ask comprehension questions here!")))),
                                      br(),
-                                     br(),
-                                     conditionalPanel(
-                                       condition = "input.about1%2==1",
-                                       h4(p("How does ocean acidification affect intertidal animals like crabs?",
-                                            style="text-align:center;color:black;background-color:azure;padding:10px;border-radius:10px"),
-                                       )),
-                                     br(),
-                                     br()),
+                                     br())),
                             ###
                             tabPanel(h4("The effect on calcifying organisms"),
+                                     fluidRow(
+                                       column(width = 9,
                                      h4(p("The removal of carbonate and addition of hydrogen ions in seawater through the process of OA has serious consequences for many marine organisms, especially marine calcifiers.
                                        Calcifying marine organisms use carbonate to make shells (calcium carbonate). Therefore, the removal of carbonate from seawater makes it harder for these organisms to form hard, strong shells.
                                        Furthermore, the addition of hydrogen drops the seawater pH and corrodes calcifier's shells.
@@ -163,22 +165,22 @@ ui <- fluidPage(
                                        br(),
                                        br(),
                                        HTML('<center><iframe width="560" height="315" src="https://www.youtube.com/embed/aG3n1fAa7vk" title="The Acid Test" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>')),
-                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
-                                     column(12, align="center",
-                                            tags$head(
-                                              tags$style(HTML('#about2{color:white;background-color:skyblue}'))),
-                                            actionButton(inputId = "about2", label = "Check your comprehension")),
+                                       style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
+                                     column(width = 3,
+                                            br(),
+                                            br(),
+                                            box(title = h5(strong("Check your comprehension")),
+                                                solidHeader = T,
+                                                collapsible = T,
+                                                collapsed = T,
+                                                width = "50%",column(12, align="center",
+                                                                     h5("Ask comprehension questions here!")))),
                                      br(),
-                                     br(),
-                                     conditionalPanel(
-                                       condition = "input.about2%2==1",
-                                       h4(p("How does ocean acidification affect intertidal animals like crabs?",
-                                            style="text-align:center;color:black;background-color:azure;padding:10px;border-radius:10px"),
-                                       )),
-                                     br(),
-                                     br()),
+                                     br())),
                             ###
                             tabPanel(h4("Along the coastline"),
+                                     fluidRow(
+                                       column(width = 9,
                                      h4(p("OA occurs at different rates in different ecosystems.
                                           Coastal environments in particular experience more rapid rates of acidification due to local processes, often linked to human activities, that alter water chemistry. 
                                           For example, eutrophication (nutrient runoff) can cause algal blooms that release CO2 when the algae die and decompose.",
@@ -201,22 +203,22 @@ ui <- fluidPage(
                                                          tags$a(href="https://oceanservice.noaa.gov/education/tutorial_currents/03coastal4.html", "National Oceanic and Atmospheric Administration"), ".")),
                                                     style="text-align:center;color:darkgray")),
                                           br()),
-                                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
-                                     column(12, align="center",
-                                            tags$head(
-                                              tags$style(HTML('#about3{color:white;background-color:skyblue}'))),
-                                            actionButton(inputId = "about3", label = "Check your comprehension")),
+                                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
+                                     column(width = 3,
+                                            br(),
+                                            br(),
+                                            box(title = h5(strong("Check your comprehension")),
+                                                solidHeader = T,
+                                                collapsible = T,
+                                                collapsed = T,
+                                                width = "50%",column(12, align="center",
+                                                                     h5("Ask comprehension questions here!")))),
                                      br(),
-                                     br(),
-                                     conditionalPanel(
-                                       condition = "input.about3%2==1",
-                                       h4(p("How does ocean acidification affect intertidal animals like crabs?",
-                                            style="text-align:center;color:black;background-color:azure;padding:10px;border-radius:10px"),
-                                       )),
-                                     br(),
-                                     br()),
+                                     br())),
                             ### 
                             tabPanel(h4("In the intertidal"),
+                                     fluidRow(
+                                       column(width = 9,
                                      h4(p("The intertidal zone is a highly variable and dynamic environment.
                                           Organisms that live in the intertidal are subject to the extreme conditions resulting from waves and the daily rise and fall of the tides.
                                           When the tide goes out, organisms must cope with increases in salinity and temperature, reduced oxygen availability, and even exposure to the air.
@@ -238,20 +240,18 @@ ui <- fluidPage(
                                                  h6(p(em("Photo by Amelia Ritger")),
                                                     style="text-align:center;color:darkgray")),
                                           br()),
-                                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
-                                     column(12, align="center",
-                                            tags$head(
-                                              tags$style(HTML('#about4{color:white;background-color:skyblue}'))),
-                                            actionButton(inputId = "about4", label = "Check your comprehension")),
+                                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
+                                     column(width = 3,
+                                            br(),
+                                            br(),
+                                            box(title = h5(strong("Check your comprehension")),
+                                                solidHeader = T,
+                                                collapsible = T,
+                                                collapsed = T,
+                                                width = "50%",column(12, align="center",
+                                                                     h5("Ask comprehension questions here!")))),
                                      br(),
-                                     br(),
-                                     conditionalPanel(
-                                       condition = "input.about4%2==1",
-                                       h4(p("How does ocean acidification affect intertidal animals like crabs?",
-                                            style="text-align:center;color:black;background-color:azure;padding:10px;border-radius:10px"),
-                                       )),
-                                     br(),
-                                     br()),
+                                     br())),
                             ###
                             tabPanel(h4("Your turn"),
                                      h4(p(strong("Using the information you just learned, answer the following questions."
@@ -312,7 +312,6 @@ ui <- fluidPage(
                                               fluidRow(
                                                 column=12,
                                                 align="center",
-                                              "**we will add more photos from each site in the final version of the app**",
                                               h4("Bodega Bay",
                                                  style="text-align:center"),
                                               HTML('<left><img src="bodega_site.jpg" width="45%"></left>'),
@@ -323,26 +322,24 @@ ui <- fluidPage(
                                               actionButton('bodega1', 'Zoom in on Bodega Bay', class="btn-xs", style='font-size:75%'),
                                               br(),
                                               br(),
-                                              # tags$li(class = "dropdown",
-                                              #         dropMenu(
-                                              #           dropdownButton("Info", status = 'success', icon = icon('info')),
-                                              #           tags$img(src = "bodega_site.jpg", align = "center",height="100%",width="100%"),
-                                              #           h3(strong('Information')),
-                                              #           br(),
-                                              #           h5('This is really helpful'),
-                                              #           textInput('text', 'You can also put UI elements here'),
-                                              #           placement = "bottom",
-                                              #           maxWidth = 800,
-                                              #           arrow = TRUE)),
-                                        
                                               h4("Lompoc Landing",
                                                  style="text-align:center"),
-                                              tags$img(src = "lol_site.jpg", align = "center",height="100%",width="100%"),
+                                              HTML('<left><img src="lol_site.jpg" width="45%"></left>'),
+                                              HTML('<right><img src="lol-horizon.jpg" width="45%"></right>'),
+                                              br(),
+                                              br(),
+                                              p(" ", style = "margin-bottom: -10px;"),
+                                              actionButton('lompoc1', 'Zoom in on Lompoc Landing', class="btn-xs", style='font-size:75%'),
                                               br(),
                                               br(),
                                               h4("Alegria",
                                                  style="text-align:center"),
-                                              tags$img(src = "alegria_site.jpg", align = "center",height="100%",width="100%")
+                                              HTML('<left><img src="alegria_site.jpg" width="45%"></left>'),
+                                              HTML('<right><img src="alegria2_site.jpg" width="45%"></right>'),
+                                              br(),
+                                              br(),
+                                              p(" ", style = "margin-bottom: -10px;"),
+                                              actionButton('alegria1', 'Zoom in on Alegria', class="btn-xs", style='font-size:75%'),
                                      ))
                                      #tabPanel(h4("Site map")
                                      #leafletOutput(outputId = "map", width = "100%", height = 600 )
@@ -352,33 +349,44 @@ ui <- fluidPage(
                          h3("Your turn"),
                          tabsetPanel(id="our_research_tabs",
                                      tabPanel(h4("Question 1"),
-                                              h4(p("Examine the pictures from the three different study sites. What are some visual differences between each environment?",
-                                                   style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
-                                              column(12, align="right",
-                                                     checkboxInput("checkbox1", label = "Show answer", value = FALSE)),
-                                              conditionalPanel(
-                                                condition = "input.checkbox1 == 1",
-                                                h4(p(em("A lot more sand in Alegria, more flat than rocky Bodega; Lompoc is structured like a shelf with steps; sensor was exposed at Bodega site"),
-                                                     style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")))),
+                                              column(width = 12,
+                                                     br(),
+                                                     box(title = h4(p("Examine the pictures from the three different study sites. What are some visual differences between each environment?"),
+                                                                    br(),
+                                                                    em("Click the '+' to reveal the answer."),
+                                                                    style="color:black"),
+                                                         solidHeader = T,
+                                                         collapsible = T,
+                                                         collapsed = T,
+                                                         width = "50%",column(12, align="center",
+                                                                              h5(em("A lot more sand in Alegria, more flat than rocky Bodega; Lompoc is structured like a shelf with steps; sensor was exposed at Bodega site"))))),
+                                              ),
                                      tabPanel(h4("Question 2"),
-                                              h4(p("Why were these three sites selected? How are these sites similar? How are they different?",
-                                                   style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
-                                              column(12, align="right",
-                                                     checkboxInput("checkbox2",label = "Show answer", value = FALSE)),
-                                              conditionalPanel(
-                                                condition = "input.checkbox2 == 1",
-                                                h4(p(em("Alegria is furthest south (only one south of Point Conception, meaning it has less intense upwelling and higher average pH), followed by Lompoc and Bodega Bay north of Point Conception which are in the same upwelling regime"),
-                                                     style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))
-                                              )),
+                                              column(width = 12,
+                                                     br(),
+                                                     box(title = h4(p("Why were these three sites selected? How are these sites similar? How are they different?"),
+                                                                    br(),
+                                                                    em("Click the '+' to reveal the answer."),
+                                                                    style="color:black"),
+                                                         solidHeader = T,
+                                                         collapsible = T,
+                                                         collapsed = T,
+                                                         width = "50%",column(12, align="center",
+                                                                              h5(em("Alegria is furthest south (only one south of Point Conception, meaning it has less intense upwelling and higher average pH), followed by Lompoc and Bodega Bay north of Point Conception which are in the same upwelling regime"))))),
+                                              ),
                                      tabPanel(h4("Question 3"),
-                                              h4(p("What physical conditions unique to the intertidal might affect the temperature and pH data collected by the sensors?",
-                                                   style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
-                                              column(12, align="right",
-                                                     checkboxInput("checkbox3", label = "Show answer", value = FALSE)),
-                                              conditionalPanel(
-                                                condition = "input.checkbox3 == 1",
-                                                h4(p(em("zonation, isolation of pools, depth"),
-                                                     style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))))
+                                              column(width = 12,
+                                                     br(),
+                                                     box(title = h4(p("What physical conditions unique to the intertidal might affect the temperature and pH data collected by the sensors?"),
+                                                                    br(),
+                                                                    em("Click the '+' to reveal the answer."),
+                                                                    style="color:black"),
+                                                         solidHeader = T,
+                                                         collapsible = T,
+                                                         collapsed = T,
+                                                         width = "50%",column(12, align="center",
+                                                                              h5(em("zonation, isolation of pools, depth"))))),
+                                              )
                          )))),
         
         tabItem(tabName = "data",
@@ -966,6 +974,28 @@ server <- function(input, output) {
       br(),
       br(),
       HTML('<img src="bodega-sun.jpg" width=100% />')
+    ))
+  })
+  
+  observeEvent(input$lompoc1,{
+    showModal(modalDialog(
+      title = "Lompoc Landing",
+      size = "l",
+      HTML('<img src="lol_site.jpg" width=100% />'),
+      br(),
+      br(),
+      HTML('<img src="lol-horizon.jpg" width=100% />')
+    ))
+  })
+  
+  observeEvent(input$alegria1,{
+    showModal(modalDialog(
+      title = "Bodega Bay",
+      size = "l",
+      HTML('<img src="alegria_site.jpg" width=100% />'),
+      br(),
+      br(),
+      HTML('<img src="alegria2_site.jpg" width=100% />')
     ))
   })
 
