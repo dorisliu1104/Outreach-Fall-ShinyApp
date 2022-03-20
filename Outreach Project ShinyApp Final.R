@@ -918,8 +918,8 @@ server <- function(input, output) {
       geom_line(size = 0.7,color = ifelse(input$compare_tab3 == "temp_c", "#D55E00","#009E73" )) + #make it a line chart
       geom_smooth(method="loess", span=0.1) + #plot trend line for each site
       #scale_color_manual(values = ifelse(input$ph_temp == "temp_c", "#D55E00","#009E73" )) + #color lines by custom site color palette
-      scale_x_datetime(breaks = scales::date_breaks("1 week"), 
-                       labels = date_format("%m/%d %H:%m")) + #change x axis to make it look cleaner - each tick is one week, display month/day hour/minute
+      #scale_x_datetime(breaks = scales::date_breaks("1 week"), 
+                       #labels = date_format("%m/%d %H:%m")) + #change x axis to make it look cleaner - each tick is one week, display month/day hour/minute
       xlab("Date time") + #change x axis label
       ylab(ifelse(input$compare_tab3 == "temp_c", "Temperature", "pH")) + #change y axis label
       theme_bw() +
