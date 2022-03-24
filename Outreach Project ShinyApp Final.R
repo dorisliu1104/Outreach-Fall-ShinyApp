@@ -25,7 +25,8 @@ ph_clean_final <- read_csv(here("data", "ph_clean_final.csv"))
 ph_clean_final <- ph_clean_final %>%
   arrange(date_time) %>% 
   mutate(date=mdy(date)) %>% 
-  mutate(date_highchart =as.character(date, format="%d %B %Y"))
+  mutate(date_highchart = as.character(date_time, format="%d %B %Y %H:%M"))
+
 f = "%m/%d/%Y" 
 ph_clean_final$SetDateMonth <- format(as.POSIXct(ph_clean_final$date, format = f), "%m")
 
@@ -43,7 +44,8 @@ lompoc <- ph_clean_final %>%
   arrange(ymd(date))
 
 lompoc_day <- filter(lompoc, between(date, as.Date("2021-07-25"), as.Date("2021-07-26")))
-lompoc2 <- filter(lompoc, between(date, as.Date("2021-07-25"), as.Date("2021-08-05"))) ## lompoc question 3
+lompoc2 <- filter(lompoc, between(date, as.Date("2021-07-27"), as.Date("2021-08-05")))
+## lompoc question 3
 lompoc3 <- filter(lompoc, between(date, as.Date("2021-08-26"), as.Date("2021-09-27"))) ## lompoc question 4
 lompoc4 <- filter(lompoc, between(date, as.Date("2021-06-17"), as.Date("2021-06-23")))
 alegria4 <- dplyr::filter(ph_clean_final, site=="Alegria") %>% 
@@ -56,7 +58,8 @@ datafiles <- list(lompoc_day, lompoc2, lompoc)
 
 comdata <- ph_clean_final %>% 
   unite("date_time", "date", "time", sep="\ ") %>%
-  mutate(date_time=ymd_hms(date_time)) #apply lubridate to date/time column
+  mutate(date_time=ymd_hms(date_time)) %>% #apply lubridate to date/time column
+  mutate(date_clean = format(as.POSIXct(date_time), "%d %B %Y %H:%M"))
 
 comdata$site <- factor(comdata$site, levels=c("Lompoc Landing","Bodega Bay", "Alegria"))
 
@@ -405,18 +408,43 @@ ui <- fluidPage(
         tabItem(tabName = "data",
                 h1("Lompoc Landing Data"),
                 tabsetPanel(id = "lomdata",
+                            tabPanel(h4("Data overview"),
+                                     fluidRow(
+                                       column(width = 12, align="center",
+                                              h4(p("In this section, you will explore the data we collected from the sensor deployed at Lompoc Landing.",
+                                          br(),
+                                          br(),
+                                          "Each question will have an associated graph (such as the one below), which you can interact with to analyze different aspects to the data.",
+                                          br(),
+                                          br(),
+                                         # "The X axis will show the date (or date and time), and the Y axis will show the variable(s) of interest. Time is in military time (e.g., 20:00 = 8:00 PM), temperature is in degrees Celsius, and tide values are height in feet. The date increases the further you move right along the X axis, and variable value increases the further you move up along the Y axis. More negative tide heights are lower tides, and lower pH values are more acidic conditions.",
+                                          #br(),
+                                          #br(),
+                                          "Move your cursor over each of the lines to see the value of each variable at any particular point in time.",
+                                          highchartOutput("lompoc_intro", width="75%"),
+                                          style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
+                                          h4(p("The X axis will show the date (or date and time), and the Y axis will show the variable(s) of interest. Time is in military time (e.g., 20:00 = 8:00 PM), temperature is in degrees Celsius, and tide values are height in feet. The date increases the further you move right along the X axis, and variable value increases the further you move up along the Y axis. More negative tide heights are lower tides, and lower pH values are more acidic conditions.",
+                                           style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))
+                                     ))),
                             tabPanel(h4("Question 1"),
-                                     sidebarPanel(h4("1. Describe the trends between pH, temperature, and tide heights at Lompoc Landing."),
+                                     sidebarPanel(h4("Here is a graph of the pH, temperature, and tide heights at Lompoc Landing from June until October 2021. Change the dates to look at the data at different time scales."),
+                                                  h4("1. Describe the trends between pH, temperature, and tide heights at Lompoc Landing. How does time of day influence the patterns?"),
+                                                  h5(em("Hint: Filter the data to look at a few days in June, and a few days in September. At high tide, what is happening to the temperature? The pH? Conversely, at low tide, what is happening to the temperature? The pH? Keep an eye on the time - low tides at nighttime may show very different trends than low tides midday!")),
                                                   column(12, align="right",
                                                          checkboxInput("checkbox_lompoc1", label = "Show answer", value = FALSE)),
-                                                  conditionalPanel(
-                                                    condition = "input.checkbox_lompoc1 == 1",
-                                                    h4(p(em("answer will go here :)"),
-                                                         style="text-align:left"))),
                                                   br(),
                                                   dateRangeInput(inputId = "date_range", 
-                                                                 label = 'Filter tide by date',
-                                                                 start = as.Date('2021-06-14') , end = as.Date('2021-10-06'))
+                                                                 label = 'Filter by date',
+                                                                 start = as.Date('2021-06-14'),
+                                                                 end = as.Date('2021-10-06'),
+                                                                 min = as.Date('2021-06-14'),
+                                                                 max = as.Date('2021-10-06')),
+                                                  br(),
+                                                  br(),
+                                                  conditionalPanel(
+                                                    condition = "input.checkbox_lompoc1 == 1",
+                                                    h5(p(em("At midday low tide (June), pH drops and temperature starts to increase. Temperature only decreases once the tide comes back in. At nighttime low tide (S"),
+                                                         style="text-align:left")))
                                      ),
                                      
                                      mainPanel(highchartOutput("ph_ts_plot"))
@@ -727,10 +755,34 @@ server <- function(input, output) {
   
   ## Data (Lompoc) Tab
   
+  # how to lompoc plot
+  output$lompoc_intro <- renderHighchart({
+    y13 <- lompoc2$temp_c #set first y axis
+    y14 <- lompoc2$p_h  #set second y axis
+    y15 <- lompoc2$tide_height #set third y axis
+    x <- lompoc2$date_time
+    
+    highchart() %>% 
+      hc_add_series(data = y13, dashStyle="solid", name = "Temperature") %>% #plot temp
+      hc_add_series(data = y14, yAxis = 1, name = "pH") %>% #plot pH
+      hc_add_series(data = y15, yAxis = 2, name = "Tide") %>% #plot tide height
+      hc_yAxis_multiples(
+        list(lineWidth = 3, lineColor='#D55E00', title=list(text="Temperature (C)")), #label/colorize temp y axis
+        list(lineWidth = 3, lineColor="#009E73", title=list(text="pH")), #label/colorize pH y axis
+        list(lineWidth = 3, lineColor="#0072B2", title=list(text="Tide (ft)"))) %>% #label/colorize tide y axis
+      hc_xAxis(title = "Date", categories = lompoc2$date_highchart, tickInterval = 7 * 24 * 1 * 2) %>% #label x axis
+      hc_colors(c("#D55E00", #set specific colors for points (note same color order as y axis)
+                  "#009E73",
+                  "#0072B2"))
+  })
+  
+  
   dateFiltered <- reactive({
     ph_clean_final %>%
       filter(site == "Lompoc Landing") %>%
-      filter(date>=input$date_range[1] & date<input$date_range[2])
+      filter(date>=input$date_range[1] & date<input$date_range[2]) %>%
+      mutate(date_highchart = format(as.POSIXct(date_time), "%d %B %Y %H:%M"))
+
   })
   
   # Highchart
@@ -739,16 +791,18 @@ server <- function(input, output) {
     y2 <- dateFiltered()$p_h  #set second y axis
     y3 <- dateFiltered()$tide_height #set third y axis
     x <- dateFiltered()$date_time
+    print( input$date_range[1])
+    print(input$date_range[2])
     
     highchart() %>% 
       hc_add_series(data = y1, dashStyle="solid", name = "Temperature") %>% #plot temp
       hc_add_series(data = y2, yAxis = 1, name = "pH") %>% #plot pH
       hc_add_series(data = y3, yAxis = 2, name = "Tide") %>% #plot tide height
       hc_yAxis_multiples(
-        list(lineWidth = 3, lineColor='#D55E00', title=list(text="Temperature")), #label/colorize temp y axis
+        list(lineWidth = 3, lineColor='#D55E00', title=list(text="Temperature (C)")), #label/colorize temp y axis
         list(lineWidth = 3, lineColor="#009E73", title=list(text="pH")), #label/colorize pH y axis
-        list(lineWidth = 3, lineColor="#0072B2", title=list(text="Tide"))) %>% #label/colorize tide y axis
-      hc_xAxis(title = "Date", categories = lompoc$date_highchart, tickInterval = 7* 24 * 4 *2) %>% #label x axis
+        list(lineWidth = 3, lineColor="#0072B2", title=list(text="Tide (ft)"))) %>% #label/colorize tide y axis
+      hc_xAxis(title = "Date", categories = dateFiltered()$date_highchart, tickInterval = 24) %>% #label x axis
       hc_colors(c("#D55E00", #set specific colors for points (note same color order as y axis)
                   "#009E73",
                   "#0072B2"))
@@ -775,8 +829,8 @@ server <- function(input, output) {
       #scale_color_manual(values = ifelse(input$ph_temp == "temp_c", "#D55E00","#009E73" )) + #color lines by custom site color palette
       #scale_x_datetime(breaks = scales::date_breaks("1 week"), 
       #labels = date_format("%m/%d %H:%m")) + #change x axis to make it look cleaner - each tick is one week, display month/day hour/minute
-      xlab("Date time") + #change x axis label
-      ylab(ifelse(input$ph_temp == "temp_c", "Temperature", "pH")) + #change y axis label
+      xlab("Date and time") + #change x axis label
+      ylab(ifelse(input$ph_temp == "temp_c", "Temperature (C)", "pH")) + #change y axis label
       theme_bw() +
       theme(#legend.position = "none", #remove legend
         axis.text.x=element_text(angle=45, vjust = 1, hjust=1, size=12), #adjust x axis text format
@@ -798,9 +852,9 @@ server <- function(input, output) {
       hc_add_series(data = y5, yAxis = 1, name = "pH") %>% #plot pH
       hc_add_series(data = y6, yAxis = 2, name = "Tide") %>% #plot tide height
       hc_yAxis_multiples(
-        list(lineWidth = 3, lineColor='#D55E00', title=list(text="Temperature")), #label/colorize temp y axis
+        list(lineWidth = 3, lineColor='#D55E00', title=list(text="Temperature (C)")), #label/colorize temp y axis
         list(lineWidth = 3, lineColor="#009E73", title=list(text="pH")), #label/colorize pH y axis
-        list(lineWidth = 3, lineColor="#0072B2", title=list(text="Tide"))) %>% #label/colorize tide y axis
+        list(lineWidth = 3, lineColor="#0072B2", title=list(text="Tide (ft)"))) %>% #label/colorize tide y axis
       hc_xAxis(title = "Date", categories = lompoc2$date_highchart, tickInterval = 7 * 24 * 1 * 2) %>% #label x axis
       hc_colors(c("#D55E00", #set specific colors for points (note same color order as y axis)
                   "#009E73",
@@ -820,9 +874,9 @@ server <- function(input, output) {
       hc_add_series(data = y8, yAxis = 1, name = "pH") %>% #plot pH
       hc_add_series(data = y9, yAxis = 2, name = "Tide") %>% #plot tide height
       hc_yAxis_multiples(
-        list(lineWidth = 3, lineColor='#D55E00', title=list(text="Temperature")), #label/colorize temp y axis
+        list(lineWidth = 3, lineColor='#D55E00', title=list(text="Temperature (C)")), #label/colorize temp y axis
         list(lineWidth = 3, lineColor="#009E73", title=list(text="pH")), #label/colorize pH y axis
-        list(lineWidth = 3, lineColor="#0072B2", title=list(text="Tide"))) %>% #label/colorize tide y axis
+        list(lineWidth = 3, lineColor="#0072B2", title=list(text="Tide (ft)"))) %>% #label/colorize tide y axis
       hc_xAxis(title = "Date", categories = lompoc3$date_highchart, tickInterval = 7 *24*4*2) %>% #label x axis
       hc_colors(c("#D55E00", #set specific colors for points (note same color order as y axis)
                   "#009E73",
@@ -834,13 +888,13 @@ server <- function(input, output) {
   ## tab 1 plots
   output$tab1_plot <- renderPlot({
     ggplot(comdata, aes(x=date_time, y=get(input$compare_tab1), group=site)) + #plot pH here
-      geom_line(aes(color=site, alpha=site), size=0.7) + #make it a line chart
+      geom_line(aes(color=site, alpha=site), size=0.7, show.legend = F) + #make it a line chart
       geom_smooth(aes(color=site), method="loess", span=0.1) + #plot trend line for each site
       scale_color_manual(values = pal) + #color lines by custom site color palette
-      scale_x_datetime(breaks = scales::date_breaks("1 week"), 
-                       labels = date_format("%m/%d %H:%m")) + #change x axis to make it look cleaner - each tick is one week, display month/day hour/minute
-      xlab("Date time") + #change x axis label
-      ylab(ifelse(input$ph_temp == "temp_c", "Temperature", "pH")) + #change y axis label
+      scale_x_datetime(breaks = scales::date_breaks("2 weeks"), 
+                       labels = date_format("%d %b")) + #change x axis to make it look cleaner - each tick is one week, display month/day hour/minute
+      xlab("Date") + #change x axis label
+      ylab(ifelse(input$ph_temp == "temp_c", "Temperature (C)", "pH")) + #change y axis label
       theme_bw() +
       theme(#legend.position = "none", #remove legend
         axis.text.x=element_text(angle=45, vjust = 1, hjust=1, size=12), #adjust x axis text format
@@ -922,7 +976,7 @@ server <- function(input, output) {
   # tab 3 plot
   siteFiltered <- reactive({
     ph_clean_final %>% 
-      dplyr::filter(site== input$compare_site) %>% 
+      dplyr::filter(site == input$compare_site) %>% 
       unite("date_time", "date", "time", sep="\ ", remove = FALSE) %>%
       mutate(date_time=ymd_hms(date_time))
   })
@@ -934,8 +988,8 @@ server <- function(input, output) {
       #scale_color_manual(values = ifelse(input$ph_temp == "temp_c", "#D55E00","#009E73" )) + #color lines by custom site color palette
       #scale_x_datetime(breaks = scales::date_breaks("1 week"), 
                        #labels = date_format("%m/%d %H:%m")) + #change x axis to make it look cleaner - each tick is one week, display month/day hour/minute
-      xlab("Date time") + #change x axis label
-      ylab(ifelse(input$compare_tab3 == "temp_c", "Temperature", "pH")) + #change y axis label
+      xlab("Month") + #change x axis label
+      ylab(ifelse(input$compare_tab3 == "temp_c", "Temperature (C)", "pH")) + #change y axis label
       theme_bw() +
       theme(#legend.position = "none", #remove legend
         axis.text.x=element_text(angle=45, vjust = 1, hjust=1, size=12), #adjust x axis text format
@@ -970,9 +1024,9 @@ server <- function(input, output) {
       hc_add_series(data = y11, yAxis = 1, name = "pH") %>% #plot pH
       hc_add_series(data = y12, yAxis = 2, name = "Tide") %>% #plot tide height
       hc_yAxis_multiples(
-        list(lineWidth = 3, lineColor='#D55E00', title=list(text="Temperature")), #label/colorize temp y axis
+        list(lineWidth = 3, lineColor='#D55E00', title=list(text="Temperature (C)")), #label/colorize temp y axis
         list(lineWidth = 3, lineColor="#009E73", title=list(text="pH")), #label/colorize pH y axis
-        list(lineWidth = 3, lineColor="#0072B2", title=list(text="Tide"))) %>% #label/colorize tide y axis
+        list(lineWidth = 3, lineColor="#0072B2", title=list(text="Tide (ft)"))) %>% #label/colorize tide y axis
       hc_xAxis(title = "Date", categories = tab4_reactive()$date_highchart, tickInterval = 7*24*1*1) %>% #label x axis
       hc_colors(c("#D55E00", #set specific colors for points (note same color order as y axis)
                   "#009E73",
