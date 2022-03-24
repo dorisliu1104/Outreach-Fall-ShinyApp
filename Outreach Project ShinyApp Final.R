@@ -44,7 +44,7 @@ lompoc <- ph_clean_final %>%
   arrange(ymd(date))
 
 lompoc_day <- filter(lompoc, between(date, as.Date("2021-07-25"), as.Date("2021-07-26")))
-lompoc2 <- filter(lompoc, between(date, as.Date("2021-07-27"), as.Date("2021-08-05")))
+lompoc2 <- filter(lompoc, between(date, as.Date("2021-07-30"), as.Date("2021-08-04")))
 ## lompoc question 3
 lompoc3 <- filter(lompoc, between(date, as.Date("2021-08-26"), as.Date("2021-09-27"))) ## lompoc question 4
 lompoc4 <- filter(lompoc, between(date, as.Date("2021-06-17"), as.Date("2021-06-23")))
@@ -302,7 +302,7 @@ ui <- fluidPage(
                                      tabPanel(h4("Methods"),
                                               h4(strong("Sensor deployments:"), "pH and temperature sensors were deployed in the rocky intertidal zone at three sites - Bodega Bay, Lompoc Landing, and Alegria - from May 2021 until November 2021. Sensors collected temperature and pH measurements every 15 minutes."),
                                               br(),
-                                              h4(strong("Site selection:"), "Sites were selected because they had 1) been studied before, which would allow us to build upon historical datasets, 2) capture variation in oceanographic conditions attributed to California's two upwelling regimes, and 3) limit public access, which protects the valuable sensor equipment."),
+                                              h4(strong("Site selection:"), "Sites were selected because they 1) had been studied before, which would allow us to build upon historical datasets, 2) capture variation in oceanographic conditions attributed to California's two upwelling regimes, and 3) limit public access, which protects the valuable sensor equipment."),
                                               br(),
                                               h4(strong("Site map")),
                                               leafletOutput(outputId = "map", width = "100%", height = 400),
@@ -417,19 +417,16 @@ ui <- fluidPage(
                                           "Each question will have an associated graph (such as the one below), which you can interact with to analyze different aspects to the data.",
                                           br(),
                                           br(),
-                                         # "The X axis will show the date (or date and time), and the Y axis will show the variable(s) of interest. Time is in military time (e.g., 20:00 = 8:00 PM), temperature is in degrees Celsius, and tide values are height in feet. The date increases the further you move right along the X axis, and variable value increases the further you move up along the Y axis. More negative tide heights are lower tides, and lower pH values are more acidic conditions.",
-                                          #br(),
-                                          #br(),
                                           "Move your cursor over each of the lines to see the value of each variable at any particular point in time.",
                                           highchartOutput("lompoc_intro", width="75%"),
                                           style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
-                                          h4(p("The X axis will show the date (or date and time), and the Y axis will show the variable(s) of interest. Time is in military time (e.g., 20:00 = 8:00 PM), temperature is in degrees Celsius, and tide values are height in feet. The date increases the further you move right along the X axis, and variable value increases the further you move up along the Y axis. More negative tide heights are lower tides, and lower pH values are more acidic conditions.",
+                                          h4(p("The X axis will show the date (or date and time), and the Y axis will show the variable(s) of interest. Time is in military time (e.g., 8:00 = 8:00 AM and 20:00 = 8:00 PM), temperature is in degrees Celsius, and tide values are height in feet. The date increases the further you move right along the X axis, and the variable value increases the further you move up along the Y axis. More negative tide heights are lower tides, and lower pH values are more acidic conditions.",
                                            style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"))
                                      ))),
                             tabPanel(h4("Question 1"),
-                                     sidebarPanel(h4("Here is a graph of the pH, temperature, and tide heights at Lompoc Landing from June until October 2021. Change the dates to look at the data at different time scales."),
-                                                  h4("1. Describe the trends between pH, temperature, and tide heights at Lompoc Landing. How does time of day influence the patterns?"),
-                                                  h5(em("Hint: Filter the data to look at a few days in June, and a few days in September. At high tide, what is happening to the temperature? The pH? Conversely, at low tide, what is happening to the temperature? The pH? Keep an eye on the time - low tides at nighttime may show very different trends than low tides midday!")),
+                                     sidebarPanel(h4(strong("1. Describe the trends between pH, temperature, and tide heights at Lompoc Landing. How does time of day influence the patterns?")),
+                                                  #"Here is a graph of the pH, temperature, and tide heights at Lompoc Landing from June until October 2021. Change the dates to view the data at different time scales.",
+                                                  h5(em("Hint: Filter the data to look at a few days early in a month, and a few days later in the month. At high tide, what is happening to the temperature? The pH? Conversely, at low tide, what is happening to the temperature? The pH? Keep an eye on the time - low tides at nighttime may show very different trends than low tides midday!")),
                                                   column(12, align="right",
                                                          checkboxInput("checkbox_lompoc1", label = "Show answer", value = FALSE)),
                                                   br(),
@@ -443,42 +440,45 @@ ui <- fluidPage(
                                                   br(),
                                                   conditionalPanel(
                                                     condition = "input.checkbox_lompoc1 == 1",
-                                                    h5(p(em("At midday low tide (June), pH drops and temperature starts to increase. Temperature only decreases once the tide comes back in. At nighttime low tide (S"),
+                                                    h5(p(em("At low tide, pH drops and temperature starts to increase. Temperature only decreases once the tide comes back in. pH tends to drop at low tide regardless of time of day, while the greatest temperature spikes occur when low tide happens when the sun is out."),
                                                          style="text-align:left")))
                                      ),
-                                     
                                      mainPanel(highchartOutput("ph_ts_plot"))
                             ),
                             
                             tabPanel(
                               h4("Question 2"),
-                              sidebarPanel(h4("2. What do you notice about the scale of change for pH and temperature over days? Weeks? Months?"),
+                              sidebarPanel(h4(strong("2. What do you notice about the scale of change for pH and temperature over days? Weeks? Months?")),
+                                           h5(em("Hint: Look at the direction of the blue trend line - is it generally increasing? Decreasing? Staying flat? How does the blue trend line compare to the raw data (red for temperature, green for pH)")),
                                            column(12, align="right",
                                                   checkboxInput("checkbox_lompoc2",label = "Show answer", value = FALSE)),
-                                           br(),
-                                           conditionalPanel(
-                                             condition = "input.checkbox_lompoc2 == 1",
-                                             h4(p(em("The temperature tracks with the pH over the scale of days and weeks."),
-                                                  style="text-align:left"))),
+
                                            br(),
                                            selectInput(inputId = "ph_temp",
                                                        label = "Select pH or temperature",
                                                        choices = c("Temperature"="temp_c","pH"="p_h")),
                                            selectInput(inputId = "week_day",
-                                                       label = "Select to see changes over days/weeks/months",
-                                                       choices = c("days", "weeks" , "months"))
+                                                       label = "Select to see changes at different time scales",
+                                                       choices = c("days", "weeks" , "months")),
+                                           br(),
+                                           br(),
+                                           conditionalPanel(
+                                             condition = "input.checkbox_lompoc2 == 1",
+                                             h5(p(em("The greatest variation in pH and temperature is observed at the daily scale. At the weekly scale, temperature and pH don't generally change a lot. On the scale of months, it appears that there are time periods, on the scale of weeks, where pH or temperature is generally high or generally low. Also, looking at the monthly scale makes the daily variation all the more apparent!"),
+                                                  style="text-align:left")))
                               ),
                               mainPanel(plotOutput(outputId = "q2plot"))),
                             tabPanel(
                               h4("Question 3"),
                               sidebarPanel(
-                                h4("3.", 
-                                   tags$a(href="https://www.wunderground.com/history/daily/us/ca/santa-maria/KSMX/date/2021-8-1", "Look up the weather"), "for August 1st and August 3rd, 2021, and compare it with the data collected by the sensor at Lompoc Landing around those same dates. What do you think could have caused the differences in seawater temperature and pH between those two dates?"),
+                                h4(strong("3.", 
+                                   tags$a(href="https://www.wunderground.com/history/daily/us/ca/santa-maria/KSMX/date/2021-8-1", "Look up the weather"), "for August 1st and August 3rd, 2021, and compare it with the data collected by the sensor at Lompoc Landing around those same dates. What do you think could have caused the differences in seawater temperature and pH between those two dates?")),
+                                h5(em("Hint: Look at air temperature and wind speed when the temperature was at its peak on each day.")),
                                 column(12, align="right",
                                        checkboxInput("checkbox_lompoc3", label = "Show answer", value = FALSE)),
                                 conditionalPanel(
                                   condition = "input.checkbox_lompoc3 == 1",
-                                  h4(p(em("answer will go here :)"),
+                                  h5(p(em("Warmer air temperatures could mean warmer waters for a tidepool. Stronger winds could mean higher waves crashing into tidepools, even at low tide. On August 1st, the air temperature was higher (72F compared to 67F) and the wind speed was slightly stronger (14 mph vs 10 mph). The air temperature difference was likely a contributing factor to the difference in maximum water temperature measured between both days."),
                                        style="text-align:left"))),
                                 br()),
                               mainPanel(highchartOutput("q3plot"))
