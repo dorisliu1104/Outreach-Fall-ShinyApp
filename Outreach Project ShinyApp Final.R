@@ -410,7 +410,7 @@ ui <- fluidPage(
                             tabPanel(h4("Data overview"),
                                      fluidRow(
                                        column(width = 12, align="center",
-                                              h4(p("In this section, you will explore the data we collected from the sensor deployed at Lompoc Landing.",
+                                              h4(p("In this section, you will explore the data we collected from the sensor deployed at Lompoc Landing. Because the sensor deployed at Lompoc Landing was high in the intertidal zone and always underwater, these data provide an excellent opportunity to learn about the range of environmental conditions organisms must navigate in the intertidal zone.",
                                           br(),
                                           br(),
                                           "Each question will have an associated graph (such as the one below), which you can interact with to analyze different aspects to the data.",
@@ -446,7 +446,7 @@ ui <- fluidPage(
                             tabPanel(
                               h4("Question 2"),
                               sidebarPanel(h4(strong("2. What do you notice about the scale of change for pH and temperature over days? Weeks? Months?")),
-                                           h5(em("Hint: Look at the direction of the blue trend line - is it generally increasing? Decreasing? Staying flat? How does the blue trend line compare to the raw data (red for temperature, green for pH)")),
+                                           h5(em("Hint: Look at the direction of the blue trend line - is it generally increasing? Decreasing? Staying flat? How does the blue trend line compare to the raw data (red for temperature, green for pH)?")),
                                            column(12, align="right",
                                                   checkboxInput("checkbox_lompoc2",label = "Show answer", value = FALSE)),
 
@@ -601,7 +601,7 @@ ui <- fluidPage(
                                      sidebarLayout(
                                        sidebarPanel(
                                          h4(strong("3. What site has the most variation in temperature and pH? What are some possible causes for such variation?"),
-                                            h5(em("Hint: Each site has the same y axis for each variable. Toggle between each site to see which site has the highest and lowest peaks (the most extreme zig-zag)."))),
+                                            h5(em("Hint: Each site has the same y axis for each variable. Toggle between each site to examine which site has the greatest difference between high and low peaks."))),
                                          column(12, align="right",
                                                 checkboxInput("checkbox_compare3", label = "Show answer", value = FALSE)),
                                          br(),
@@ -624,7 +624,7 @@ ui <- fluidPage(
                                      sidebarLayout(
                                        sidebarPanel(
                                          h4(strong("4. Is there a relationship between tide and temperature? How are tide and temperature related to pH at each site?"),
-                                            h5(em("Hint: This is similar to Question 1 from the Lompoc Landing section. Toggle between each site, and make note of: When temperature is going up, what is happening to the pH? Conversely, when temperature is going down, what is happening to the pH? Does one measurement generally start to rise or drop before the other?"))),
+                                            h5(em("Hint: Toggle between each site, and make note of: When temperature is going up, what is happening to the pH? Conversely, when temperature is going down, what is happening to the pH? Does one measurement generally start to rise or drop before the other?"))),
                                          column(12, align="right",
                                                 checkboxInput("compare4", label = "Show answer", value = FALSE)),
                                          br(),
@@ -652,7 +652,7 @@ ui <- fluidPage(
                                      h4(p("During this learning module, you have learned about one monitoring effort by scientists studying the progression of ocean acidification along the California coastline.",
                                         br(),
                                         br(),
-                                        "To evaluate how the California coastline is being affected by ocean acidification, as well as other climate change-related impacts, we must continue to track pH and temperature (among other environmental factors, such as salinity and dissolved oxygen). Long-term monitoring efforts by scientists support effective management and conservation of marine ecosystems, in addition to helping us adapt to the consequences of ocean acidification now and in the future."),
+                                        "To evaluate how California is being affected by ocean acidification, as well as other climate change-related impacts, we must continue to track pH and temperature (among other environmental factors, such as salinity and dissolved oxygen). Long-term monitoring efforts by scientists support effective management and conservation of marine ecosystems, in addition to helping us adapt to the consequences of ocean acidification now and in the future."),
                                         style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
                                      tags$img(src = "alg_sunset-wide.png", style="display: block; margin-left: auto; margin-right: auto;", height="75%",width="75%"),
                                      column(width = 12,
@@ -754,8 +754,12 @@ ui <- fluidPage(
                      em("Robert Goettler, Logan Kozal, Melissa M. Moore, and Markie Wordley"),
                      style = "text-align: center")),
                 br(),
-                h4(p(strong("Want to take a look at the code for this app?")),
+                h4(p(strong("Do you want to look at the code for this app?")),
                    tags$a(href="https://github.com/dorisliu1104/Outreach-Fall-ShinyApp", "View the Github repository"),
+                   style="text-align: center; display: block; margin-left: auto; margin-right: auto"),
+                   br(),
+                   h4(p(strong("Do you have additional questions about the app?")),
+                      tags$a(href="mailto:aritger@ucsb.edu", "Email Amelia Ritger"),
                    style="text-align: center; display: block; margin-left: auto; margin-right: auto"),
                 br(),
                 tags$img(src = "goletapier.JPG", style="display: block; margin-left: auto; margin-right: auto;", height="75%",width="75%"),
