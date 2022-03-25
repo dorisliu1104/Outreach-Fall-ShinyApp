@@ -47,11 +47,11 @@ lompoc_day <- filter(lompoc, between(date, as.Date("2021-07-25"), as.Date("2021-
 lompoc2 <- filter(lompoc, between(date, as.Date("2021-07-30"), as.Date("2021-08-04")))
 ## lompoc question 3
 lompoc3 <- filter(lompoc, between(date, as.Date("2021-08-26"), as.Date("2021-09-27"))) ## lompoc question 4
-lompoc4 <- filter(lompoc, between(date, as.Date("2021-06-17"), as.Date("2021-06-23")))
+lompoc4 <- filter(lompoc, between(date, as.Date("2021-06-19"), as.Date("2021-06-23")))
 alegria4 <- dplyr::filter(ph_clean_final, site=="Alegria") %>% 
-  filter(between(date, as.Date("2021-08-07"), as.Date("2021-08-14")))
+  filter(between(date, as.Date("2021-08-08"), as.Date("2021-08-12")))
 bodega4 <- dplyr::filter(ph_clean_final, site=="Bodega Bay") %>% 
-  filter(between(date, as.Date("2021-07-05"), as.Date("2021-07-09")))
+  filter(between(date, as.Date("2021-07-15"), as.Date("2021-07-19")))
 datafiles <- list(lompoc_day, lompoc2, lompoc)
 
 ## create dataframe for compare and contrast plots
@@ -84,7 +84,6 @@ data_summary_table <- site_gps %>%
 ## Filter data for alegria and bodega bay
 alegria <- dplyr::filter(ph_clean_final, site=="Alegria")  ## Filtering the data according to different sites
 bodega <- dplyr::filter(ph_clean_final, site=="Bodega Bay")
-
 
 ## Create the ui (user interface)
 ui <- fluidPage(
@@ -503,10 +502,10 @@ ui <- fluidPage(
                             tabPanel(h4("Data overview"),
                                      fluidRow(
                                        column(width = 12, align="center",
-                                              h4(p("In this section, you will now zoom out and explore the data we collected from the sensors deployed at all three sites: Alegria, Lompoc Landing, and Bodega Bay.",
+                                              h4(p("In this section, we will now zoom out and explore the data we collected from the sensors deployed at all three sites: Alegria, Lompoc Landing, and Bodega Bay.",
                                                    #leafletOutput(outputId = "map_intro", width = "75%", height = 300 ),
                                                    style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
-                                              a(img(height="50%", width="50%", src="sitemap.png"), style="text-align: center; display: block; margin-left: auto; margin-right: auto; margin-bottom:-55px; margin-top:-60px;"),
+                                              a(img(height="50%", width="50%", src="sitemap.png"), style="text-align: center; display: block; margin-left: auto; margin-right: auto;"),
                                               h4(p("As you learned in the Research Overview, the California coastline has two upwelling regimes: strong upwelling North of Point Conception, and weak upwelling South of Point Conception. This means that we expect Alegria to have generally higher pH conditions than both Lompoc Landing and Bodega Bay. Likewise, because of the latitudinal gradient of temperature along the coastline, we expect Bodega Bay to have the coldest water temperatures and Alegria to have the warmest water temperatures.",
                                                    br(),
                                                    br(),
@@ -521,6 +520,7 @@ ui <- fluidPage(
                                               leafletOutput(outputId = "map3", width = "100%", height = 600 )),
                                        column(width = 7,
                                               h4(p(strong("1. Compare the data at all three sites. What general patterns do you see in the data?"),
+                                                   h5(em("Hint: On the map to the left, click on each site's bubble to view the overall average values for each variable. On the plot below, examine the trend lines (bold) of each site to compare overall trends in the data, and examine the raw data (transparent lines) of each site to compare finer details in the data, such as maximum and minimum values for each variable.")),
                                                  h5(selectInput(inputId = "compare_tab1",
                                                              label = "Select a variable",
                                                              choices = c("Temperature"="temp_c","pH"="p_h"))))),
@@ -533,40 +533,46 @@ ui <- fluidPage(
                                               plotOutput("tab1_plot"),
                                               conditionalPanel(
                                                 condition = "input.checkbox_compare1 == 1",
-                                                h5(p(em("Answer: FILL IN: answer will go here :)"),
+                                                h5(p(em("Answer: Looking at the average values at each site on the map, it appears that the data follow the predictions: Alegria is on average warmer and has a higher pH, and Bodega Bay is on average colder and has a lower pH.  Looking at the trend lines on the plot, the answer isn't as clearcut for pH, and even temperature."),
+                                                     br(),
+                                                     br(),
+                                                     em("For temperature, the trendlines generally follow the predictions (Alegria is higher than Lompoc and Bodega Bay), but sometimes Lompoc Landing is colder than Bodega Bay and warmer than Alegria. For pH, Alegria is sometimes the most acidic location, and Bodega Bay is sometimes the least acidic location!"),
                                                      style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")))
                                               ))),
                             
                             tabPanel(h4("Question 2"),
                                      fluidRow(
                                        column(width = 8,
-                                              br(),
                                               h4(p(strong("2. Look at the following table and consider: How do these data align with the study predictions?"),
-                                                   style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")),
-                                              column(12, align="right",
-                                                     checkboxInput("checkbox_compare2", label = "Show answer", value = FALSE)),
+                                                   h5(em("Hint: If you do not remember the study predictions, take a look at the box on the right.")))),
+                                                   style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
+                                       
+                                              column(8, align="right",
+                                                     checkboxInput("checkbox_compare2", label = "Show answer", value = FALSE),
                                               (div(DT::dataTableOutput("mytable1", width = "100%"), style = "font-size: 90%; width: 100%")),
                                               h6(p("Move your cursor to scroll across the table")),
                                               conditionalPanel(
                                                 condition = "input.checkbox_compare2 == 1",
-                                                h5(p(em("Answer: FILL IN: answer will go here :)"),
+                                                h5(p(em("The data do align with the study predictions. Bodega Bay, the furthest north, has the lowest minimum temperature, lowest average temperature, and lowest average pH. Alegria, the furthest south, has the highest average temperature and highest average pH."),
+                                                     br(),
+                                                     br(),
+                                                     em("However, there is nuance to this conclusion. For example, Lompoc Landing has the highest maximum temperature and the lowest minimum pH, and Bodega Bay has the highest maximum pH!"),
                                                      style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px")))),
                                        
                                        column(width = 4,
-                                              br(),
-                                              br(),
                                               box(title = "Reminder: Research Overview",
-                                                solidHeader = T,
-                                                    collapsible = T,
-                                                    collapsed = T,
-                                                width = "50%",
-                                              h5(strong("Question:"), "What are the pH and temperature conditions across the California coastline?"),
-                                              br(),
-                                              h5(strong("Hypothesis:"), "pH will decrease with increasing latitude, and temperature will increase with decreasing latitude."),
-                                              br(),
-                                              h5(strong("Predictions:"), "Bodega Bay, the northernmost site, will experience the lowest pH and temperatures, whereas Alegria, the southernmost site, will experience the highest pH and temperatures.")))
+                                                  solidHeader = T,
+                                                  collapsible = T,
+                                                  collapsed = T,
+                                                  width = "50%",
+                                                  h5(strong("Question:"), "What are the pH and temperature conditions across the California coastline?"),
+                                                  br(),
+                                                  h5(strong("Hypothesis:"), "pH will decrease with increasing latitude, and temperature will increase with decreasing latitude."),
+                                                  br(),
+                                                  h5(strong("Predictions:"), "Bodega Bay, the northernmost site, will experience the lowest pH and temperatures, whereas Alegria, the southernmost site, will experience the highest pH and temperatures."))),
                                        
-                                       
+                                    
+
                                        )),
           
                              # sidebarLayout(position = "right",
@@ -594,20 +600,21 @@ ui <- fluidPage(
                             tabPanel(h4("Question 3"),
                                      sidebarLayout(
                                        sidebarPanel(
-                                         h4(strong("3. What site has the most variation in temperature and pH? What are some possible causes for such variation?")),
+                                         h4(strong("3. What site has the most variation in temperature and pH? What are some possible causes for such variation?"),
+                                            h5(em("Hint: Each site has the same y axis for each variable. Toggle between each site to see which site has the highest and lowest peaks (the most extreme zig-zag)."))),
                                          column(12, align="right",
                                                 checkboxInput("checkbox_compare3", label = "Show answer", value = FALSE)),
                                          br(),
                                          br(),
+                                         selectInput(inputId = "compare_tab3",
+                                                    label = "Select a variable",
+                                                    choices = c("Temperature"="temp_c","pH"="p_h")),
                                          selectInput(inputId = "compare_site",
                                                      label = "Select a site",
                                                      choices = c("Alegria","Lompoc Landing", "Bodega Bay")),
-                                         selectInput(inputId = "compare_tab3",
-                                                          label = "Select a variable",
-                                                          choices = c("Temperature"="temp_c","pH"="p_h")),
                                          conditionalPanel(
                                            condition = "input.checkbox_compare3 == 1",
-                                           h5(p(em("Answer: FILL IN: Bodega bay dropoff is unclear, might’ve been an upwelling event due to strong winds; sensor is in low tide in Alegria and high tide in Lompoc and Bodega"),
+                                           h5(p(em("Answer: Lompoc Landing has the most daily variation in both temperature and pH. This could be due to the sensor placement at Lompoc Landing - since the sensor was located high in the intertidal zone, it may have had more time to experience temperature rises and pH drops before the tide returned. The temporally variable spikes in pH and temperature at other sites could be due to local conditions, such as heatwaves, or strong winds and waves."),
                                                 style="text-align:left")))
                                               ),
                                          mainPanel(plotOutput("tab3_plot"))
@@ -616,7 +623,8 @@ ui <- fluidPage(
                             tabPanel(h4("Question 4"),
                                      sidebarLayout(
                                        sidebarPanel(
-                                         h4(strong("4. Is there a relationship between tide and temperature? How are tide and temperature related to pH at each site?")),
+                                         h4(strong("4. Is there a relationship between tide and temperature? How are tide and temperature related to pH at each site?"),
+                                            h5(em("Hint: This is similar to Question 1 from the Lompoc Landing section. Toggle between each site, and make note of: When temperature is going up, what is happening to the pH? Conversely, when temperature is going down, what is happening to the pH? Does one measurement generally start to rise or drop before the other?"))),
                                          column(12, align="right",
                                                 checkboxInput("compare4", label = "Show answer", value = FALSE)),
                                          br(),
@@ -628,7 +636,7 @@ ui <- fluidPage(
                                                                   'Example 3 (Bodega Bay)')),
                                          conditionalPanel(
                                            condition = "input.compare4 == 1",
-                                           h5(p(em("Answer: ILL IN: answer will go here :)"),
+                                           h5(p(em("Answer: Although each site has differences in the shape of the patterns of both temperature and pH, temperature and pH have an overall positive relationship across sites. When accounting for the tide height, the time of the lowest pH and temperature varies between locations: at Alegria, they track closely with tide and pH, and the lowest temperatures/pH occur around low tide; at Lompoc Landing, the lowest temperatures/pH occur just after low tide; and at Bodega Bay, the lowest temperatures/pH occur just before low tide."),
                                                 style="text-align:left")))),
                                        mainPanel(
                                         highchartOutput("tab4_plot") )
@@ -640,6 +648,18 @@ ui <- fluidPage(
         tabItem(tabName = "conclusions",
                 h1("Final thoughts"),
                 tabsetPanel(id="conclusiontabs",
+                            tabPanel(h4("Summary"),
+                                     h4(p("During this learning module, you have learned about one monitoring effort by scientists studying the progression of ocean acidification along the California coastline.",
+                                        br(),
+                                        br(),
+                                        "To evaluate how the California coastline is being affected by ocean acidification, as well as other climate change-related impacts, we must continue to track pH and temperature (among other environmental factors, such as salinity and dissolved oxygen). Long-term monitoring efforts by scientists support effective management and conservation of marine ecosystems, in addition to helping us adapt to the consequences of ocean acidification now and in the future."),
+                                        style="text-align:left;color:black;background-color:white;padding:15px;border-radius:10px"),
+                                     tags$img(src = "alg_sunset-wide.png", style="display: block; margin-left: auto; margin-right: auto;", height="75%",width="75%"),
+                                     column(width = 12,
+                                            h6(p(em("Photo by Amelia Ritger")),
+                                               style="text-align:center;color:darkgray")),
+                                     br()
+                            ),
                             tabPanel(h4("Your turn"),
                                      h4(p("1. What did you learn about OA? Check your comprehension and summarize what you now know by creating a concept map using the terms below. Add to the map as you continue to learn about OA. ",
                                           br(),
@@ -898,7 +918,7 @@ server <- function(input, output) {
   ## tab 1 plots
   output$tab1_plot <- renderPlot({
     ggplot(comdata, aes(x=date_time, y=get(input$compare_tab1), group=site)) + #plot pH here
-      geom_line(aes(color=site, alpha=site), size=0.7, show.legend = F) + #make it a line chart
+      geom_line(aes(color=site),alpha=0.4, size=0.7, show.legend = F) + #make it a line chart
       geom_smooth(aes(color=site), method="loess", span=0.1) + #plot trend line for each site
       scale_color_manual(values = pal) + #color lines by custom site color palette
       scale_x_datetime(breaks = scales::date_breaks("2 weeks"), 
@@ -910,8 +930,9 @@ server <- function(input, output) {
         axis.text.x=element_text(angle=45, vjust = 1, hjust=1, size=12), #adjust x axis text format
         axis.title.x=element_text(size=15),
         axis.text.y=element_text(size=12), #adjust y axis text format
-        axis.title.y=element_text(size=15)) +
-      scale_alpha_manual(values=c(0.5,0.5,1))
+        axis.title.y=element_text(size=15),
+        legend.title = element_blank())
+      #scale_alpha_manual(values=c(0.5,0.5,1))
   })
   
   # output$map_intro <- renderLeaflet({
@@ -1006,6 +1027,7 @@ server <- function(input, output) {
   }) 
   
   # tab 3 plot
+
   siteFiltered <- reactive({
     ph_clean_final %>% 
       dplyr::filter(site == input$compare_site) %>% 
@@ -1014,7 +1036,7 @@ server <- function(input, output) {
   })
   
   output$tab3_plot <- renderPlot({
-    ggplot(siteFiltered(), aes(x=date_time, y=get(input$compare_tab3)))+ #plot pH here
+    p <- ggplot(siteFiltered(), aes(x=date_time, y=get(input$compare_tab3)))+ #plot pH here
       geom_line(size = 0.7,color = ifelse(input$compare_tab3 == "temp_c", "#D55E00","#009E73" )) + #make it a line chart
       geom_smooth(method="loess", span=0.1) + #plot trend line for each site
       #scale_color_manual(values = ifelse(input$ph_temp == "temp_c", "#D55E00","#009E73" )) + #color lines by custom site color palette
@@ -1022,12 +1044,21 @@ server <- function(input, output) {
                        #labels = date_format("%m/%d %H:%m")) + #change x axis to make it look cleaner - each tick is one week, display month/day hour/minute
       xlab("Month") + #change x axis label
       ylab(ifelse(input$compare_tab3 == "temp_c", "Temperature (C)", "pH")) + #change y axis label
+      #scale_y_continuous(limits = ifelse(input$compare_tab3 == "temp_c", tab3_temp, tab3_ph)) +
       theme_bw() +
       theme(#legend.position = "none", #remove legend
         axis.text.x=element_text(angle=45, vjust = 1, hjust=1, size=12), #adjust x axis text format
         axis.title.x=element_text(size=15),
         axis.text.y=element_text(size=12), #adjust y axis text format
         axis.title.y=element_text(size=15))
+    
+    if(input$compare_tab3 == "temp_c"){
+      p + scale_y_continuous(limits=c(5,25)) 
+    }
+    else{
+      p + scale_y_continuous(limits=c(7.2,8.5)) 
+    }
+    
   })
   
   
