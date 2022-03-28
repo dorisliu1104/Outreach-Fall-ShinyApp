@@ -122,7 +122,7 @@ ui <- fluidPage(
                                           tags$img(src = "OCcycle2.png", style="display: block; margin-left: auto; margin-right: auto;", height="75%",width="75%"),
                                           column(width = 12,
                                                  h6(p(em("Figure by ",
-                                                         tags$a(href="http://www.necan.org/overview", "Northeast Coastal Acidification Network"), ".")),
+                                                         tags$a(href="http://www.necan.org/overview", "Northeast Coastal Acidification Network", target="_blank"), ".")),
                                                     style="text-align:center;color:darkgray")),
                                           br(),
                                           br(),
@@ -685,7 +685,7 @@ ui <- fluidPage(
                                      br(),
                                      a(img(height="50%", width="50%", src="ccanlogo.jpg"), href="https://c-can.info/", target="_blank", style="text-align: center; display: block; margin-left: auto; margin-right: auto"),
                                      br(),
-                                     a(img(height="50%", width="50%", src="goa-onlogo.png"), href="http://www.goa-on.org/home.php", style="text-align: center; display: block; margin-left: auto; margin-right: auto"),
+                                     a(img(height="50%", width="50%", src="goa-onlogo.png"), href="http://www.goa-on.org/home.php", target="_blank", style="text-align: center; display: block; margin-left: auto; margin-right: auto"),
                                      br(),
                                      a(img(height="50%", width="50%", src="OAIElogo.png"), href="https://www.oainfoexchange.org/index.html", target="_blank", style="text-align: center; display: block; margin-left: auto; margin-right: auto")))),
 
